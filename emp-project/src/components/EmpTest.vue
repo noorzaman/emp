@@ -2,12 +2,15 @@
   <div class="emptest">
     <h1>Your top match from default search 'pretty' is: {{ matches }}</h1>
     <!--li v-for="match in matches[0]">@{{ match._id }}</li-->
-    <input type="text" v-model="input.search" placeholder="Search" />
+    <h2>Try searching by theme here like 'casual' or 'professional':</h2>
+    <input type="text" v-model="input.theme" placeholder="Search Theme" />
+    <button v-on:click="searchByTheme()">Search by Theme</button>
+    <h2>Try searching by attributes here like 'wifi' or 'projector':</h2>
+    <input type="text" v-model="input.attribute" placeholder="Search Attribute" />
     <!--input type="text" v-model="input.lastname" placeholder="Last Name" /-->
-    <button v-on:click="sendData()">Send</button>
     <br />
     <br />
-    <h1>The top search result from your input is: {{ searchResult }}</h1>
+    <h1>The top search result from your criteria is: {{ searchResult }}</h1>
   </div>
 </template>
 
@@ -59,16 +62,16 @@ export default {
     }
   },
   mounted () {
-    this.$http.get('https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp2/_search?q=*&pretty').then(result => {
-      this.matches = result.body.hits.hits[0]._id
+    this.$http.get('https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?q=*&pretty').then(result => {
+      this.matches = result.body.hits.hits[0]._source.meeting_place.name
     }, error => {
       console.error(error)
     })
   },
   methods: {
-    sendData () {
-      this.$http.get('https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp2/_search?q=*&' + this.input.search).then(result => {
-        this.searchResult = result.body.hits.hits[0]._id
+    searchByTheme () {
+      this.$http.get('https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?q=meeting_place.theme:' + this.input.theme).then(result => {
+        this.searchResult = result.body.hits.hits[0]._source.meeting_place.name
       }, error => {
         console.error(error)
       })
