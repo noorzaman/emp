@@ -67,7 +67,6 @@ export default {
   },
   methods: {
     sendData () {
-      // This part doesn't work yet !!!
       this.$http.get('https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp2/_search?q=*&' + this.input.search).then(result => {
         this.searchResult = result.body.hits.hits[0]._id
       }, error => {
