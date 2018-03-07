@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Enhanced Meeting Planner</title>
+    </head>
+    <body>
+        <H1>Enhanced Meeting Planner Insertion Form [EMP]</H1>
+        <form method="POST" action="" name="searchForm">
+            <fieldset>
+                <legend>Enhanced Meeting Planner Elastic Search Server Details</legend>
+                EMP Host: <input type="text" id="empHost" value="https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com" />
+                <br>
+                EMP Index: <input type="text" id="empIndex" value="emp" />
+                <br>
+                EMP Type: <input type="text" id="empType" value="rooms" />
+            </fieldset>
+            <hr>
+            <br>
+            <fieldset>
+                <legend>Meeting Place</legend>
+                <br>
+                email: <input type="text" name="meeting_place.email" value="godzilla@pfizer.com" /><br> 
+                name: <input type="text" name="meeting_place.name" value="Big conference room"><br>  
+                theme: <input type="text" name="meeting_place.theme" value="gprofessional"><br> 
+                capacity: <input type="text" name="meeting_place.capacity" value="25"><br> 
+                description: <input type="text" name="meeting_place.description" value="The big room at Pfizer main building"><br>
+                create_date: <input type="text" name="meeting_place.create_date" value="20180304"><br> 
+                update_date: <input type="text" name="meeting_place.update_date" value="20180304"><br> 
+                <br>
+            </fieldset>
+            <hr>
+            <fieldset>
+                <legend>Location, Location, Location</legend>
+                <fieldset>
+                    <legend>Office Location</legend>
+                    office_space: <input type="text" name="location.office_space" value="true" /><br>
+                    room_name: <input type="text" name="location.office.room_name" value="godzilla" /><br>
+                    floor: <input type="text" name="location.office.floor" value="3" /><br>
+                    building: <input type="text" name="location.office.building" value="Pfizer Building 1" /><br>
+                </fieldset>
+                <fieldset>
+                    <legend>Other Location</legend>
+                    business_name: <input type="text" name="location.other.business_name" value="" /><br>
+                    street_address: <input type="text" name="location.other.street_address" value="" /><br>
+                    city: <input type="text" name="location.other.city" value="" /><br>
+                    zip_code: <input type="text" name="location.other.zip_code" value="" /><br>
+                    state: <input type="text" name="location.other.state" value="" /><br>
+                </fieldset>
+            </fieldset>
+            <hr>
+            <fieldset>
+                <legend>Tags</legend>
+                <textarea name="tags" rows="4" cols="50">television projector speakerphone whiteboard 
+                </textarea>
+            </fieldset>
+
+            <button onclick="storeElastic(this.form)">Store</button>
+        </form>
+
+        <script>
+
+
+        function storeElastic(form) {
+
+            var root = new Object();
+
+            var meeting_place_obj = new Object();
+            root.meeting_place = meeting_place_obj;
+
+            var location_obj = new Object();
+            var office_location_obj = new Object();
+            location_obj.office = office_location_obj;
+
+            var other_location_obj = new Object();
+            location_obj.other = other_location_obj;
+
+            root.location = location_obj;
+
+            var tagsObj = new Object();
+            root.tags = tagsObj;
+  
+
+            var i = 0;
+            var fe = form.elements;
+            for (i = 0; i < fe.length; i+=1) {
+                if (fe[i].name == "meeting_place.email") {
+                    root.meeting_place.email = fe[i].value;
+                } else if (fe[i].name == "meeting_place.name") {
+                    root.meeting_place.name = fe[i].value;
+                } else if (fe[i].name == "meeting_place.theme") {
+                    root.meeting_place.theme = fe[i].value;  
+				} else if (fe[i].name == "meeting_place.capacity") {
+                    root.meeting_place.capacity = fe[i].value;
+                } else if (fe[i].name == "meeting_place.description") {
+                    root.meeting_place.description = fe[i].value;
+                } else if (fe[i].name == "meeting_place.create_date") {
+                    root.meeting_place.create_date = fe[i].value;
+                } else if (fe[i].name == "meeting_place.update_date") {
+                    root.meeting_place.update_date = fe[i].value; 
+
+
+                }  else if (fe[i].name == "location.office_space") {
+                    root.location.office_space = fe[i].value; 
+
+
+                }  else if (fe[i].name == "location.office.room_name") {
+                    root.location.office.room_name = fe[i].value; 
+                }  else if (fe[i].name == "location.office.floor") {
+                    root.location.office.floor = fe[i].value; 
+                }  else if (fe[i].name == "location.office.building") {
+                    root.location.office.building = fe[i].value; 
+
+
+                }  else if (fe[i].name == "location.other.business_name") {
+                    root.location.other.business_name = fe[i].value; 
+                }  else if (fe[i].name == "location.other.street_address") {
+                    root.location.other.street_address = fe[i].value; 
+                }  else if (fe[i].name == "location.other.city") {
+                    root.location.other.city = fe[i].value; 
+                }  else if (fe[i].name == "location.other.zip_code") {
+                    root.location.other.zip_code = fe[i].value; 
+                }  else if (fe[i].name == "location.other.state") {
+                    root.location.other.state = fe[i].value; 
+
+                } else if (fe[i].name == "tags") {
+                    root.tags = fe[i].value.trim().split(" ");
+
+                }
+            }
+            var jsonStr = JSON.stringify(root);
+            alert (jsonStr);
+
+
+
+            var empUrl = null;
+            var empHost = null;
+            var empIndex = null;
+            var empType = null;
+
+            if (empHost == null || empHost == undefined) 
+                empHost = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com';
+            if (empIndex == null || empIndex == undefined)
+                empIndex = "emp";
+            if (empType == null || empType == undefined) 
+                empType = "rooms";
+            
+            empUrl = empHost + "/" + empIndex + "/" + empType;
+            
+            //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'; 
+            indexUsingXmlHttp(empUrl, root.meeting_place.email, jsonStr);
+            //form.submit();
+        }
+
+
+        function indexUsingXmlHttp(empUrl, id, jsonStr) {
+            //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'; 
+            empUrl = empUrl + "/" + id;    
+            alert(empUrl);       
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open('POST', empUrl, false);
+            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xmlHttp.send(jsonStr);
+            var response = JSON.parse(xmlHttp.responseText);
+            alert(response);
+        }
+
+        function indexRoom (idx, meetingSpace, roomId, jsonStr) {
+            alert ('here 1')
+            var cmdStr = '{ index:' + 'emp' + ', type:' + 'rooms' + ',id:' + 'test_room_1' + ', body:' + jsonStr;
+            alert(cmdStr);
+
+            var elasticsearch = require('elasticsearch');
+            alert ('here 2')
+            var client = new elasticsearch.Client({
+                hosts: ['https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com']
+            });
+            alert ('here 3')
+
+            alert(cmdStr);
+
+            client.create(cmdStr, function (error, response) {
+                alert (response);
+                alert(error);
+            });
+        }
+        </script>
+    </body>
+</html>
