@@ -17,18 +17,18 @@
         </fieldset>
         <hr><br>
 
-            <p>
-            <button onclick="searchElastic()">Search All</button>
+        <p>
+            <button onclick="searchAll()">Search All</button>
+            Use this to retrieve all rooms/places
+
             <br><br>
-            <button onclick="searchElasticByEmailId()">Search By Email Id</button>
+            <button onclick="searchByEmailId()">Search By Email Id</button>
             <input type="text" id="emailId" value="email" />
-            </p>
- 
-            <br>
-            <textarea id="allEsResponses" rows="20" cols="50">All records 
-            </textarea>
-            <textarea id="esResponseByEmailId" rows="20" cols="50">Record matching emailid
-            </textarea>
+        </p>
+        <br>
+            
+        <textarea id="allResponses" rows="20" cols="50">All records </textarea>
+        <textarea id="responseByEmailId" rows="20" cols="50">Record matching emailid</textarea>
         <br><hr><br>
 
 
@@ -36,14 +36,63 @@
         <script>
         var DEV_DEBUG = false;
 
-        function searchElastic(form) {
-            if (DEV_DEBUG) alert('HERE 1');
-            var jsonStr = null;
+        function searchAll() {
+            var jsonStr = '{"query" : {"match_all" : {}}}';
+            if (DEV_DEBUG) alert (jsonStr);
+
+            var empUrl = createElasticSearchUrl();
+            //var searchUrl = empUrl + '/_search';
+            var searchUrl = createElasticSearchUrl() + '/_search?size=1000&from=0';
+
+            if (DEV_DEBUG) alert (searchUrl);
+
+            var response = searchUsingXmlHttp(searchUrl, jsonStr);
+            responseTxt = flattenJson(response);
+            //var responseTxt = JSON.stringify(JSON.parse(response),null,2);  
+            document.getElementById("allResponses").innerHTML = responseTxt;
+
+        }
+
+        function flattenJson(response) {
+            var js = JSON.parse(response);
+            var rooms = js.hits.hits;
+
+            var summary = "";
+            for (var i = 0; i < rooms.length; i++) {
+                summary += 
+                    rooms[i]._source.meeting_place.theme + "\t"
+                    + rooms[i]._source.meeting_place.email + "\t"
+                    + rooms[i]._source.meeting_place.name + "\n"
+                    //+ rooms[i]._source.meeting_place.description + "\n"
+                ;
+            }
+            if (DEV_DEBUG) alert (summary);
+            return summary;
+        }
+
+
+
+        function searchByEmailId() {
+            var emailId = document.getElementById("emailId").value;
+            var jsonStr = '{"query": {"ids" : {"values" : ["' + emailId + '"]}}}';
+            if (DEV_DEBUG) alert (jsonStr);
+
+            var searchUrl = createElasticSearchUrl() + '/_search';
+            if (DEV_DEBUG) alert (searchUrl);
+
+            var response = searchUsingXmlHttp(searchUrl, jsonStr);
+            var responseTxt = JSON.stringify(JSON.parse(response),null,2);  
+            document.getElementById("responseByEmailId").innerHTML = responseTxt;           
+        }
+
+
+        function createElasticSearchUrl () {
 
             var empUrl = null;
-            var empHost = null;
-            var empIndex = null;
-            var empType = null;
+
+            var empHost = document.getElementById("empHost").value;
+            var empIndex = document.getElementById("empIndex").value;
+            var empType = document.getElementById("empType").value;
 
             if (empHost == null || empHost == undefined) 
                 empHost = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com';
@@ -51,53 +100,23 @@
                 empIndex = "emp";
             if (empType == null || empType == undefined) 
                 empType = "rooms";
-            
-            if (DEV_DEBUG) alert('HERE 2');
             empUrl = empHost + "/" + empIndex + "/" + empType;
-            
-            if (DEV_DEBUG) alert('HERE 3');
-            searchUsingXmlHttp();
-            return false;
+            return empUrl;
         }
 
 
-        function searchUsingXmlHttp() {
-            var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search';       
-            
-            var jsonStr = '{"query" : {"match_all" : {}}}';
+        function searchUsingXmlHttp(empUrl, queryStr) {
+
+            //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?size=1000&from=0'; 
+
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.open('POST', empUrl, false);
             xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xmlHttp.send(jsonStr);
-            //var response = JSON.stringify(xmlHttp.responseText);
-            var response = JSON.stringify(JSON.parse(xmlHttp.responseText),null,2);  
+            xmlHttp.send(queryStr);
+
+            var response = xmlHttp.responseText;  
             if (DEV_DEBUG) alert(response);
-            document.getElementById("allEsResponses").innerHTML = response;
-        }
-
-        function searchElasticByEmailId() {
-
-            var emailId = document.getElementById("emailId").value;
-
-            var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search';       
-            
-
-            var jsonStr = '{"query": {"ids" : {"values" : [' +  + ']}}}';
-
-            alert (jsonStr);
-            
-            
-    
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open('POST', empUrl, false);
-            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            //xmlHttp.send('{"query": {"terms" : {"_id" : [' + "guuos@emp.com" + ']}}}');
-            xmlHttp.send(jsonStr);
-
-            //var response = JSON.stringify(xmlHttp.responseText);
-            var response = JSON.stringify(JSON.parse(xmlHttp.responseText),null,2);  
-            if (DEV_DEBUG) alert(response);
-            document.getElementById("esResponseByEmailId").innerHTML = response;
+            return response;
         }
 
         </script>
