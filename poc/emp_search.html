@@ -4,133 +4,41 @@
         <title>Enhanced Meeting Planner</title>
     </head>
     <body>
-        <H1>Enhanced Meeting Planner Insertion Form [EMP]</H1>
-        <form method="POST" action="" id="searchForm">
-            <fieldset>
-                <legend>Enhanced Meeting Planner Elastic Search Server Details</legend>
-                EMP Host: <input type="text" id="empHost" value="https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com" />
-                <br>
-                EMP Index: <input type="text" id="empIndex" value="emp" />
-                <br>
-                EMP Type: <input type="text" id="empType" value="rooms" />
-            </fieldset>
-            <hr>
+        <h4><a href='http://ayeshamd.com/emp_insert.html'>to insertion form</a></h4>
+        <H1>Enhanced Meeting Planner POC - Search</H1> 
+        <hr>
+        <fieldset>
+            <legend>Enhanced Meeting Planner Elastic Search Server Details</legend>
+            EMP Host: <input type="text" id="empHost" value="https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com" />
             <br>
-            <fieldset>
-                <legend>Meeting Place</legend>
-                <br>
-                email: <input type="text" id="meeting_place.email" value="godzilla@pfizer.com" /><br> 
-                name: <input type="text" id="meeting_place.name" value="Big conference room"><br>  
-                theme: <input type="text" id="meeting_place.theme" value="professional"><br> 
-                capacity: <input type="text" id="meeting_place.capacity" value="25"><br> 
-                description: <input type="text" id="meeting_place.description" value="The big room at Pfizer main building"><br>
-                create_date: <input type="text" id="meeting_place.create_date" value="20180304"><br> 
-                update_date: <input type="text" id="meeting_place.update_date" value="20180304"><br> 
-                <br>
-            </fieldset>
-            <hr>
-            <fieldset>
-                <legend>Location, Location, Location</legend>
-                <fieldset>
-                    <legend>Office Location</legend>
-                    office_space: <input type="text" id="location.office_space" value="true" /><br>
-                    room_name: <input type="text" id="location.office.room_name" value="godzilla" /><br>
-                    floor: <input type="text" id="location.office.floor" value="3" /><br>
-                    building: <input type="text" id="location.office.building" value="Pfizer Building 1" /><br>
-                </fieldset>
-                <fieldset>
-                    <legend>Other Location</legend>
-                    business_name: <input type="text" id="location.other.business_name" value="" /><br>
-                    street_address: <input type="text" id="location.other.street_address" value="" /><br>
-                    city: <input type="text" id="location.other.city" value="" /><br>
-                    zip_code: <input type="text" id="location.other.zip_code" value="" /><br>
-                    state: <input type="text" id="location.other.state" value="" /><br>
-                </fieldset>
-            </fieldset>
-            <hr>
-            <fieldset>
-                <legend>Tags</legend>
-                <textarea id="tags" rows="4" cols="50">television projector speakerphone whiteboard 
-                </textarea>
-            </fieldset>
+            EMP Index: <input type="text" id="empIndex" value="emp" />
+            <br>
+            EMP Type: <input type="text" id="empType" value="rooms" />
+        </fieldset>
+        <hr><br>
 
-            <button onclick="storeElastic(this.form)">Store</button>
-        </form>
+            <p>
+            <button onclick="searchElastic()">Search All</button>
+            <br><br>
+            <button onclick="searchElasticByEmailId()">Search By Email Id</button>
+            <input type="text" id="emailId" value="email" />
+            </p>
+ 
+            <br>
+            <textarea id="allEsResponses" rows="20" cols="50">All records 
+            </textarea>
+            <textarea id="esResponseByEmailId" rows="20" cols="50">Record matching emailid
+            </textarea>
+        <br><hr><br>
 
 
+        <!-- This script can be moved to emp_core.js -->
         <script>
         var DEV_DEBUG = false;
 
-        function storeElastic(form) {
-            var root = new Object();
-
-            var meeting_place_obj = new Object();
-            root.meeting_place = meeting_place_obj;
-
-            var location_obj = new Object();
-            var office_location_obj = new Object();
-            location_obj.office = office_location_obj;
-
-            var other_location_obj = new Object();
-            location_obj.other = other_location_obj;
-
-            root.location = location_obj;
-
-            var tagsObj = new Object();
-            root.tags = tagsObj;
-  
-
-            var i = 0;
-            var fe = form.elements;
-            for (i = 0; i < fe.length; i+=1) {
-                if (fe[i].id == "meeting_place.email") {
-                    root.meeting_place.email = fe[i].value;
-                } else if (fe[i].id == "meeting_place.name") {
-                    root.meeting_place.name = fe[i].value;
-                } else if (fe[i].id == "meeting_place.theme") {
-                    root.meeting_place.theme = fe[i].value;  
-				} else if (fe[i].id == "meeting_place.capacity") {
-                    root.meeting_place.capacity = fe[i].value;
-                } else if (fe[i].id == "meeting_place.description") {
-                    root.meeting_place.description = fe[i].value;
-                } else if (fe[i].id == "meeting_place.create_date") {
-                    root.meeting_place.create_date = fe[i].value;
-                } else if (fe[i].id == "meeting_place.update_date") {
-                    root.meeting_place.update_date = fe[i].value; 
-
-
-                }  else if (fe[i].id == "location.office_space") {
-                    root.location.office_space = fe[i].value; 
-
-
-                }  else if (fe[i].id == "location.office.room_name") {
-                    root.location.office.room_name = fe[i].value; 
-                }  else if (fe[i].id == "location.office.floor") {
-                    root.location.office.floor = fe[i].value; 
-                }  else if (fe[i].id == "location.office.building") {
-                    root.location.office.building = fe[i].value; 
-
-
-                }  else if (fe[i].id == "location.other.business_name") {
-                    root.location.other.business_name = fe[i].value; 
-                }  else if (fe[i].id == "location.other.street_address") {
-                    root.location.other.street_address = fe[i].value; 
-                }  else if (fe[i].id == "location.other.city") {
-                    root.location.other.city = fe[i].value; 
-                }  else if (fe[i].id == "location.other.zip_code") {
-                    root.location.other.zip_code = fe[i].value; 
-                }  else if (fe[i].id == "location.other.state") {
-                    root.location.other.state = fe[i].value; 
-
-                } else if (fe[i].id == "tags") {
-                    root.tags = fe[i].value.trim().split(" ");
-
-                }
-            }
-            var jsonStr = JSON.stringify(root);
-            if(DEV_DEBUG) alert (jsonStr);
-
-
+        function searchElastic(form) {
+            if (DEV_DEBUG) alert('HERE 1');
+            var jsonStr = null;
 
             var empUrl = null;
             var empHost = null;
@@ -144,55 +52,53 @@
             if (empType == null || empType == undefined) 
                 empType = "rooms";
             
+            if (DEV_DEBUG) alert('HERE 2');
             empUrl = empHost + "/" + empIndex + "/" + empType;
             
-            //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'; 
-            indexUsingXmlHttp(empUrl, root.meeting_place.email, jsonStr);
-            //form.submit();
+            if (DEV_DEBUG) alert('HERE 3');
+            searchUsingXmlHttp();
+            return false;
         }
 
 
-        function indexUsingXmlHttp(empUrl, id, jsonStr) {
-            //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'; 
-            empUrl = empUrl + "/" + id;    
-            if(DEV_DEBUG) alert(empUrl);       
+        function searchUsingXmlHttp() {
+            var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search';       
+            
+            var jsonStr = '{"query" : {"match_all" : {}}}';
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.open('POST', empUrl, false);
             xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             xmlHttp.send(jsonStr);
-            var response = JSON.parse(xmlHttp.responseText);
-            if(DEV_DEBUG) alert(response);
+            //var response = JSON.stringify(xmlHttp.responseText);
+            var response = JSON.stringify(JSON.parse(xmlHttp.responseText),null,2);  
+            if (DEV_DEBUG) alert(response);
+            document.getElementById("allEsResponses").innerHTML = response;
         }
 
-        function getRandomEmail() {
-            var randomEmail = "";
-            for (i = 0; i < 5; i++) { 
-                randomEmail += String.fromCharCode(Math.floor(Math.random() * 26 + 97));
-            }
-            return randomEmail + "@emp.com";
-        }
-        document.getElementById("meeting_place.email").value = getRandomEmail();
+        function searchElasticByEmailId() {
 
-        function getDateTime(date) {
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? 'pm' : 'am';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0'+ minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
+            var emailId = document.getElementById("emailId").value;
 
-            var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-            var mins = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-            var secs = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+            var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search';       
             
-            var month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-            return date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + mins + ":" + secs + "Z";
+
+            var jsonStr = '{"query": {"ids" : {"values" : [' +  + ']}}}';
+
+            alert (jsonStr);
+            
+            
+    
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open('POST', empUrl, false);
+            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            //xmlHttp.send('{"query": {"terms" : {"_id" : [' + "guuos@emp.com" + ']}}}');
+            xmlHttp.send(jsonStr);
+
+            //var response = JSON.stringify(xmlHttp.responseText);
+            var response = JSON.stringify(JSON.parse(xmlHttp.responseText),null,2);  
+            if (DEV_DEBUG) alert(response);
+            document.getElementById("esResponseByEmailId").innerHTML = response;
         }
-        var d = getDateTime(new Date());
-        document.getElementById("meeting_place.create_date").value = d;
-        document.getElementById("meeting_place.update_date").value = d;
 
         </script>
     </body>
