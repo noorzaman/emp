@@ -1,0 +1,19 @@
+<template>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+            <img class="logo" src="/static/images/meeting-logo.png" alt="">
+            <h2>Meet Anywhere</h2>
+            <p>The right meeting space for any situation</p>
+        </div>
+        <div id="navbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li><router-link to="/">Browse Spaces</router-link></li>
+            <li><router-link to="/search-spaces">Search Space</router-link></li>
+            <li><a href="#">My Booked Spaces</a></li>
+            <li><router-link to="/add-space">Add Space</router-link></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+</template>
