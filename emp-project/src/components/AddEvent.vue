@@ -12,6 +12,10 @@
         <input type='text' name='location' value='Location name'/>
       </div>
       <div class='form-group'>
+        <label>location e-mail</label>
+        <input type='text' name='add' value='location@emp.com'/>
+      </div>
+      <div class='form-group'>
         <label>details</label>
         <input type='text' name='details' value='Description for the meeting'/>
       </div>
