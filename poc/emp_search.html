@@ -7,6 +7,7 @@
         <h4><a href='http://ayeshamd.com/emp_insert.html'>to insertion form</a></h4>
         <H1>Enhanced Meeting Planner POC - Search</H1> 
         <hr>
+
         <fieldset>
             <legend>Enhanced Meeting Planner Elastic Search Server Details</legend>
             EMP Host: <input type="text" id="empHost" value="https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com" />
@@ -15,109 +16,94 @@
             <br>
             EMP Type: <input type="text" id="empType" value="rooms" />
         </fieldset>
+
         <hr><br>
 
-        <p>
-            <button onclick="searchAll()">Search All</button>
-            Use this to retrieve all rooms/places
+        <fieldset>
+            <legend>Help me search</legend>
+            <button onclick="showAllRecords()">Show All Meeting Spaces</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button onclick="showRecordsByFieldsAndKeywords()">Search By Fields and Keywords</button>
+            <input type="text" id="fieldsToSearch" value="field names to search" />
+            &nbsp;
+            <input type="text" id="keywordsInFields" value="keywords to search" />
+        </fieldset>
+        
+        <br><br>
 
+        <fieldset>
+            <legend>I know what I am looking for</legend>
+            <button onclick="showRecordsByKeywords()">Search By Attributes</button>
+            <input type="text" id="keywords" value="type attributes/tags" />
             <br><br>
-            <button onclick="searchByEmailId()">Search By Email Id</button>
-            <input type="text" id="emailId" value="email" />
-        </p>
+            <button onclick="showRecordsByTheme()">Search By Theme</button>
+            <input type="text" id="theme" value="type theme" />
+            <br><br>
+            <button onclick="showRecordsByEmailId()">Search By Email Id</button>
+            <input type="text" id="emailId" value="type email" />
+        </fieldset>
+
         <br>
-            
-        <textarea id="allResponses" rows="20" cols="50">All records </textarea>
-        <textarea id="responseByEmailId" rows="20" cols="50">Record matching emailid</textarea>
-        <br><hr><br>
 
+        <textarea id="allResponses" rows="20" cols="50">Summarized records</textarea>
+        <textarea id="responseByEmailId" rows="20" cols="50">Detailed records</textarea>
 
-        <!-- This script can be moved to emp_core.js -->
+        <br> <hr> <br>
+
+        <!-- The methods in this script are mostly unaware of the html elements -->
+        <script type="text/javascript" src="emp_search_helper.js"></script>
+
+        <!-- The methods in this script are closely tied to the html elements -->
         <script>
-        var DEV_DEBUG = false;
-
-        function searchAll() {
-            var jsonStr = '{"query" : {"match_all" : {}}}';
-            if (DEV_DEBUG) alert (jsonStr);
-
-            var empUrl = createElasticSearchUrl();
-            //var searchUrl = empUrl + '/_search';
-            var searchUrl = createElasticSearchUrl() + '/_search?size=1000&from=0';
-
-            if (DEV_DEBUG) alert (searchUrl);
-
-            var response = searchUsingXmlHttp(searchUrl, jsonStr);
-            responseTxt = flattenJson(response);
-            //var responseTxt = JSON.stringify(JSON.parse(response),null,2);  
-            document.getElementById("allResponses").innerHTML = responseTxt;
-
-        }
-
-        function flattenJson(response) {
-            var js = JSON.parse(response);
-            var rooms = js.hits.hits;
-
-            var summary = "";
-            for (var i = 0; i < rooms.length; i++) {
-                summary += 
-                    rooms[i]._source.meeting_place.theme + "\t"
-                    + rooms[i]._source.meeting_place.email + "\t"
-                    + rooms[i]._source.meeting_place.name + "\n"
-                    //+ rooms[i]._source.meeting_place.description + "\n"
-                ;
+            function showAllRecords() {
+                var resp = searchAll();
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
             }
-            if (DEV_DEBUG) alert (summary);
-            return summary;
-        }
 
+            function showRecordsByFieldsAndKeywords() {
+                var fields = document.getElementById("fieldsToSearch").value;
+                var keywords = document.getElementById("keywordsInFields").value;
 
+                var resp = searchBy(fields, keywords);
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
+            }
 
-        function searchByEmailId() {
-            var emailId = document.getElementById("emailId").value;
-            var jsonStr = '{"query": {"ids" : {"values" : ["' + emailId + '"]}}}';
-            if (DEV_DEBUG) alert (jsonStr);
+            function showRecordsByKeywords() {
+                var keywords = document.getElementById("keywords").value;
+                var resp = searchByKeywords(keywords);
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
+            }
 
-            var searchUrl = createElasticSearchUrl() + '/_search';
-            if (DEV_DEBUG) alert (searchUrl);
+            function showRecordsByTheme() {
+                var theme = document.getElementById("theme").value;
+                var resp = searchByTheme(theme);
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
+            }
 
-            var response = searchUsingXmlHttp(searchUrl, jsonStr);
-            var responseTxt = JSON.stringify(JSON.parse(response),null,2);  
-            document.getElementById("responseByEmailId").innerHTML = responseTxt;           
-        }
+            function showRecordsByEmailId() {
+                var email = document.getElementById("emailId").value;
+                var resp = searchByEmailId(email);
+                document.getElementById("responseByEmailId").innerHTML = resp; 
+            }
 
+            function filterSelectedFields(response) {
+                var js = JSON.parse(response);
+                var rooms = js.hits.hits;
 
-        function createElasticSearchUrl () {
-
-            var empUrl = null;
-
-            var empHost = document.getElementById("empHost").value;
-            var empIndex = document.getElementById("empIndex").value;
-            var empType = document.getElementById("empType").value;
-
-            if (empHost == null || empHost == undefined) 
-                empHost = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com';
-            if (empIndex == null || empIndex == undefined)
-                empIndex = "emp";
-            if (empType == null || empType == undefined) 
-                empType = "rooms";
-            empUrl = empHost + "/" + empIndex + "/" + empType;
-            return empUrl;
-        }
-
-
-        function searchUsingXmlHttp(empUrl, queryStr) {
-
-            //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?size=1000&from=0'; 
-
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open('POST', empUrl, false);
-            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xmlHttp.send(queryStr);
-
-            var response = xmlHttp.responseText;  
-            if (DEV_DEBUG) alert(response);
-            return response;
-        }
+                var summary = "";
+                for (var i = 0; i < rooms.length; i++) {
+                    summary += 
+                        rooms[i]._source.meeting_place.theme + "\t"
+                        + rooms[i]._source.meeting_place.email + "\t"
+                        + rooms[i]._source.meeting_place.name + "\n"
+                    ;
+                }
+                return summary;
+            }
 
         </script>
     </body>
