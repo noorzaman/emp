@@ -38,6 +38,7 @@
                 theme: <input type="text" id="meeting_place.theme" value="professional"><br> 
                 capacity: <input type="text" id="meeting_place.capacity" value="25"><br> 
                 description: <input type="text" id="meeting_place.description" value="The big room at Pfizer main building"><br>
+                image_location: <input type="text" id="meeting_place.image_location" value="https://s3.amazonaws.com/empharv/image1.jpeg"><br>
                 create_date: <input type="text" id="meeting_place.create_date" value="20180304"><br> 
                 update_date: <input type="text" id="meeting_place.update_date" value="20180304"><br> 
                 <br>
@@ -115,6 +116,9 @@
                         root.meeting_place.capacity = fe[i].value;
                     } else if (fe[i].id == "meeting_place.description") {
                         root.meeting_place.description = fe[i].value;
+                    } else if (fe[i].id == "meeting_place.image_location") {
+                        root.meeting_place.image_location = fe[i].value;
+
                     } else if (fe[i].id == "meeting_place.create_date") {
                         root.meeting_place.create_date = fe[i].value;
                     } else if (fe[i].id == "meeting_place.update_date") {

@@ -2,6 +2,14 @@
 <html>
     <head>
         <title>Enhanced Meeting Planner</title>
+        <style type="text/css">
+            img{
+                width : 10%;
+                padding : 1%;
+                max-width : 75px;
+                min-width : 75px;
+            }
+        </style>
     </head>
     <body>
             <strong><a href='http://ayeshamd.com/emp_insert.html'>to insert page</a></strong>
@@ -44,9 +52,16 @@
             <button onclick="showRecordsByEmailId()">Search By Email Id</button>
             <input type="text" id="emailId" value="type email" />
         </fieldset>
-
         <br>
 
+        <div >
+            <table align="center">
+                <tr id="AmazonS3Images">
+                    <!-- place holder for Amazon S3 Images -->
+                </tr>
+            </table>
+        </div>
+        
         <textarea id="allResponses" rows="20" cols="50">Summarized records</textarea>
         <textarea id="responseByEmailId" rows="20" cols="50">Detailed records</textarea>
 
@@ -61,6 +76,7 @@
                 var resp = searchAll();
                 var respTxt = filterSelectedFields(resp);
                 document.getElementById("allResponses").innerHTML = respTxt;
+                showImages();
             }
 
             function showRecordsByFieldsAndKeywords() {
@@ -105,6 +121,16 @@
                     ;
                 }
                 return summary;
+            }
+
+            function showImages() {
+                var randomImageUrls = "";
+                for (i = 1; i < 8; i++) { 
+                    randomImageUrls += '<th><img class="thumbnail" src="https://s3.amazonaws.com/empharv/image'
+                                    + Math.floor(Math.random() * 29 + 1) 
+                                    + '.jpeg"/></th>';
+                }
+                document.getElementById("AmazonS3Images").innerHTML = randomImageUrls;
             }
 
         </script>

@@ -58,24 +58,26 @@ function searchBy(fields, keywords) {
         && (keywords == null || keywords == undefined ||  keywords.trim() == "") ){
             jsonStr = '{"query":{"match_all":{}},' 
                 + '"sort":[{"meeting_place.update_date":{"order":"desc"}}]}';
-
+            if (DEV_DEBUG) alert (jsonStr);
 
     } else if (  (keywords != null && keywords != undefined && keywords.trim() != "")
             && (fields != null && fields != undefined && fields.trim() != "" ) ) {
         jsonStr = '{"query": {"simple_query_string" : {"fields" : ["' 
             + fields + '"], "query" : "' 
             + keywords + '"}}}';
+        if (DEV_DEBUG) alert (jsonStr);
 
     } else  if (keywords == null || keywords == undefined ||  keywords.trim() == "") {
         jsonStr = '{"query": {"simple_query_string" : {"fields" : ["' 
             + fields + '"], "query" : "' 
             + "*" + '"}}}';
+        if (DEV_DEBUG) alert (jsonStr);
 
     } else if (fields == null || fields == undefined || fields.trim() == "") {
         jsonStr = '{"query": {"multi_match" : '
             + '{"fields" : ["' + "*" + '"],'
             + '"query" : "' + keywords + '"}}}';
-        //jsonStr = '{"query":{"match":{"_all":"' + keywords + '"}}}';
+        if (DEV_DEBUG) alert (jsonStr);
     }
 
     var searchUrl = createElasticSearchUrl() + '/_search?size=1000&from=0';
@@ -89,6 +91,7 @@ function searchByKeywords(keywords) {
 
     var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["tags"], "query" : "' 
                     + keywords + '"}}}';
+    if (DEV_DEBUG) alert (jsonStr);
 
     var searchUrl = createElasticSearchUrl() + '/_search?size=1000&from=0';
 
@@ -100,6 +103,7 @@ function searchByKeywords(keywords) {
 function searchByTheme(theme) {
     var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme"], "query" : "' 
                 + theme + '"}}}';
+    if (DEV_DEBUG) alert (jsonStr);
 
     var searchUrl = createElasticSearchUrl() + '/_search?size=1000&from=0';
 
