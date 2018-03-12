@@ -4,26 +4,27 @@
     <form method="GET" action="/" class="searchForm">
         <div class="form-group">
             <label>Capacity</label>
-            <input type="text" placeholder="slider will go here"/>
+            <NumberSlider></NumberSlider>
         </div>
         <div class="form-group">
             <label>Meeting time</label>
-            <input type="text" placeholder="date/time data will go here"/>
+            <DatePicker></DatePicker>
+            <p>Time picker will go here</p>
         </div>
         <div class="form-group">
             <label>Theme</label>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Option <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Casual <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Celebratory <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Cozy <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Fancy <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Fun <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Professional <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Quiet <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Studious <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Zen <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Another1 <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Another2 <br>
+            <input type="checkbox" name="vehicle" value="Bike"> Another3 <br>
         </div>
         <div class="form-group">
             <label>Attributes</label>
@@ -38,6 +39,15 @@
 </template>
 
 <script>
+import NumberSlider from './NumberSlider'
+import DatePicker from './DatePicker'
+export default {
+  name: 'Search',
+  components: {
+    'NumberSlider': NumberSlider,
+    'DatePicker': DatePicker
+  }
+}
 </script>
 
 <style scoped>
