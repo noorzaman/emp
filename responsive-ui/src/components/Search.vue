@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <h1>Meeting Space Criteria</h1>
-    <form method="GET" action="/" class="searchForm">
+    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributes()">
         <div class="form-group">
             <label>Capacity</label>
             <NumberSlider></NumberSlider>
@@ -12,19 +12,16 @@
             <p>Time picker will go here</p>
         </div>
         <div class="form-group">
-            <label>Theme</label>
-            <input type="checkbox" name="vehicle" value="Bike"> Casual <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Celebratory <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Cozy <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Fancy <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Fun <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Professional <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Quiet <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Studious <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Zen <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Another1 <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Another2 <br>
-            <input type="checkbox" name="vehicle" value="Bike"> Another3 <br>
+            <label>Theme</label> <br>
+            <input type="checkbox" name="themeCheckbox" value="casual"> Casual <br>
+            <input type="checkbox" name="themeCheckbox" value="celebratory"> Celebratory <br>
+            <input type="checkbox" name="themeCheckbox" value="cozy"> Cozy <br>
+            <input type="checkbox" name="themeCheckbox" value="fancy"> Fancy <br>
+            <input type="checkbox" name="themeCheckbox" value="fun"> Fun <br>
+            <input type="checkbox" name="themeCheckbox" value="professional"> Professional <br>
+            <input type="checkbox" name="themeCheckbox" value="quiet"> Quiet <br>
+            <input type="checkbox" name="themeCheckbox" value="studious"> Studious <br>
+            <input type="checkbox" name="themeCheckbox" value="zen"> Zen <br>
         </div>
         <div class="form-group">
             <TypeAhead></TypeAhead>
@@ -33,11 +30,13 @@
         </div>
         <input type="submit" value="Search Spaces"/>
     </form>
-    <table id="resultsTable" border="1" cellpadding="10px">
+    <table id="searchResultsTable" border="1" cellpadding="10px">
       <tr>
+        <th>Image</th>
         <th>Space Name</th>
-        <th>Space Email</th>
-        <th>Space Description</th>
+        <th>Email</th>
+        <th>Theme</th>
+        <th>Attributes</th>
       </tr>
     </table>
   </div>
@@ -83,15 +82,43 @@ export default {
     },
     searchByTheme (theme) {
       var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme"], "query" : "' + theme + '"}}}'
-      this.sendSearchAndDisplayResultrchAndDisplayResult(jsonStr)
+      this.sendSearchAndDisplayResult(jsonStr)
     },
     searchByEmail (email) {
       var jsonStr = '{"query": {"ids" : {"values" : ["' + email + '"]}}}'
-      this.sendSearchAndDisplayResultrchAndDisplayResult(jsonStr)
+      this.sendSearchAndDisplayResult(jsonStr)
     },
     searchByAttributes (attributes) {
       var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["tags"], "query" : "' + attributes + '"}}}'
-      this.sendSearchAndDisplayResultrchAndDisplayResult(jsonStr)
+      this.sendSearchAndDisplayResult(jsonStr)
+    },
+    searchByThemesAndAttributes () {
+      console.log('DEBUG: search by themes and attributes')
+      var checkedThemes = []
+      var options = document.getElementsByName('themeCheckbox')
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].checked) {
+          checkedThemes.push(options[i].value)
+        }
+      }
+
+      var spaceDelimitedThemes = ''
+      for (var j = 0; j < checkedThemes.length; j++) {
+        spaceDelimitedThemes += checkedThemes[j]
+        if (j < checkedThemes.length - 1) {
+          spaceDelimitedThemes += ' '
+        }
+      }
+      console.log('DEBUG: ' + spaceDelimitedThemes)
+
+      // TODO: get space delimited attributes
+      var spaceDelimitedAttributes = document.getElementById('attributes').value
+      console.log('DEBUG: ' + spaceDelimitedAttributes)
+
+      var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme", "tags"], "query" : "' +
+        spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '"}}}'
+      console.log('DEBUG: ' + jsonStr)
+      this.sendSearchAndDisplayResult(jsonStr)
     },
     searchByField (fields, keywords) {
       var jsonStr = ''
@@ -122,14 +149,15 @@ export default {
       }).then(result => {
         this.searchResult = result.body.hits.hits
 
-        var top5ResultsArray = []
+        var top20ResultsArray = []
 
-        for (var n = 0; n < (this.searchResult.length > 5 ? 5 : this.searchResult.length); n++) {
-          var matchedEntry = this.searchResult[n]._source.meeting_place
-          top5ResultsArray[n] = [matchedEntry.name, matchedEntry.email, matchedEntry.description]
+        for (var n = 0; n < (this.searchResult.length > 20 ? 20 : this.searchResult.length); n++) {
+          var matchedEntry = this.searchResult[n]._source
+          top20ResultsArray[n] = [matchedEntry.meeting_place.image_location, matchedEntry.meeting_place.name,
+            matchedEntry.meeting_place.email, matchedEntry.meeting_place.theme, matchedEntry.tags]
         }
 
-        var table = document.getElementById('resultsTable')
+        var table = document.getElementById('searchResultsTable')
 
         // clear table except heading
         var rowCount = table.rows.length
@@ -138,16 +166,16 @@ export default {
         }
 
         // for (var i = 0; i < 5; i++) {
-        for (var i = 0; i < top5ResultsArray.length; i++) {
+        for (var i = 0; i < top20ResultsArray.length; i++) {
           // create a new row
           var newRow = table.insertRow(table.length)
           // for (var j = 0; j < 3; j++) {
-          for (var j = 0; j < top5ResultsArray[i].length; j++) {
+          for (var j = 0; j < top20ResultsArray[i].length; j++) {
             // create a new cell
             var cell = newRow.insertCell(j)
 
             // add value to the cell
-            cell.innerHTML = top5ResultsArray[i][j]
+            cell.innerHTML = top20ResultsArray[i][j]
           }
         }
       }, error => {

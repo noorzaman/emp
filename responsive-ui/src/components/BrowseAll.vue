@@ -42,9 +42,6 @@ export default {
         {image: 'professional', caption: 'Professional'},
         {image: 'quiet', caption: 'Quiet'},
         {image: 'studious', caption: 'Studious'},
-        {image: 'zen', caption: 'Zen'},
-        {image: 'quiet', caption: 'Quiet'},
-        {image: 'studious', caption: 'Studious'},
         {image: 'zen', caption: 'Zen'}
       ],
       pageTitle: 'Explore Meeting Spaces',
