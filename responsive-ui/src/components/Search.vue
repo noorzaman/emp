@@ -153,6 +153,9 @@ export default {
       }, error => {
         console.error(error)
       })
+    },
+    showImage (elementId, imageUrl) {
+      document.getElementById(elementId).innerHTML = imageUrl
     }
   }
 }
