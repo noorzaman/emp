@@ -27,9 +27,7 @@
             <input type="checkbox" name="vehicle" value="Bike"> Another3 <br>
         </div>
         <div class="form-group">
-            <label>Attributes</label>
-            <p>Ex: food, WiFi, projector, etc.</p>
-            <input type="text" placeholder="attributes search bar will go here"/>
+            <TypeAhead></TypeAhead>
             <p>Attributes for the space:</p>
             <p>No attributes added yet.</p>
         </div>
@@ -41,13 +39,16 @@
 <script>
 import NumberSlider from './NumberSlider'
 import DatePicker from './DatePicker'
+import TypeAhead from './TypeAhead'
 export default {
   name: 'Search',
   components: {
     'NumberSlider': NumberSlider,
-    'DatePicker': DatePicker
+    'DatePicker': DatePicker,
+    'TypeAhead': TypeAhead
   }
 }
+
 </script>
 
 <style scoped>
