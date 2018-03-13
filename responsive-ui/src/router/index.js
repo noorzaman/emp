@@ -4,6 +4,7 @@ import BrowseAll from '@/components/BrowseAll'
 import AddSpace from '@/components/AddSpace'
 import Search from '@/components/Search'
 import Booked from '@/components/Booked'
+import BrowseTheme from '@/components/BrowseTheme'
 
 Vue.use(Router)
 
@@ -13,6 +14,12 @@ export default new Router({
       path: '/',
       name: 'BrowseAll',
       component: BrowseAll,
+      pageTitle: 'TITLE'
+    },
+    {
+      path: '/browse/:theme',
+      name: 'BrowseTheme',
+      component: BrowseTheme,
       pageTitle: 'TITLE'
     },
     {
