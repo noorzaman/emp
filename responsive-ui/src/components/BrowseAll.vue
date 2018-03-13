@@ -73,14 +73,16 @@ export default {
       this.empUrl = empHost + '/' + empIndex + '/' + empType
     },
     searchByTheme (clickedTheme) {
-      var searchUrl = this.empUrl + '/_search?size=50&from=0'
-      // var queryStr = '?q=meeting_place.theme:' + clickedTheme
       var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme"], "query" : "' + clickedTheme + '"}}}'
-
+      this.sendSearchAndDisplayResult(jsonStr)
+    },
+    sendSearchAndDisplayResult (jsonStr) {
+      var searchUrl = this.empUrl + '/_search?size=50&from=0'
       this.$http.post(searchUrl, jsonStr, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
-        }}).then(result => {
+        }
+      }).then(result => {
         this.searchResult = result.body.hits.hits
 
         var top5ResultsArray = []
