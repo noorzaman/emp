@@ -53,11 +53,6 @@ export default {
   components: {
     'NumberSlider': NumberSlider,
     'DatePicker': DatePicker
-  }
-}
-export default {
-  name: 'Search',
-  components: {
   },
   data () {
     return {
