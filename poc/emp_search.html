@@ -3,11 +3,21 @@
     <head>
         <title>Enhanced Meeting Planner</title>
         <style type="text/css">
-            img{
+            /* img{
                 width : 10%;
                 padding : 1%;
                 max-width : 75px;
                 min-width : 75px;
+            } */
+
+            #image{
+                width:75px;
+                height:75px;
+            }
+
+            #image:hover{
+                width:250px;
+                height:250px;
             }
         </style>
     </head>
@@ -115,9 +125,9 @@
                 var summary = "";
                 for (var i = 0; i < rooms.length; i++) {
                     summary += 
-                        rooms[i]._source.meeting_place.theme + "\t"
-                        + rooms[i]._source.meeting_place.email + "\t"
-                        + rooms[i]._source.meeting_place.name + "\n"
+                        rooms[i]._source.meeting_place.email + "\t"
+                        + rooms[i]._source.meeting_place.name + "\t"
+                        + rooms[i]._source.meeting_place.theme + "\n"
                     ;
                 }
                 return summary;
@@ -126,7 +136,7 @@
             function showImages() {
                 var randomImageUrls = "";
                 for (i = 1; i < 8; i++) { 
-                    randomImageUrls += '<th><img class="thumbnail" src="https://s3.amazonaws.com/empharv/image'
+                    randomImageUrls += '<th><img id="image" class="thumbnail" src="https://s3.amazonaws.com/empharv/image'
                                     + Math.floor(Math.random() * 49 + 1) 
                                     + '.jpeg"/></th>';
                 }
