@@ -8,20 +8,14 @@
         <h1>Explore Meeting Spaces</h1>
         </div>
     </div>
-    <div v-for="theme in themes" v-bind:key="theme" class="browseThemes">
-        <a :href="'/browse/' + theme.image">
-        <!-- v-on:click="searchByTheme(theme.image)"> -->
-            <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption">
-            <p>{{theme.caption}}</p>
-        </a>
-    </div>
-    <!-- <table id="resultsTable" border="1" cellpadding="10px">
+    <span>{{this.$route.params.theme}} search results:</span>
+    <table id="resultsTable" border="1" cellpadding="10px">
       <tr>
         <th>Space Name</th>
         <th>Space Email</th>
         <th>Space Description</th>
       </tr>
-    </table> -->
+    </table>
   </div>
 </template>
 
@@ -34,17 +28,6 @@ export default {
   },
   data () {
     return {
-      themes: [
-        {image: 'casual', caption: 'Casual'},
-        {image: 'celebratory', caption: 'Celebratory'},
-        {image: 'cozy', caption: 'Cozy'},
-        {image: 'fancy', caption: 'Fancy'},
-        {image: 'fun', caption: 'Fun'},
-        {image: 'professional', caption: 'Professional'},
-        {image: 'quiet', caption: 'Quiet'},
-        {image: 'studious', caption: 'Studious'},
-        {image: 'zen', caption: 'Zen'}
-      ],
       pageTitle: 'Explore Meeting Spaces',
       pageWidth: document.documentElement.clientWidth,
       empUrl: '',
@@ -115,6 +98,9 @@ export default {
         console.error(error)
       })
     }
+  },
+  beforeMount () {
+    this.searchByTheme(this.$route.params.theme)
   }
 }
 </script>
