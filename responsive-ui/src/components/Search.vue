@@ -25,8 +25,6 @@
         </div>
         <div class="form-group">
             <TypeAhead></TypeAhead>
-            <p>Attributes for the space:</p>
-            <p>No attributes added yet.</p>
         </div>
         <input type="submit" value="Search Spaces"/>
     </form>
@@ -93,7 +91,7 @@ export default {
       this.sendSearchAndDisplayResult(jsonStr)
     },
     searchByThemesAndAttributes () {
-      console.log('DEBUG: search by themes and attributes')
+      // console.log('DEBUG: search by themes and attributes')
       var checkedThemes = []
       var options = document.getElementsByName('themeCheckbox')
       for (var i = 0; i < options.length; i++) {
@@ -109,15 +107,15 @@ export default {
           spaceDelimitedThemes += ' '
         }
       }
-      console.log('DEBUG: ' + spaceDelimitedThemes)
+      //  console.log('DEBUG: ' + spaceDelimitedThemes)
 
       // TODO: get space delimited attributes
       var spaceDelimitedAttributes = document.getElementById('attributes').value
-      console.log('DEBUG: ' + spaceDelimitedAttributes)
+      //  console.log('DEBUG: ' + spaceDelimitedAttributes)
 
       var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme", "tags"], "query" : "' +
         spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '"}}}'
-      console.log('DEBUG: ' + jsonStr)
+      //  console.log('DEBUG: ' + jsonStr)
       this.sendSearchAndDisplayResult(jsonStr)
     },
     searchByField (fields, keywords) {
