@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <h1>Meeting Space Criteria</h1>
-    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributes()">
+    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributesAndCapacity()">
         <div class="form-group">
             <label>Capacity</label>
             <NumberSlider></NumberSlider>
@@ -34,6 +34,7 @@
         <th>Space Name</th>
         <th>Email</th>
         <th>Theme</th>
+        <th>Capacity</th>
         <th>Attributes</th>
       </tr>
     </table>
@@ -90,7 +91,7 @@ export default {
       var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["tags"], "query" : "' + attributes + '"}}}'
       this.sendSearchAndDisplayResult(jsonStr)
     },
-    searchByThemesAndAttributes () {
+    searchByThemesAndAttributesAndCapacity () {
       // console.log('DEBUG: search by themes and attributes')
       var checkedThemes = []
       var options = document.getElementsByName('themeCheckbox')
@@ -109,12 +110,18 @@ export default {
       }
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
 
-      // TODO: get space delimited attributes
       var spaceDelimitedAttributes = document.getElementById('attributes').value
       //  console.log('DEBUG: ' + spaceDelimitedAttributes)
 
-      var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme", "tags"], "query" : "' +
-        spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '"}}}'
+      // TODO: Can't get this to work :(
+      var desiredCapacity = document.getElementById('capacity-slider').value
+      console.log(document.getElementById('capacity-slider'))
+      console.log('DEBUG: ' + desiredCapacity)
+
+      var jsonStr = '{ "query": { "bool": { "should" : { "multi_match": { "query": "' +
+        spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["meeting_place.theme", "tags"] } }, ' +
+        '"filter": { "range" : { "meeting_place.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
+
       //  console.log('DEBUG: ' + jsonStr)
       this.sendSearchAndDisplayResult(jsonStr)
     },
@@ -152,7 +159,8 @@ export default {
         for (var n = 0; n < (this.searchResult.length > 20 ? 20 : this.searchResult.length); n++) {
           var matchedEntry = this.searchResult[n]._source
           top20ResultsArray[n] = [matchedEntry.meeting_place.image_location, matchedEntry.meeting_place.name,
-            matchedEntry.meeting_place.email, matchedEntry.meeting_place.theme, matchedEntry.tags]
+            matchedEntry.meeting_place.email, matchedEntry.meeting_place.theme, matchedEntry.meeting_place.capacity,
+            matchedEntry.tags]
         }
 
         var table = document.getElementById('searchResultsTable')

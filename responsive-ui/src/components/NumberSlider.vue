@@ -1,6 +1,6 @@
 <template>
   <div class="numberSlider">
-    <vue-slider ref="slider" v-model="value"></vue-slider>
+    <vue-slider ref="slider" v-model="value" id="capacity-slider"></vue-slider>
   </div>
 </template>
 <script>
