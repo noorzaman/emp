@@ -2,9 +2,9 @@
   <section>
     <label for="attributes">Attributes</label>
     <p>Ex: food, WiFi, projector, etc.</p>
-    <input id="attributes" class="form-control" type="text" placeholder="Type to search...">
+    <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off">
     <typeahead v-model="model" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
-    <button id="addAttrButton">Add attribute</button>
+    <button id="addAttrButton" class="btn btn-primary">Add attribute</button>
     <br>
     <div id="selectedItemsAlert">
     </div>

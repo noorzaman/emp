@@ -16,7 +16,7 @@ export default {
   },
   data () {
     return {
-      value: 'Any capacity',
+      value: 'Any',
       options: {
         eventType: 'auto',
         width: 'auto',

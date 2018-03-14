@@ -9,7 +9,7 @@
         </div>
     </div>
     <span>{{this.$route.params.theme}} search results:</span>
-    <table id="resultsTable" border="1" cellpadding="10px">
+    <table id="resultsTable2" border="1" cellpadding="10px">
       <tr>
         <th>Space Name</th>
         <th>Space Email</th>
@@ -38,6 +38,7 @@ export default {
   mounted: function () {
     window.addEventListener('resize', this.handleResize)
     this.createElasticSearchUrl()
+    this.searchByTheme(this.$route.params.theme)
   },
   beforeDestroy: function () {
     window.removeEventListener('resize', this.handleResize)
@@ -59,6 +60,7 @@ export default {
     },
     sendSearchAndDisplayResult (jsonStr) {
       var searchUrl = this.empUrl + '/_search?size=50&from=0'
+
       this.$http.post(searchUrl, jsonStr, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
@@ -73,13 +75,13 @@ export default {
           top5ResultsArray[n] = [matchedEntry.name, matchedEntry.email, matchedEntry.description]
         }
 
-        var table = document.getElementById('resultsTable')
+        var table = document.getElementById('resultsTable2')
 
         // clear table except heading
-        var rowCount = table.rows.length
-        for (var r = rowCount - 1; r > 0; r--) {
-          table.deleteRow(r)
-        }
+        // var rowCount = table.rows.length
+        // for (var r = rowCount - 1; r > 0; r--) {
+        //   table.deleteRow(r)
+        // }
 
         // for (var i = 0; i < 5; i++) {
         for (var i = 0; i < top5ResultsArray.length; i++) {
@@ -98,9 +100,6 @@ export default {
         console.error(error)
       })
     }
-  },
-  beforeMount () {
-    this.searchByTheme(this.$route.params.theme)
   }
 }
 </script>
