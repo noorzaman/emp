@@ -139,16 +139,17 @@ export default {
       }
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
 
-      var spaceDelimitedAttributes = document.getElementById('attributes').value
-      //  console.log('DEBUG: ' + spaceDelimitedAttributes)
+      // TODO: Not sure how to get this to work
+      var spaceDelimitedAttributes = TypeAhead.data().selectedItems // document.getElementById('selectedItemsArea').value
+      console.log('DEBUG: ' + spaceDelimitedAttributes)
 
-      // TODO: Can't get this to work :(
-      var desiredCapacity = document.getElementById('capacity-slider').value
-      console.log(document.getElementById('capacity-slider'))
+      // TODO: Not sure how to get this to work
+      var desiredCapacity = NumberSlider.data().value // document.getElementById('capacity-slider').value
       console.log('DEBUG: ' + desiredCapacity)
       // Temporary workaround:
       desiredCapacity = 0
 
+      // TODO: check for null and empty values
       var jsonStr = '{ "query": { "bool": { "must" : { "multi_match": { "query": "' +
         spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["meeting_place.theme", "tags"] } }, ' +
         '"filter": { "range" : { "meeting_place.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
