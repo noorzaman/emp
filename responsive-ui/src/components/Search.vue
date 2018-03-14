@@ -1,33 +1,60 @@
 <template>
-  <div class="main">
+  <div class="search">
     <h1>Meeting Space Criteria</h1>
     <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributes()">
-        <div class="form-group">
-            <label>Capacity</label>
-            <NumberSlider></NumberSlider>
+        <div class="leftSearch">
+        <p>Leave a space blank to indicate no preference.</p>
+        <br>
+            <div class="form-group">
+                <label>Capacity</label>
+                <NumberSlider></NumberSlider>
+            </div>
+            <div class="form-group">
+                <label>Meeting Day</label>
+                <DatePicker></DatePicker>
+            </div>
+            <div class="form-group">
+                <label>Meeting Time</label>
+                <br>
+                <div class="timePicker">
+                  <TimePicker></TimePicker>
+                </div>
+                <div class="to">
+                  <p>to</p>
+                </div>
+                <div class="timePicker">
+                  <TimePicker></TimePicker>
+                </div>
+                <div class="clearFix"></div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Meeting time</label>
-            <DatePicker></DatePicker>
-            <p>Time picker will go here</p>
+        <div class="rightSearch">
+            <div class="form-group themes">
+                <label>Theme</label> <br>
+                <ul class="checkbox-grid">
+                    <li><input type="checkbox" name="casual" value="casual" />Casual</li>
+                    <li><input type="checkbox" name="celebratory" value="celebratory" />Celebratory</li>
+                    <li><input type="checkbox" name="cozy" value="cozy" />Cozy</li>
+                    <li><input type="checkbox" name="fancy" value="fancy" />Fancy</li>
+                    <li><input type="checkbox" name="fun" value="fun" />Fun</li>
+                    <li><input type="checkbox" name="lively" value="lively" />Lively</li>
+                    <li><input type="checkbox" name="modern" value="modern" />Modern</li>
+                    <li><input type="checkbox" name="professional" value="professional" />Professional</li>
+                    <li><input type="checkbox" name="quiet" value="quiet" />Quiet</li>
+                    <li><input type="checkbox" name="rustic" value="rustic" />Rustic</li>
+                    <li><input type="checkbox" name="studious" value="studious" />Studious</li>
+                    <li><input type="checkbox" name="zen" value="zen" />Zen</li>
+                </ul>
+            </div>
+            <div class="form-group typeAhead">
+                <TypeAhead></TypeAhead>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Theme</label> <br>
-            <input type="checkbox" name="themeCheckbox" value="casual"> Casual <br>
-            <input type="checkbox" name="themeCheckbox" value="celebratory"> Celebratory <br>
-            <input type="checkbox" name="themeCheckbox" value="cozy"> Cozy <br>
-            <input type="checkbox" name="themeCheckbox" value="fancy"> Fancy <br>
-            <input type="checkbox" name="themeCheckbox" value="fun"> Fun <br>
-            <input type="checkbox" name="themeCheckbox" value="professional"> Professional <br>
-            <input type="checkbox" name="themeCheckbox" value="quiet"> Quiet <br>
-            <input type="checkbox" name="themeCheckbox" value="studious"> Studious <br>
-            <input type="checkbox" name="themeCheckbox" value="zen"> Zen <br>
-        </div>
-        <div class="form-group">
-            <TypeAhead></TypeAhead>
-        </div>
-        <input type="submit" value="Search Spaces"/>
+        <input type="submit" value="Search Spaces" class="btn btn-primary submitButton"/>
     </form>
+    <div class="clearFix"></div>
+    <br>
+    <br>
     <table id="searchResultsTable" border="1" cellpadding="10px">
       <tr>
         <th>Image</th>
@@ -44,12 +71,14 @@
 import NumberSlider from './NumberSlider'
 import DatePicker from './DatePicker'
 import TypeAhead from './TypeAhead'
+import TimePicker from './TimePicker'
 export default {
   name: 'Search',
   components: {
     'NumberSlider': NumberSlider,
     'DatePicker': DatePicker,
-    'TypeAhead': TypeAhead
+    'TypeAhead': TypeAhead,
+    'TimePicker': TimePicker
   },
   data () {
     return {

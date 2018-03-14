@@ -49,8 +49,9 @@
 
 /* Main Content Styles */
 
-h1 {
-    margin-left: 1.5em;
+.main {
+    margin-left: 2em;
+    margin-right: 2em;
 }
 
 .intro {
@@ -63,9 +64,6 @@ h1 {
 }
 
 hr {
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
     border: 1px solid #e5dddd;
 }
 
@@ -107,7 +105,6 @@ hr {
 .introText {
     float: left;
     width: 40%;
-    margin-left: 4em;
 }
 
 .introText li, .introText p {
@@ -117,6 +114,10 @@ hr {
 
 .introText h1 {
     margin-left: 0px;
+}
+
+.introText ul {
+    padding-left: 1.5em;
 }
 
 .sliderContainer {
@@ -166,11 +167,83 @@ hr {
 }
 
 /* Search Form Styles */
-.attr {
 
+.search {
+    margin-left: 2em;
 }
 
-#selectedItemsAlert p {
+.leftSearch {
+    float: left;
+    width: 45%;
+    border-right: 2px solid #e5dddd;
+    margin-right: 10px;
+}
+
+.rightSearch {
+    float: left;
+    width: 45%;
+    margin-left: 10px;
+}
+
+.form-group {
+    margin-bottom: 2em;
+}
+
+label {
+    font-size: 1.5em;
+}
+
+.submitButton {
+    float: left;
+    margin-right: 80%;
+}
+
+.numberSlider {
+    width: 90%;
+    margin-top: 2.5em;
+}
+
+.timePicker {
+    float: left;
+}
+
+.to {
+    float: left;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.to p {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2.5em;
+}
+
+.checkbox-grid li {
+    display: block;
+    float: left;
+    width: 25%;
+}
+
+ul {
+    padding-left: 0;
+}
+
+.themes {
+    margin-bottom: 100px;
+}
+
+.typeAhead {
+    margin-top: 8em;
+}
+
+#addAttrButton {
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+#attributes {
+    width: 50%;
 }
 
 /* Footer Styles */
@@ -355,7 +428,9 @@ hr {
 }
 
 @media only screen and (max-width: 885px) {
-    body {
+    /* switch search here */
+    
+    body { 
         background-color: pink;
     }
     
@@ -371,6 +446,21 @@ hr {
         font-size: 0.85em;
         padding-left: 8px;
         padding-right: 8px;
+    }
+    
+    .leftSearch {
+        width: 100%;
+        border-right: 0px solid #e5dddd;
+        margin-right: 0;
+    }
+    
+    .rightSearch {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .form-group {
+        margin-bottom: 1em;
     }
 }
 
@@ -476,6 +566,10 @@ hr {
         width: 50%;
     }
     
+    #attributes {
+        width: 75%;
+    }
+    
     .footer .item {
         width: 130px;
     }
@@ -544,6 +638,8 @@ hr {
 }
 
 @media only screen and (max-width: 430px) {
+    
+    /* changes here! */
     body {
         background-color: lightblue;
     }
@@ -566,6 +662,19 @@ hr {
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
+    }
+    
+    .timePicker {
+        float: left;
+        width: 100%;
+    }
+    
+    .to p {
+        margin-top: 0.5em;
+    }
+    
+    .checkbox-grid li {
+        width: 33%;
     }
     
     .footer .item {
@@ -619,6 +728,8 @@ hr {
 }
 
 @media only screen and (max-width: 360px) {
+    
+    /* cats */
     body {
         background-color: lightblue;
     }
@@ -627,6 +738,10 @@ hr {
         height: 70px;
         margin-left: 25%;
         margin-right: 25%;
+        width: 50%;
+    }
+    
+    .checkbox-grid li {
         width: 50%;
     }
     
@@ -770,108 +885,3 @@ hr {
         line-height: 20px;
     }
 }
-
-.awesomplete [hidden] {
-    display: none;
-}
-
-.awesomplete .visually-hidden {
-    position: absolute;
-    clip: rect(0, 0, 0, 0);
-}
-
-.awesomplete {
-    display: inline-block;
-    position: relative;
-}
-
-.awesomplete > input {
-    display: block;
-}
-
-.awesomplete > ul {
-    position: absolute;
-    left: 0;
-    z-index: 1;
-    min-width: 100%;
-    box-sizing: border-box;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    background: #fff;
-}
-
-.awesomplete > ul:empty {
-    display: none;
-}
-
-.awesomplete > ul {
-	border-radius: .3em;
-	margin: .2em 0 0;
-	background: hsla(0,0%,100%,.9);
-	background: linear-gradient(to bottom right, white, hsla(0,0%,100%,.8));
-	border: 1px solid rgba(0,0,0,.3);
-	box-shadow: .05em .2em .6em rgba(0,0,0,.2);
-	text-shadow: none;
-}
-
-@supports (transform: scale(0)) {
-	.awesomplete > ul {
-		transition: .3s cubic-bezier(.4,.2,.5,1.4);
-		transform-origin: 1.43em -.43em;
-	}
-	
-	.awesomplete > ul[hidden],
-	.awesomplete > ul:empty {
-		opacity: 0;
-		transform: scale(0);
-		display: block;
-		transition-timing-function: ease;
-	}
-}
-
-	/* Pointer */
-	.awesomplete > ul:before {
-		content: "";
-		position: absolute;
-		top: -.43em;
-		left: 1em;
-		width: 0; height: 0;
-		padding: .4em;
-		background: white;
-		border: inherit;
-		border-right: 0;
-		border-bottom: 0;
-		-webkit-transform: rotate(45deg);
-		transform: rotate(45deg);
-	}
-
-	.awesomplete > ul > li {
-		position: relative;
-		padding: .2em .5em;
-		cursor: pointer;
-	}
-	
-	.awesomplete > ul > li:hover {
-		background: hsl(200, 40%, 80%);
-		color: black;
-	}
-	
-	.awesomplete > ul > li[aria-selected="true"] {
-		background: hsl(205, 40%, 40%);
-		color: white;
-	}
-	
-		.awesomplete mark {
-			background: hsl(65, 100%, 50%);
-		}
-		
-		.awesomplete li:hover mark {
-			background: hsl(68, 100%, 41%);
-		}
-		
-		.awesomplete li[aria-selected="true"] mark {
-			background: hsl(86, 100%, 21%);
-			color: inherit;
-		}
-/*# sourceMappingURL=awesomplete.css.map */
