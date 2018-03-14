@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <h1>Meeting Space Criteria</h1>
-    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributes()">
+    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributesAndCapacity()">
         <div class="leftSearch">
         <p>Leave a space blank to indicate no preference.</p>
         <br>
@@ -32,18 +32,18 @@
             <div class="form-group themes">
                 <label>Theme</label> <br>
                 <ul class="checkbox-grid">
-                    <li><input type="checkbox" name="casual" value="casual" />Casual</li>
-                    <li><input type="checkbox" name="celebratory" value="celebratory" />Celebratory</li>
-                    <li><input type="checkbox" name="cozy" value="cozy" />Cozy</li>
-                    <li><input type="checkbox" name="fancy" value="fancy" />Fancy</li>
-                    <li><input type="checkbox" name="fun" value="fun" />Fun</li>
-                    <li><input type="checkbox" name="lively" value="lively" />Lively</li>
-                    <li><input type="checkbox" name="modern" value="modern" />Modern</li>
-                    <li><input type="checkbox" name="professional" value="professional" />Professional</li>
-                    <li><input type="checkbox" name="quiet" value="quiet" />Quiet</li>
-                    <li><input type="checkbox" name="rustic" value="rustic" />Rustic</li>
-                    <li><input type="checkbox" name="studious" value="studious" />Studious</li>
-                    <li><input type="checkbox" name="zen" value="zen" />Zen</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="casual" />Casual</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="celebratory" />Celebratory</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="cozy" />Cozy</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="fancy" />Fancy</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="fun" />Fun</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="lively" />Lively</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="modern" />Modern</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="professional" />Professional</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="quiet" />Quiet</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="rustic" />Rustic</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="studious" />Studious</li>
+                    <li><input type="checkbox" name="themeCheckbox" value="zen" />Zen</li>
                 </ul>
             </div>
             <div class="form-group typeAhead">
@@ -146,8 +146,10 @@ export default {
       var desiredCapacity = document.getElementById('capacity-slider').value
       console.log(document.getElementById('capacity-slider'))
       console.log('DEBUG: ' + desiredCapacity)
+      // Temporary workaround:
+      desiredCapacity = 0
 
-      var jsonStr = '{ "query": { "bool": { "should" : { "multi_match": { "query": "' +
+      var jsonStr = '{ "query": { "bool": { "must" : { "multi_match": { "query": "' +
         spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["meeting_place.theme", "tags"] } }, ' +
         '"filter": { "range" : { "meeting_place.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
 
