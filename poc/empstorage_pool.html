@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AWS S3 File Upload</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+</head>
+
+
+<body>
+    <input type="file" id="file-chooser" />
+    <button id="upload-button" onclick="storeFile()">Upload to S3</button>
+    <div id="results"></div>
+
+    <script src="./empstorage_pool.js"></script>
+
+    <script>
+        var fileChooser = document.getElementById('file-chooser');
+        var button = document.getElementById('upload-button');
+        var results = document.getElementById('results');
+
+        function storeFile() {
+            var file = fileChooser.files[0];
+            store(file);
+        }
+    </script>
+</body>
