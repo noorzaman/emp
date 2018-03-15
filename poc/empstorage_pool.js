@@ -10,7 +10,7 @@ AWS.config.credentials.get(function(err) {
     console.log(AWS.config.credentials);
 });
 
-var bucketName = 'empstorage'; // Enter your bucket name
+var bucketName = 'empstorage'; 
 var bucket = new AWS.S3({
     params: {
         Bucket: bucketName
@@ -30,11 +30,9 @@ function store(file) {
 
     bucket.putObject(params, function(err, data) {
         if (err) {
-            console.log(err, err.stack); // an error occurred
-            alert ('store error');
+            console.log(err, err.stack); 
         } else {
-            console.log(data);  // successful response
-            alert ('store success');
+            console.log(data);  //success
         }
     });
 }

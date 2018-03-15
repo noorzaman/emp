@@ -1,0 +1,304 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Enhanced Meeting Planner</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+
+        <style type="text/css">
+
+            * {margin: 0; padding: 0;}
+
+            div {
+            margin: 20px;
+            }
+
+            ul {
+            list-style-type: none;
+            width: 500px;
+            }
+
+            h3 {
+            font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+            }
+
+            li img {
+            float: left;
+            margin: 0 15px 0 0;
+            width:100px;
+            height:100px;
+            }
+
+            li p {
+            font: 200 12px/1.5 Georgia, Times New Roman, serif;
+            }
+
+            li {
+            padding: 10px;
+            overflow: auto;
+            }
+
+            li:hover {
+            background: #eee;
+            cursor: pointer;
+            }
+
+            fieldset {
+                padding: 10px;
+            }
+
+
+h1 {
+	margin: 1em 0 0.5em 0;
+	font-weight: 600;
+	font-family: 'Titillium Web', sans-serif;
+	position: relative;  
+	font-size: 18px;
+	line-height: 20px;
+	padding: 15px 15px 15px 15%;
+	color: #355681;
+	box-shadow: 
+		inset 0 0 0 1px rgba(53,86,129, 0.4), 
+		inset 0 0 5px rgba(53,86,129, 0.5),
+		inset -285px 0 35px white;
+	border-radius: 0 10px 0 10px;
+	background: #fff url(https://s3.amazonaws.com/empharv/image10.jpeg) no-repeat center left;
+}
+
+.largeButton {
+  display: inline-block;
+  padding: 10px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.largeButton:hover {background-color: #3e8e41}
+
+.largeButton:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+
+        </style>
+    </head>
+    <body>
+            <strong><a href='http://ayeshamd.com/emp_insert.html'>to insert page</a></strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <strong><a href='http://ayeshamd.com'>to main page</a></strong>
+        <H1>Enhanced Meeting Planner POC Search</H1> 
+
+
+        <fieldset hidden=true>
+            <legend>Enhanced Meeting Planner Elastic Search Server Details</legend>
+            EMP Host: <input type="text" id="empHost" value="https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com" />
+            <br>
+            EMP Index: <input type="text" id="empIndex" value="emp" />
+            <br>
+            EMP Type: <input type="text" id="empType" value="rooms" />
+        </fieldset>
+        <!-- <hr> -->
+
+
+        <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Choose as many themes as you would like:</legend>
+                  <label for="casual">Casual</label>
+                  <input type="checkbox" name="theme" id="casual" value="casual">
+                  <label for="celebratory">Celebratory</label>
+                  <input type="checkbox" name="theme" id="celebratory" value="celebratory">
+                  <label for="cozy">Cozy</label>
+                  <input type="checkbox" name="theme" id="cozy" value="cozy">
+
+                  <label for="fancy">Fancy</label>
+                  <input type="checkbox" name="theme" id="fancy" value="fancy">
+
+                  <label for="fun">Fun</label>
+                  <input type="checkbox" name="theme" id="fun" value="fun">
+
+                  <label for="professional">Professional</label>
+                  <input type="checkbox" name="theme" id="professional" value="professional">
+
+                  <label for="quiet">Quiet</label>
+                  <input type="checkbox" name="theme" id="quiet" value="quiet">
+
+                  <label for="studious">Studious</label>
+                  <input type="checkbox" name="theme" id="studious" value="studious">
+
+                  <label for="zen">Zen</label>
+                  <input type="checkbox" name="theme" id="zen" value="zen">
+        </fieldset>
+        <br>
+
+        <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Type zero or more tags to narrow down the search:</legend>
+                <input type="text" name="email" size="100">
+        </fieldset>
+        <br>
+        <button class="largeButton" onclick="showAllRecords()">Show All Meeting Spaces >></button>
+
+
+        <fieldset hidden=true>
+            <legend>Help me search</legend>
+            <button onclick="showAllRecords()">Show All Meeting Spaces</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button onclick="showRecordsByFieldsAndKeywords()">Search By Fields and Keywords</button>
+            <input type="text" id="fieldsToSearch" value="field names to search" />
+            &nbsp;
+            <input type="text" id="keywordsInFields" value="keywords to search" />
+        </fieldset>
+
+        <fieldset hidden=true>
+            <legend>I know what I am looking for</legend>
+            <button onclick="showRecordsByKeywords()">Search By Attributes</button>
+            <input type="text" id="keywords" value="type attributes/tags" />
+            <br><br>
+            <button onclick="showRecordsByTheme()">Search By Theme</button>
+            <input type="text" id="theme" value="type theme" />
+            <br><br>
+            <button onclick='showRecordsByEmailId("noor")'>Search By Email Id</button>
+            <input type="text" id="emailId" value="type email" />
+        </fieldset>
+
+        <div >
+            <table align="center">
+                <tr id="AmazonS3Images">
+                    <!-- place holder for Amazon S3 Images -->
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <ul id="spacesSummary">
+                <!-- place holder for summary -->
+            </ul>
+        </div>
+    
+        
+        <textarea hidden=true id="allResponses" rows="20" cols="50">Summarized records</textarea>
+        <textarea hidden = true id="responseByEmailId" rows="20" cols="50">Detailed records</textarea>
+
+        <!-- The methods in this script are mostly unaware of the html elements -->
+        <script type="text/javascript" src="emp_search_helper2.js"></script>
+
+        <!-- The methods in this script are closely tied to the html elements -->
+        <script>
+            function showAllRecords() {
+                //showImages();
+                var resp = searchAll();
+
+                var js = JSON.parse(resp);
+                var rooms = js.hits.hits;
+
+                var summary = "";
+                for (var i = 0; i < rooms.length; i++) {
+                    summary += formatEntry (
+                        rooms[i]._source.meeting_place.theme,
+                        rooms[i]._source.meeting_place.name,
+                        rooms[i]._source.meeting_place.email,
+                        rooms[i]._source.tags,
+                        rooms[i]._source.meeting_place.description
+                    )
+                }
+                document.getElementById("spacesSummary").innerHTML = summary;
+            }
+            function showDetails(emailId) {
+   
+                var resp = searchByEmailId(emailId);
+                var js = JSON.parse(resp);
+                var src = js.hits.hits[0]._source;
+                var responseTxt = JSON.stringify(src,null,2);  
+                alert(responseTxt);
+            }
+            function showRecordsByFieldsAndKeywords() {
+                var fields = document.getElementById("fieldsToSearch").value;
+                var keywords = document.getElementById("keywordsInFields").value;
+
+                var resp = searchBy(fields, keywords);
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
+            }
+
+            function showRecordsByKeywords() {
+                var keywords = document.getElementById("keywords").value;
+                var resp = searchByKeywords(keywords);
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
+            }
+
+            function showRecordsByTheme() {
+                var theme = document.getElementById("theme").value;
+                var resp = searchByTheme(theme);
+                var respTxt = filterSelectedFields(resp);
+                document.getElementById("allResponses").innerHTML = respTxt;
+            }
+
+            function showRecordsByEmailId(arg1) {
+                alert (arg1);
+                var email = document.getElementById("emailId").value;
+                var resp = searchByEmailId(email);
+                document.getElementById("responseByEmailId").innerHTML = resp; 
+            }
+
+            function filterSelectedFields(response) {
+                var js = JSON.parse(response);
+                var rooms = js.hits.hits;
+
+                var summary = "";
+                for (var i = 0; i < rooms.length; i++) {
+                    summary += 
+                        rooms[i]._source.meeting_place.email + "\t"
+                        + rooms[i]._source.meeting_place.name + "\t"
+                        + rooms[i]._source.meeting_place.theme + "\n"
+                    ;
+                }
+                return summary;
+            }
+
+            function showImages() {
+                var randomImageUrls = "";
+                for (i = 1; i < 8; i++) { 
+                    randomImageUrls += '<th><img id="image" class="thumbnail" src="https://s3.amazonaws.com/empharv/image'
+                                    + Math.floor(Math.random() * 49 + 1) 
+                                    + '.jpeg"/></th>';
+                }
+                document.getElementById("AmazonS3Images").innerHTML = randomImageUrls;
+            }
+
+
+            function formatEntry(theme, name, email, tags, desc) {
+                var randomImageUrls = "";
+                randomImageUrl = 'https://s3.amazonaws.com/empharv/image'
+                                    + Math.floor(Math.random() * 49 + 1) 
+                                    + '.jpeg';
+
+                var detailed = '\'showDetails(' +  '"' + email + '"' + ');\'';
+
+                var entry =                 
+                    //'<li onclick=\'showDetails("test");\'>' 
+                    '<li onclick=' + detailed + '>'
+                    + '<img src="' + randomImageUrl + '">'
+                    + '<h3>' + name + '</h3>'
+                    + '<p>' + 'Theme: ' + theme + '</p>'
+                    + '<p>' + 'eMail: ' + email + '</p>'
+                    + '<p>' + 'tags: ' + tags + '</p>'
+                    + '<p>' + desc + '</p>'
+                    + '</li>';
+                
+                return entry;
+            }
+
+        </script>
+    </body>
+</html>
