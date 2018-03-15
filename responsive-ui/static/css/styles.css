@@ -246,6 +246,20 @@ ul {
     width: 50%;
 }
 
+/* Booked Spaces Styles */
+
+.bookedLocation {
+    margin-bottom: 2em;
+}
+
+.bookedImg {
+    margin-bottom: 1em;
+}
+
+.bookedImg {
+    width: 100%;
+}
+
 /* Footer Styles */
 
 .footer {
