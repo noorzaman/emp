@@ -55,16 +55,17 @@
     <div class="clearFix"></div>
     <br>
     <br>
-    <table id="searchResultsTable" border="1" cellpadding="10px">
-      <tr>
-        <th>Image</th>
-        <th>Space Name</th>
-        <th>Email</th>
-        <th>Theme</th>
-        <th>Capacity</th>
-        <th>Attributes</th>
-      </tr>
-    </table>
+    <div v-for="match of matches" :key="match.id">
+      <label>{{match.name}}</label><br>
+      <img :src=match.image :alt=match.name width="400">
+      <p>Capacity: {{match.capacity}}</p>
+      <p>Email: {{match.email}}</p>
+      <p>Theme: {{match.theme}}</p>
+      <p>Attributes:</p>
+      <ul v-for="attribute of match.attributes" :key="attribute">
+        <li>{{attribute}}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -86,7 +87,7 @@ export default {
       pageTitle: 'Search Meeting Spaces',
       pageWidth: document.documentElement.clientWidth,
       empUrl: '',
-      searchResult: ''
+      matches: []
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -190,49 +191,21 @@ export default {
     },
     sendSearchAndDisplayResult (jsonStr) {
       var searchUrl = this.empUrl + '/_search?size=50&from=0'
+
       this.$http.post(searchUrl, jsonStr, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         }
       }).then(result => {
-        this.searchResult = result.body.hits.hits
-
-        var top20ResultsArray = []
-
-        for (var n = 0; n < (this.searchResult.length > 20 ? 20 : this.searchResult.length); n++) {
-          var matchedEntry = this.searchResult[n]._source
-          top20ResultsArray[n] = [matchedEntry.meeting_place.image_location, matchedEntry.meeting_place.name,
-            matchedEntry.meeting_place.email, matchedEntry.meeting_place.theme, matchedEntry.meeting_place.capacity,
-            matchedEntry.tags]
-        }
-
-        var table = document.getElementById('searchResultsTable')
-
-        // clear table except heading
-        var rowCount = table.rows.length
-        for (var r = rowCount - 1; r > 0; r--) {
-          table.deleteRow(r)
-        }
-
-        // for (var i = 0; i < 5; i++) {
-        for (var i = 0; i < top20ResultsArray.length; i++) {
-          // create a new row
-          var newRow = table.insertRow(table.length)
-          // for (var j = 0; j < 3; j++) {
-          for (var j = 0; j < top20ResultsArray[i].length; j++) {
-            // create a new cell
-            var cell = newRow.insertCell(j)
-
-            // add value to the cell
-            cell.innerHTML = top20ResultsArray[i][j]
-          }
+        this.matches.length = 0
+        var searchResult = result.body.hits.hits
+        for (var n = 0; n < Math.min(searchResult.length, 20); n++) {
+          var entry = searchResult[n]._source
+          this.matches.push({id: n, name: entry.meeting_place.name, image: entry.meeting_place.image_location, theme: entry.meeting_place.theme, attributes: entry.tags, email: entry.meeting_place.email, capacity: entry.meeting_place.capacity})
         }
       }, error => {
         console.error(error)
       })
-    },
-    showImage (elementId, imageUrl) {
-      document.getElementById(elementId).innerHTML = imageUrl
     }
   }
 }

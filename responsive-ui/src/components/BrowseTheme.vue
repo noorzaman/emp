@@ -8,8 +8,7 @@
         <h1>Explore Meeting Spaces</h1>
       </div>
     </div>
-
-    <div v-for="match of matches" :key="match">
+    <div v-for="match of matches" :key="match.id">
         <div>
           <label>{{match.name}}</label><br>
           <img :src=match.image :alt=match.name width="400">
@@ -72,7 +71,7 @@ export default {
 
         for (var n = 0; n < Math.min(searchResult.length, 5); n++) {
           var entry = searchResult[n]._source
-          this.matches.push({name: entry.meeting_place.name, image: entry.meeting_place.image_location, attributes: entry.tags})
+          this.matches.push({id: n, name: entry.meeting_place.name, image: entry.meeting_place.image_location, attributes: entry.tags})
         }
       }, error => {
         console.error(error)
