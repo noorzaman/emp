@@ -1,0 +1,85 @@
+textarea#selectedTags {
+	width: 240px;
+	height: 50px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+	/* background-image: url(bg.gif); */
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+textarea#empDescription {
+	width: 240px;
+	height: 50px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+	/* background-image: url(bg.gif); */
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+.largeButton {
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 3px #999;
+  }
+  
+.largeButton:hover {background-color: #3e8e41}
+
+.largeButton:active {
+background-color: #3e8e41;
+box-shadow: 0 5px #666;
+transform: translateY(4px);
+}
+
+.chooseFileButton {
+    width: 247px;
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: rgb(76, 130, 175);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 1px #999;
+}
+
+.empThemeCheckBoxes {
+    width: 227px;
+    border: 2px solid rgb(131, 204, 228);
+    margin: 2px;
+}
+
+.empMultiCheckBoxes {
+    width: 227px;
+    border: 2px solid rgb(131, 204, 228);
+    margin: 2px;
+}
+
+input[type="text"] {
+    width: 208px;
+    border: 2px solid #cccccc;
+    margin:1px;
+
+}   
+
+  
+.slider {
+    width: 108px;
+    border: 2px solid rgb(131, 204, 228);
+}

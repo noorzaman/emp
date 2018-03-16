@@ -2,21 +2,9 @@
 <html>
 
 <head>
-    <title>AWS S3 File Upload</title>
+    <title>File Upload and Image Recognition</title>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
-    <style>
-textarea#selectedTags {
-	width: 240px;
-	height: 50px;
-	border: 3px solid #cccccc;
-	padding: 5px;
-	font-family: Tahoma, sans-serif;
-	background-image: url(bg.gif);
-	background-position: bottom right;
-	background-repeat: no-repeat;
-}
-    </style>
-
+    <link rel="stylesheet" href="empstyle.css">
 </head>
 
 
@@ -26,17 +14,11 @@ textarea#selectedTags {
          />
     <br>
 
-    <!-- <div id="wrapper">
-            <input type="file" accept="image/*" onchange="preview_image(event)">
-            <img id="output_image"/>
-    </div> -->
-
-    <!-- <input type="file" id="file-chooser" /> -->
-    <input type="file" id="file-chooser" accept="image/*" onchange="preview_image(event)">
-    <br>
-    <button id="upload-button" onclick="storeFile()">Upload >></button>
-    <br>
-    <button id="image-tags" onclick="getTags()">Get Image Tags >></button>
+    <input type="file" class="chooseFileButton" id="file-chooser" accept="image/*" onchange="preview_image(event)">
+    <br><br>
+    <button class="largeButton" id="upload-button" onclick="storeFile()">Upload >></button>
+    <br><br>
+    <button hidden=true id="image-tags" onclick="getTags()">Get Image Tags >></button>
 
     <div id="imageTagCheckboxes">
         <!-- to be populated dynamically -->
@@ -45,6 +27,58 @@ textarea#selectedTags {
     <div id="selectedTagsDisplay">
         <textarea name="selectedTags" id="selectedTags">Select generated tags or type your own..</textarea>
     </div>
+
+    <p>
+    <div>
+        Name: <input type="text" id="empName">
+        <br>
+        Email: <input type="text" id="empEmail"/>
+        <br>
+        Capacity: <input type="text"  style="width:192px;" id="empCapacity" value="0"/>
+        <br>
+    </div>
+    </p>
+
+    <div>
+        <fieldset class="empMultiCheckBoxes" data-role="controlgroup" data-type="horizontal">
+            <legend>Choose one or more themes</legend>
+
+            <label for="casual">Casual</label>
+            <input type="checkbox" name="theme" class="empTheme" id="casual" value="casual">
+
+            <label for="celebratory">Celebratory</label>
+            <input type="checkbox" name="theme" class="empTheme" id="celebratory" value="celebratory">
+            
+            <label for="cozy">Cozy</label>
+            <input type="checkbox" name="theme" class="empTheme" id="cozy" value="cozy">
+
+            <label for="fancy">Fancy</label>
+            <input type="checkbox" name="theme" class="empTheme" id="fancy" value="fancy">
+
+            <label for="fun">Fun</label>
+            <input type="checkbox" name="theme" class="empTheme" id="fun" value="fun">
+
+            <label for="professional">Professional</label>
+            <input type="checkbox" name="theme" class="empTheme" id="professional" value="professional">
+
+            <label for="quiet">Quiet</label>
+            <input type="checkbox" name="theme" class="empTheme" id="quiet" value="quiet">
+
+            <label for="studious">Studious</label>
+            <input type="checkbox" name="theme" class="empTheme" id="studious" value="studious">
+
+            <label for="zen">Zen</label>
+            <input type="checkbox" name="theme" class="empTheme" id="zen" value="zen">
+        </fieldset>
+    </div>
+    <br>
+    Description:<br>
+    <textarea id="empDescription"></textarea>
+    <br>
+    <br><br>
+
+
+    <button class="largeButton" onclick="saveMeetingPlace()">Save meeting place</button>
 
     <script src="./empstorage_pool.js"></script>
     <script>
@@ -56,7 +90,6 @@ textarea#selectedTags {
         var button = document.getElementById('upload-button');
         var results = document.getElementById('results');
 
-
         function preview_image(event) {
             var reader = new FileReader();
             reader.onload = function() {
@@ -67,8 +100,14 @@ textarea#selectedTags {
         }
 
         function storeFile() {
+            clearAll();
+
             var file = fileChooser.files[0];
             store(file);
+
+            getImageTags(file.name);
+
+            document.getElementById("empEmail").value = getRandomEmail();
             //getImageTags
         }
 
@@ -78,6 +117,9 @@ textarea#selectedTags {
         }
 
         function getImageTags(fileName) {
+            
+            showDefaultMessage();
+
             var classificationRequest = '{'
                 + '"requests"' + ': ['
                 +    '{'
@@ -97,72 +139,128 @@ textarea#selectedTags {
                 +    '}'
                 + ']'
             + '}'
-
-            alert ("classificationRequest: " + classificationRequest);
             
-            var googleUrl = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY";
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open('POST', googleUrl, false);
-            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xmlHttp.send(classificationRequest);
+            // var url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY";
+            // var xmlHttp = new XMLHttpRequest();
+            // xmlHttp.open('POST', url, false);
+            // xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            // xmlHttp.send(classificationRequest);
+            // var response = xmlHttp.responseText; 
+            var response = sendRequest (classificationRequest);
 
-            var response = xmlHttp.responseText;  
+            //alert ("getImageTags1 :" + response); 
             var tags = parseResponse(response);
-            displayTags(tags);
 
+            if (tags == "-1") { //try again in one second
+                setTimeout(retry(classificationRequest, 4), 1000);
+            } else {
+                displayTags(tags);
+            }
         }
 
 
+        function retry (classificationRequest, maxTries) {
 
-// {
-//   "responses": [
-//     {
-//       "labelAnnotations": [
-//         {
-//           "mid": "/m/0215n",
-//           "description": "cartoon",
-//           "score": 0.9488218,
-//           "topicality": 0.9488218
-//         },
-//         {
-//           "mid": "/m/02qd0r",
-//           "description": "human behavior",
-//           "score": 0.85469866,
-//           "topicality": 0.85469866
-//         },
-//         {
-//           "mid": "/m/02h7lkt",
-//           "description": "fictional character",
-//           "score": 0.83113086,
-//           "topicality": 0.83113086
-//         },
+            if (maxTries <= 0) {
+                clearAll();
+                showMessage("Problem generating labels - please retry..");
+                return;
+            }
 
+            showMessage("Retry number: " + maxTries + " - Retrying to generate labels in 1 sec..");
+            maxTries = maxTries - 1;
+
+            var response = sendRequest (classificationRequest);
+            var tags = parseResponse(response);
+            if (tags == "-1") { //try again in one second
+                setTimeout(retry(classificationRequest,  maxTries), 1000);
+            } else {
+                showDefaultMessage();
+                displayTags(tags);
+            }
+        }
+
+        function retry2(classificationRequest) {
+
+            showMessage("Retrying to generate labels in 1 sec..");
+            var response = sendRequest (classificationRequest);
+            var tags = parseResponse(response);
+            if (tags == "-1") { //try again in one second
+                setTimeout(retry3(classificationRequest), 2000);
+            } else {
+                showDefaultMessage();
+                displayTags(tags);
+            }
+        }
+
+        function retry3(classificationRequest) {
+            showMessage("Retrying to generate labels in 2 sec..");
+            var response = sendRequest (classificationRequest);
+            //alert ("getImageTags2 :" + response); 
+            var tags = parseResponse(response);
+            if (tags == "-1") { 
+                clearAll();
+                showMessage("Problem generating labels - please retry..");
+            } else {
+                showDefaultMessage();
+                displayTags(tags);
+            }
+        }
+
+        function sendRequest(requestStr) {
+            var url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY";
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open('POST', url, false);
+            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xmlHttp.send(requestStr);
+            var response = xmlHttp.responseText; 
+            return response;
+        }
+
+        //http://freefrontend.com/css-input-text/
+        function displayTags(tags) {
+            var chbs = '<fieldset class="empMultiCheckBoxes">';
+            chbs += '<legend>Generated labels</legend>';
+            for (var i = 0; i < tags.length; i++) {
+                chbs += 
+                '<label for="tag">' + tags[i] + '</label>'
+                + '<input type="checkbox" id="tag" onchange="tagSelected()" '
+                + 'value="' + tags[i] + '"' 
+                + ' />';
+            }
+            chbs += '</fieldset>';
+
+            document.getElementById("imageTagCheckboxes").innerHTML = chbs;
+        }
+
+        /**
+        {
+            "responses": [
+                {
+                    "error": {
+                        "code": 3,
+                        "message": "The URL does not appear to be accessible by us. 
+                        Please double check or download the content and pass it in."
+                    }
+                }
+            ]
+        }
+        */
         function parseResponse (response) {
-            alert(response);
+
             var js = JSON.parse(response);
+            var response = js.responses[0];
+            if (response["error"]) 
+                return "-1";
 
             var tags = new Array();
             var annotations = js.responses[0].labelAnnotations;
+             
             for (var i = 0; i < annotations.length; i++) {
                 tags.push(annotations[i].description);
                 //annotations[i].score;
             }
-            alert (tags);
             return tags;
-        }
-        function displayTags(tags) {
-            var chbs = "";
-            for (var i = 0; i < tags.length; i++) {
-                chbs += 
-                '<input type="checkbox" id="tag" onchange="tagSelected()" '
-                + 'value="' + tags[i] + '"' 
-                + ' />'
-                + '<label for="tag">' + tags[i] + '</label>';
-
-                // <label for="zen">Zen</label>
-                //   <input type="checkbox" name="theme" id="zen" value="zen">
-            }
-            document.getElementById("imageTagCheckboxes").innerHTML = chbs;
         }
 
         function tagSelected() {
@@ -171,102 +269,77 @@ textarea#selectedTags {
             for (var i = 0; i < checkboxes.length; i++) {
                 selectedTagsArray.push(checkboxes[i].value)
             }
-
-            alert (selectedTagsArray);
             document.getElementById("selectedTags").value = selectedTagsArray;
+        }   
 
+        function clearAll() {
+            document.getElementById("imageTagCheckboxes").innerHTML = "";
+            document.getElementById("selectedTags").value = "";
         }
 
-        function setbg(color)
-            {
-            document.getElementById("styled").style.background=color
+        function showDefaultMessage() {
+            showMessage("Select generated tags or type your own..");
+        }
+
+
+        function showMessage(msg) {
+            document.getElementById("selectedTags").value = msg;
+        }
+
+        function saveMeetingPlace() {
+            
+            var empEmail = document.getElementById("empEmail").value;
+            empEmail = empEmail.trim();
+            if ( empEmail == null || empEmail == undefined || empEmail == "") {
+                alert ("An email address is required");
+                return;
             }
-              // var js = JSON.parse(resp);
-                // var rooms = js.hits.hits;
+            var empName = document.getElementById("empName").value;
+            empName = empName.trim();
+            if ( empName == null || empName == undefined || empName == "") {
+                alert ("A name for the meeting place is required");
+                return;
+            }
 
-                // var summary = "";
-                // for (var i = 0; i < rooms.length; i++) {
-                //     summary += formatEntry (
-                //         rooms[i]._source.meeting_place.theme,
-                //         rooms[i]._source.meeting_place.name,
-                //         rooms[i]._source.meeting_place.email,
-                //         rooms[i]._source.tags,
-                //         rooms[i]._source.meeting_place.description
-                //     )
-                // }
+            var themesArr = new Array(); 
+            var inputElements = document.getElementsByClassName('empTheme');
+            for(var i=0; inputElements[i]; ++i){
+                if(inputElements[i].checked){
+                    themesArr.push(inputElements[i].value);
+                }
+            }
+            if (themesArr.length < 1) {
+                alert ("A theme for the meeting place is required");
+                return;
+            }
+            var themes = themesArr.join();
 
+            var root = new Object();
 
-// var array = []
-// var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+            var meeting_place_obj = new Object();
+            root.meeting_place = meeting_place_obj;
 
-// for (var i = 0; i < checkboxes.length; i++) {
-//   array.push(checkboxes[i].value)
-// }
+            var location_obj = new Object();
+            var office_location_obj = new Object();
+            location_obj.office = office_location_obj;
 
+            var other_location_obj = new Object();
+            location_obj.other = other_location_obj;
+            root.location = location_obj;
+            var tagsObj = new Object();
+            root.tags = tagsObj;
+            root.meeting_place.email = empEmail;
+            root.meeting_place.name = empName;
 
-//'"https://s3.amazonaws.com/empharv/image41.jpeg"'
-            //AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY
-//$ open -a Google\ Chrome --args --disable-web-security --user-data-dir
-//https://cloud.google.com/vision/docs/reference/rest/v1p1beta1/images/annotate
-            // $.ajax({
-            //     type: 'POST',
-            //     url: "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY",
-            //     dataType: 'json',
-            //     data: classificationRequest,
-            //     //Include headers, otherwise you get an odd 400 error.
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
+            root.meeting_place.theme = themes.trim().split(",");
+            root.meeting_place.capacity = document.getElementById("empCapacity").value;
+            root.meeting_place.description = document.getElementById("empDescription").value;
+            var tags = document.getElementById("selectedTags").value;
+            root.tags = tags.trim().split(",");
+            var jsonStr = JSON.stringify(root);
+            alert(jsonStr);
+        }
 
-            //     success: function(data, textStatus, jqXHR) {
-            //         alert(data);
-            //     },
-            //     error: function(jqXHR, textStatus, errorThrown) {
-            //         console.log('ERRORS: ' + textStatus + ' ' + errorThrown);
-            //     }
-            // });
-
-
-        // $.ajax({
-        //     type: 'POST',
-        //     url: "https://vision.googleapis.com/v1/images:annotate?key=" + api_key,
-        //     dataType: 'json',
-        //     data: classificationRequest,
-        //     //Include headers, otherwise you get an odd 400 error.
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-
-        //     success: function(data, textStatus, jqXHR) {
-        //         alert(data);
-        //     },
-        //     error: function(jqXHR, textStatus, errorThrown) {
-        //         console.log('ERRORS: ' + textStatus + ' ' + errorThrown);
-        //     }
-        // });
-
-
-// {
-// 	"requests": [
-// 		{
-// 			"image": {
-// 				"source": {
-// 					"imageUri": "https://s3.amazonaws.com/empharv/image41.jpeg"
-// 				}
-// 			},
-// 			"features": [
-// 				{
-// 					"type": "LABEL_DETECTION",
-// 					"maxResults": 10
-// 				}
-// 			],
-// 			"imageContext": {}
-// 		}
-// 	]
-// }
-
-//document.getElementById('files').addEventListener('change', handleFileSelect, false);
-//https://stackoverflow.com/questions/14069421/show-an-image-preview-before-upload
     </script>
 </body>
 
