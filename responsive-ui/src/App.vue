@@ -35,6 +35,12 @@ export default {
   // bind event handlers to the `handleResize` method (defined below)
   mounted: function () {
     window.addEventListener('resize', this.handleResize)
+    // hard coded space e-mails to store in local storage until Google calendar is used for booking
+    // TODO - to be deleted when this functionality is added
+    var bookedEmails = [
+      '"rodpg@emp.com"', '"ssxnd@emp.com"', '"obqjw@emp.com"', '"rytjj@emp.com"'
+    ]
+    localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
   },
   beforeDestroy: function () {
     window.removeEventListener('resize', this.handleResize)
