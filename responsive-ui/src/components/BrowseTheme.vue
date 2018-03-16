@@ -1,21 +1,23 @@
 <template>
   <div class="main">
     <div v-if="pageWidth > 846">
-        <Intro></Intro>
+      <Intro></Intro>
     </div>
     <div v-else>
-        <div class="browseAllTitle">
+      <div class="browseAllTitle">
         <h1>Explore Meeting Spaces</h1>
-        </div>
+      </div>
     </div>
-    <span>{{this.$route.params.theme}} search results:</span>
-    <table id="resultsTable2" border="1" cellpadding="10px">
-      <tr>
-        <th>Space Name</th>
-        <th>Space Email</th>
-        <th>Space Description</th>
-      </tr>
-    </table>
+
+    <div v-for="match of matches" :key="match">
+        <div>
+          <label>{{match.name}}</label><br>
+          <img :src=match.image :alt=match.name width="400">
+        </div>
+        <ul v-for="attribute of match.attributes" :key="attribute">
+          <li>{{attribute}}</li>
+        </ul>
+    </div>
   </div>
 </template>
 
@@ -31,7 +33,7 @@ export default {
       pageTitle: 'Explore Meeting Spaces',
       pageWidth: document.documentElement.clientWidth,
       empUrl: '',
-      searchResult: ''
+      matches: []
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -54,8 +56,8 @@ export default {
       var empType = 'rooms'
       this.empUrl = empHost + '/' + empIndex + '/' + empType
     },
-    searchByTheme (clickedTheme) {
-      var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme"], "query" : "' + clickedTheme + '"}}}'
+    searchByTheme (theme) {
+      var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme"], "query" : "' + theme + '"}}}'
       this.sendSearchAndDisplayResult(jsonStr)
     },
     sendSearchAndDisplayResult (jsonStr) {
@@ -66,35 +68,11 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8'
         }
       }).then(result => {
-        this.searchResult = result.body.hits.hits
+        var searchResult = result.body.hits.hits
 
-        var top5ResultsArray = []
-
-        for (var n = 0; n < (this.searchResult.length > 5 ? 5 : this.searchResult.length); n++) {
-          var matchedEntry = this.searchResult[n]._source.meeting_place
-          top5ResultsArray[n] = [matchedEntry.name, matchedEntry.email, matchedEntry.description]
-        }
-
-        var table = document.getElementById('resultsTable2')
-
-        // clear table except heading
-        // var rowCount = table.rows.length
-        // for (var r = rowCount - 1; r > 0; r--) {
-        //   table.deleteRow(r)
-        // }
-
-        // for (var i = 0; i < 5; i++) {
-        for (var i = 0; i < top5ResultsArray.length; i++) {
-          // create a new row
-          var newRow = table.insertRow(table.length)
-          // for (var j = 0; j < 3; j++) {
-          for (var j = 0; j < top5ResultsArray[i].length; j++) {
-            // create a new cell
-            var cell = newRow.insertCell(j)
-
-            // add value to the cell
-            cell.innerHTML = top5ResultsArray[i][j]
-          }
+        for (var n = 0; n < Math.min(searchResult.length, 5); n++) {
+          var entry = searchResult[n]._source
+          this.matches.push({name: entry.meeting_place.name, image: entry.meeting_place.image_location, attributes: entry.tags})
         }
       }, error => {
         console.error(error)

@@ -154,7 +154,7 @@ export default {
         desiredCapacity = 0
       }
       // console.log('DEBUG: ' + desiredCapacity)
-      
+
       var jsonStr = ''
       if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
         (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
