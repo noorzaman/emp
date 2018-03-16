@@ -150,15 +150,20 @@ export default {
       // console.log('DEBUG: ' + spaceDelimitedAttributes)
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
-      if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any' || desiredCapacity <= 0) {
+      if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
         desiredCapacity = 0
       }
       // console.log('DEBUG: ' + desiredCapacity)
-
-      // TODO: check for null and empty values
-      var jsonStr = '{ "query": { "bool": { "must" : { "multi_match": { "query": "' +
-        spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["meeting_place.theme", "tags"] } }, ' +
-        '"filter": { "range" : { "meeting_place.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
+      
+      var jsonStr = ''
+      if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
+        (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
+        jsonStr = '{"query": {"range" : { "meeting_place.capacity" : { "gte" : ' + desiredCapacity + '}}}}'
+      } else {
+        jsonStr = '{ "query": { "bool": { "must" : { "multi_match": { "query": "' +
+          spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["meeting_place.theme", "tags"] } }, ' +
+          '"filter": { "range" : { "meeting_place.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
+      }
 
       //  console.log('DEBUG: ' + jsonStr)
       this.sendSearchAndDisplayResult(jsonStr)
