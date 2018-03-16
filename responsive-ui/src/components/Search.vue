@@ -139,12 +139,18 @@ export default {
       }
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
 
-      // TODO: Not sure how to get this to work
-      var spaceDelimitedAttributes = TypeAhead.data().selectedItems // document.getElementById('selectedItemsArea').value
-      console.log('DEBUG: ' + spaceDelimitedAttributes)
+      var selectedAttributes = document.getElementsByClassName('attr')
+      var spaceDelimitedAttributes = ''
+      for (var k = 0; k < selectedAttributes.length; k++) {
+        spaceDelimitedAttributes += selectedAttributes[k].id
+        if (k < selectedAttributes.length - 1) {
+          spaceDelimitedAttributes += ' '
+        }
+      }
+      // console.log('DEBUG: ' + spaceDelimitedAttributes)
 
       // TODO: Not sure how to get this to work
-      var desiredCapacity = NumberSlider.data().value // document.getElementById('capacity-slider').value
+      var desiredCapacity = document.getElementsByClassName('vue-slider')[0].value
       console.log('DEBUG: ' + desiredCapacity)
       // Temporary workaround:
       desiredCapacity = 0
