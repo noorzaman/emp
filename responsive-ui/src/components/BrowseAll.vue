@@ -8,7 +8,7 @@
         <h1>Explore Meeting Spaces</h1>
         </div>
     </div>
-    <div v-for="theme in themes" v-bind:key="theme" class="browseThemes">
+    <div v-for="(theme, index) in themes" v-bind:key="index" class="browseThemes">
         <a :href="'/browse/' + theme.image">
             <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption">
             <p>{{theme.caption}}</p>

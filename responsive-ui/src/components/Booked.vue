@@ -1,12 +1,17 @@
 <template>
   <div class="main">
     <h1>My Previously Booked Spaces</h1>
-    <div class="row">
-        <div v-for="space in prevBookedSpaces" v-bind:key="space" class="bookedLocation col-sm-4">
-                <h2>{{space.name}}</h2>
-                <p>{{space.description}}</p>
-                <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
-                <a href="#" class="btn btn-primary">Space Details</a>
+   <div v-if="prevBookedSpaces.length == 0">
+      <p>You have not booked any spaces yet.</p>
+    </div>
+    <div v-else>
+        <div class="row">
+            <div v-for="(space, index) in prevBookedSpaces" v-bind:key="index" class="bookedLocation col-sm-4">
+                    <h2>{{space.name}}</h2>
+                    <p>{{space.description}}</p>
+                    <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
+                    <a href="#" class="btn btn-primary">Space Details</a>
+            </div>
         </div>
     </div>
   </div>
@@ -17,15 +22,16 @@ export default {
   name: 'Booked',
   data () {
     return {
-      bookedEmails: [
-        '"rodpg@emp.com"', '"ssxnd@emp.com"', '"obqjw@emp.com"', '"rytjj@emp.com"'
-      ],
+      bookedEmails: [],
       prevBookedSpaces: []
     }
   },
   mounted: function () {
-    this.createElasticSearchUrl()
-    this.searchByEmail()
+    this.bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
+    if (this.bookedEmails.length > 1) {
+      this.createElasticSearchUrl()
+      this.searchByEmail()
+    }
   },
   methods: {
     createElasticSearchUrl () {
@@ -37,7 +43,6 @@ export default {
     searchByEmail () {
       var jsonStr = '{"query": {"ids" : {"values" : [' + this.bookedEmails + '] }}}'
       this.sendSearchAndDisplayResult(jsonStr)
-      console.log(jsonStr)
     },
     sendSearchAndDisplayResult (jsonStr) {
       var searchUrl = this.empUrl + '/_search?size=50&from=0'
@@ -47,7 +52,6 @@ export default {
         }
       }).then(result => {
         this.searchResult = result.body.hits.hits
-        console.log(result.body.hits.hits)
         for (var i = 0; i < (this.searchResult.length > 20 ? 20 : this.searchResult.length); i++) {
           var matchedEntry = this.searchResult[i]._source
           var space = {
@@ -57,7 +61,6 @@ export default {
           }
           this.prevBookedSpaces.push(space)
         }
-        console.log(this.prevBookedSpaces)
       }, error => {
         console.error(error)
       })
