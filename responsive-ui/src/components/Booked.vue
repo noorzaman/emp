@@ -5,14 +5,14 @@
       <p>You have not booked any spaces yet.</p>
     </div>
     <div v-else>
-        <div class="row">
-            <div v-for="(space, index) in prevBookedSpaces" v-bind:key="index" class="bookedLocation col-sm-4">
-                    <h2>{{space.name}}</h2>
-                    <p>{{space.description}}</p>
-                    <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
-                    <a href="#" class="btn btn-primary">Space Details</a>
-            </div>
+      <div class="row">
+        <div v-for="space in prevBookedSpaces" :key="space.id" class="bookedLocation col-sm-4">
+          <h2>{{space.name}}</h2>
+          <p>{{space.description}}</p>
+          <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
+          <a href="#" class="btn btn-primary">Space Details</a>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -52,9 +52,10 @@ export default {
         }
       }).then(result => {
         this.searchResult = result.body.hits.hits
-        for (var i = 0; i < (this.searchResult.length > 20 ? 20 : this.searchResult.length); i++) {
+        for (var i = 0; i < Math.min(this.searchResult.length, 20); i++) {
           var matchedEntry = this.searchResult[i]._source
           var space = {
+            id: i,
             name: matchedEntry.meeting_place.name,
             description: matchedEntry.meeting_place.description,
             image: matchedEntry.meeting_place.image_location

@@ -55,16 +55,18 @@
     <div class="clearFix"></div>
     <br>
     <br>
-    <div v-for="match of matches" :key="match.id">
-      <label>{{match.name}}</label><br>
-      <img :src=match.image :alt=match.name width="400">
-      <p>Capacity: {{match.capacity}}</p>
+    <div v-for="match in matches" :key="match.id" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+      <h2>{{match.name}}</h2>
+      <p>{{match.description}}</p>
+      <img :src="match.image" :alt="match.name + 'image'" class="img-fluid img-thumbnail bookedImg">
       <p>Email: {{match.email}}</p>
+      <p>Capacity: {{match.capacity}}</p>
       <p>Theme: {{match.theme}}</p>
       <p>Attributes:</p>
       <ul v-for="attribute of match.attributes" :key="attribute">
         <li>{{attribute}}</li>
       </ul>
+      <a href="#" class="btn btn-primary">Space Details</a>
     </div>
   </div>
 </template>
@@ -201,7 +203,16 @@ export default {
         var searchResult = result.body.hits.hits
         for (var n = 0; n < Math.min(searchResult.length, 20); n++) {
           var entry = searchResult[n]._source
-          this.matches.push({id: n, name: entry.meeting_place.name, image: entry.meeting_place.image_location, theme: entry.meeting_place.theme, attributes: entry.tags, email: entry.meeting_place.email, capacity: entry.meeting_place.capacity})
+          this.matches.push({
+            id: n,
+            name: entry.meeting_place.name,
+            description: entry.meeting_place.description,
+            image: entry.meeting_place.image_location,
+            theme: entry.meeting_place.theme,
+            attributes: entry.tags,
+            email: entry.meeting_place.email,
+            capacity: entry.meeting_place.capacity
+          })
         }
       }, error => {
         console.error(error)
