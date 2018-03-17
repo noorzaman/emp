@@ -1,50 +1,3 @@
-
-AWS.config.region = 'us-east-1'; 
-
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'us-east-1:20b70abe-c545-4142-b684-e36913ad3d3a' 
-});
-
-AWS.config.credentials.get(function(err) {
-    if (err) alert(err);
-    console.log(AWS.config.credentials);
-});
-
-var bucketName = 'empstorage'; 
-var bucket = new AWS.S3({
-    params: {
-        Bucket: bucketName
-    }
-});
-
-function store(file) {
-    var objKey = file.name;
-    var params = {
-        Key: objKey,
-        ContentType: file.type,
-        Body: file,
-        ACL: 'public-read'
-    };
-
-    bucket.putObject(params, function(err, data) {
-        if (err) {
-            console.log(err, err.stack); 
-        } else {
-            console.log(data);  //success
-        }
-    });
-}
-
-
-function getRandomEmail() {
-    var randomEmail = "";
-    for (i = 0; i < 5; i++) { 
-        randomEmail += String.fromCharCode(Math.floor(Math.random() * 26 + 97));
-    }
-    return randomEmail + "@emp.com";
-}
-
-
 /** 
  * 
  * There are two helper methods used to fill out the form
@@ -76,6 +29,7 @@ function getRandomEmail() {
     return randomEmail + "@emp.com";
 }
 
+
 function getDateTime(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -94,23 +48,40 @@ function getDateTime(date) {
     return date.getFullYear() + "-" + month + "-" + day + "T" + hours + ":" + mins + ":" + secs + "Z";
 }
 
+
 function createElasticSearchUrl () {
 
     var empUrl = null;
 
-    var empHost = document.getElementById("empHost").value;
-    var empIndex = document.getElementById("empIndex").value;
-    var empType = document.getElementById("empType").value;
+    var empHost = null;
+    var empIndex = null;
+    var empType = null;
 
-    if (empHost == null || empHost == undefined) 
+    if (document.getElementById("empHost") != undefined
+        && document.getElementById("empHost") != null) {
+        empHost = document.getElementById("empHost").value;
+        }
+    
+    if (document.getElementById("empIndex") != undefined
+        && document.getElementById("empIndex") != null) {
+            empIndex = document.getElementById("empIndex").value;
+    }
+
+    if (document.getElementById("empType") != undefined
+        && document.getElementById("empType") != null) {
+            empType = document.getElementById("empType").value;
+    }
+
+    if (empHost == null || empHost == undefined || empHost.trim()=="") 
         empHost = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com';
-    if (empIndex == null || empIndex == undefined)
+    if (empIndex == null || empIndex == undefined || empIndex.trim()=="")
         empIndex = "emp";
-    if (empType == null || empType == undefined) 
+    if (empType == null || empType == undefined || empType.trim()=="") 
         empType = "rooms";
     empUrl = empHost + "/" + empIndex + "/" + empType;
     return empUrl;
 }
+
 
 function storeInElasticSearch(emailId, formVals) {
     var jsonStr = JSON.stringify(formVals);
@@ -119,6 +90,23 @@ function storeInElasticSearch(emailId, formVals) {
     return response;
 }
 
+
+/*
+{
+	"_index": "emp",
+	"_type": "rooms",
+	"_id": "cynpn@emp.com",
+	"_version": 1,
+	"result": "created",
+	"_shards": {
+		"total": 2,
+		"successful": 1,
+		"failed": 0
+	},
+	"_seq_no": 6,
+	"_primary_term": 1
+}
+*/
 function indexUsingXmlHttp(empUrl, id, jsonStr) {
     //var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'; 
     empUrl = empUrl + "/" + id;    

@@ -2,24 +2,24 @@
 <html>
 
 <head>
-    <title>File Upload and Image Recognition</title>
+    <title>Add meeting space</title>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
-    <link rel="stylesheet" href="empstyle.css">
+    <script src="./emp_google_vision.js"></script>
+    <script src="./empstorage_pool.js"></script>
+    <link rel="stylesheet" href="./empstyle.css">
 </head>
-
 
 <body>
     <img id="output_image" style="float: top; width: 250px; height: 175px; border: 1px solid #000; margin: 5px" 
             src="https://s3.amazonaws.com/empstorage/placeholder.jpeg"
-         />
+    />
     <br>
-
     <input type="file" class="chooseFileButton" id="file-chooser" accept="image/*" onchange="preview_image(event)">
     <br><br>
-    <button class="largeButton" id="upload-button" onclick="storeFile()">Upload >></button>
+    <button class="largeButton" id="upload-button" onclick="generateTags()">Upload >></button>
     <br><br>
-    <button hidden=true id="image-tags" onclick="getTags()">Get Image Tags >></button>
-
+    <input type="text" style="width:250px;" id="empImageLocation" value="ImageLocation"/>
+    <br><br>
     <div id="imageTagCheckboxes">
         <!-- to be populated dynamically -->
     </div>
@@ -75,21 +75,20 @@
     Description:<br>
     <textarea id="empDescription"></textarea>
     <br>
+    Location:<br>
+    <textarea id="empLocation"></textarea>
     <br><br>
-
-
     <button class="largeButton" onclick="saveMeetingPlace()">Save meeting place</button>
+    <br>
 
-    <script src="./empstorage_pool.js"></script>
     <script>
-
-        var firstTimeTextAreaDisplay = true;
-
-        var empStorageUrl = "https://s3.amazonaws.com/empstorage/";
         var fileChooser = document.getElementById('file-chooser');
         var button = document.getElementById('upload-button');
         var results = document.getElementById('results');
 
+        /**
+         * Load the image for display in the preview window
+         */
         function preview_image(event) {
             var reader = new FileReader();
             reader.onload = function() {
@@ -99,132 +98,48 @@
             reader.readAsDataURL(event.target.files[0]);
         }
 
-        function storeFile() {
+
+        /**
+         * Main mehtod
+         * - stores the file online
+         * - updates the image location in text box
+         * - generates the tags 
+         * - displays the tags as checkboxes
+         * - assigns action to tag checkboxes so that any selected 
+         *   checkbox can be added to the textbox
+         */
+        function generateTags () {
             clearAll();
-
             var file = fileChooser.files[0];
-            store(file);
 
-            getImageTags(file.name);
+            ////////////
+            var resMap = getTagsFromGoogleVision(file);
+            ////////////
 
-            document.getElementById("empEmail").value = getRandomEmail();
-            //getImageTags
-        }
-
-        function getTags() {
-            var file = fileChooser.files[0];
-            getImageTags(file.name);
-        }
-
-        function getImageTags(fileName) {
-            
-            showDefaultMessage();
-
-            var classificationRequest = '{'
-                + '"requests"' + ': ['
-                +    '{'
-                +        '"image"' + ': {'
-                +            '"source"' + ': {'
-                +                '"imageUri"' + ':' 
-                                    + '"' + empStorageUrl + fileName + '"'
-                +            '}'
-                +        '},'
-                +        '"features"' + ': ['
-                +            '{'
-                +                '"type"' + ':' + '"LABEL_DETECTION"' + ','
-                +                '"maxResults"' + ': 10'
-                +            '}'
-                +        '],'
-                +        '"imageContext"' + ': {}'
-                +    '}'
-                + ']'
-            + '}'
-            
-            // var url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY";
-            // var xmlHttp = new XMLHttpRequest();
-            // xmlHttp.open('POST', url, false);
-            // xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            // xmlHttp.send(classificationRequest);
-            // var response = xmlHttp.responseText; 
-            var response = sendRequest (classificationRequest);
-
-            //alert ("getImageTags1 :" + response); 
-            var tags = parseResponse(response);
-
-            if (tags == "-1") { //try again in one second
-                setTimeout(retry(classificationRequest, 4), 1000);
-            } else {
-                displayTags(tags);
-            }
-        }
-
-
-        function retry (classificationRequest, maxTries) {
-
-            if (maxTries <= 0) {
+            var tags = resMap["tags"];
+            if (tags == "-1") {
                 clearAll();
                 showMessage("Problem generating labels - please retry..");
                 return;
             }
 
-            showMessage("Retry number: " + maxTries + " - Retrying to generate labels in 1 sec..");
-            maxTries = maxTries - 1;
-
-            var response = sendRequest (classificationRequest);
-            var tags = parseResponse(response);
-            if (tags == "-1") { //try again in one second
-                setTimeout(retry(classificationRequest,  maxTries), 1000);
-            } else {
-                showDefaultMessage();
-                displayTags(tags);
-            }
+            document.getElementById("empImageLocation").value = resMap["imageLocation"];
+            displayTagsAsCheckBoxes(tags);
+            document.getElementById("empEmail").value = getRandomEmail();
         }
 
-        function retry2(classificationRequest) {
 
-            showMessage("Retrying to generate labels in 1 sec..");
-            var response = sendRequest (classificationRequest);
-            var tags = parseResponse(response);
-            if (tags == "-1") { //try again in one second
-                setTimeout(retry3(classificationRequest), 2000);
-            } else {
-                showDefaultMessage();
-                displayTags(tags);
-            }
-        }
-
-        function retry3(classificationRequest) {
-            showMessage("Retrying to generate labels in 2 sec..");
-            var response = sendRequest (classificationRequest);
-            //alert ("getImageTags2 :" + response); 
-            var tags = parseResponse(response);
-            if (tags == "-1") { 
-                clearAll();
-                showMessage("Problem generating labels - please retry..");
-            } else {
-                showDefaultMessage();
-                displayTags(tags);
-            }
-        }
-
-        function sendRequest(requestStr) {
-            var url = "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCpxMZWeEDxIbgu5wkaDv1M_E--eJK8RhY";
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open('POST', url, false);
-            xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xmlHttp.send(requestStr);
-            var response = xmlHttp.responseText; 
-            return response;
-        }
-
-        //http://freefrontend.com/css-input-text/
-        function displayTags(tags) {
+        /**
+         * The tags are generated from image recognition and displayed 
+         * as selectable check boxes
+         */
+        function displayTagsAsCheckBoxes(tags) {
             var chbs = '<fieldset class="empMultiCheckBoxes">';
             chbs += '<legend>Generated labels</legend>';
             for (var i = 0; i < tags.length; i++) {
                 chbs += 
                 '<label for="tag">' + tags[i] + '</label>'
-                + '<input type="checkbox" id="tag" onchange="tagSelected()" '
+                + '<input type="checkbox" id="tag" onchange="showSelectedTagsInTextBox()" '
                 + 'value="' + tags[i] + '"' 
                 + ' />';
             }
@@ -233,37 +148,11 @@
             document.getElementById("imageTagCheckboxes").innerHTML = chbs;
         }
 
+
         /**
-        {
-            "responses": [
-                {
-                    "error": {
-                        "code": 3,
-                        "message": "The URL does not appear to be accessible by us. 
-                        Please double check or download the content and pass it in."
-                    }
-                }
-            ]
-        }
-        */
-        function parseResponse (response) {
-
-            var js = JSON.parse(response);
-            var response = js.responses[0];
-            if (response["error"]) 
-                return "-1";
-
-            var tags = new Array();
-            var annotations = js.responses[0].labelAnnotations;
-             
-            for (var i = 0; i < annotations.length; i++) {
-                tags.push(annotations[i].description);
-                //annotations[i].score;
-            }
-            return tags;
-        }
-
-        function tagSelected() {
+         * Show selected tags in the tags text box.
+         */
+        function showSelectedTagsInTextBox() {
             var selectedTagsArray = []
             var checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
             for (var i = 0; i < checkboxes.length; i++) {
@@ -272,33 +161,33 @@
             document.getElementById("selectedTags").value = selectedTagsArray;
         }   
 
-        function clearAll() {
-            document.getElementById("imageTagCheckboxes").innerHTML = "";
-            document.getElementById("selectedTags").value = "";
-        }
 
-        function showDefaultMessage() {
-            showMessage("Select generated tags or type your own..");
-        }
-
-
-        function showMessage(msg) {
-            document.getElementById("selectedTags").value = msg;
-        }
-
+        /**
+         * Save the meeting place data values in elastic search
+         */
         function saveMeetingPlace() {
-            
+            var vals = getFormValues();
+            var jsonStr = JSON.stringify(vals);
+            //storeInElasticSearch(empEmail, root);
+        }
+
+
+        /**
+         * Get the values that need to be stored with the image.
+         * Save the meeting place data values in elastic search
+         */
+        function saveMeetingPlace() {
             var empEmail = document.getElementById("empEmail").value;
             empEmail = empEmail.trim();
             if ( empEmail == null || empEmail == undefined || empEmail == "") {
                 alert ("An email address is required");
-                return;
+                return "-1";
             }
             var empName = document.getElementById("empName").value;
             empName = empName.trim();
             if ( empName == null || empName == undefined || empName == "") {
                 alert ("A name for the meeting place is required");
-                return;
+                return "-1";
             }
 
             var themesArr = new Array(); 
@@ -310,9 +199,19 @@
             }
             if (themesArr.length < 1) {
                 alert ("A theme for the meeting place is required");
-                return;
+                return "-1";
             }
             var themes = themesArr.join();
+
+            var fullPath = document.getElementById("file-chooser").value;
+            var imageName = "";
+            if (fullPath) {
+                var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+                var imageName = fullPath.substring(startIndex);
+                if (imageName.indexOf('\\') === 0 || imageName.indexOf('/') === 0) {
+                    imageName = imageName.substring(1);
+                }
+            }
 
             var root = new Object();
 
@@ -325,20 +224,55 @@
 
             var other_location_obj = new Object();
             location_obj.other = other_location_obj;
+
             root.location = location_obj;
+
             var tagsObj = new Object();
             root.tags = tagsObj;
+
             root.meeting_place.email = empEmail;
             root.meeting_place.name = empName;
-
+            //root.meeting_place.image_location = empStorageUrl + imageName;
+            root.meeting_place.image_location = document.getElementById("empImageLocation").value;
+            
             root.meeting_place.theme = themes.trim().split(",");
             root.meeting_place.capacity = document.getElementById("empCapacity").value;
             root.meeting_place.description = document.getElementById("empDescription").value;
+            root.meeting_place.location = document.getElementById("empLocation").value;
+
             var tags = document.getElementById("selectedTags").value;
             root.tags = tags.trim().split(",");
+
             var jsonStr = JSON.stringify(root);
-            alert(jsonStr);
+            var resp = storeInElasticSearch(empEmail, root);
+            console.log ('Save completed');
         }
+
+
+        function clearAll() {
+            document.getElementById("imageTagCheckboxes").innerHTML = "";
+            document.getElementById("selectedTags").value = "";
+            document.getElementById("empEmail").value = "";
+            document.getElementById("empName").value = "";
+            document.getElementById("empCapacity").value = 0;
+            document.getElementById("empDescription").value = "";
+            document.getElementById("empLocation").value = "";
+            var checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = false;
+            }
+        }
+
+
+        function showDefaultMessage() {
+            showMessage("Select generated tags or type your own..");
+        }
+
+
+        function showMessage(msg) {
+            document.getElementById("selectedTags").value = msg;
+        }
+
 
     </script>
 </body>

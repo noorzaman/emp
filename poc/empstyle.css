@@ -20,6 +20,17 @@ textarea#empDescription {
 	background-repeat: no-repeat;
 }
 
+textarea#empLocation {
+	width: 240px;
+	height: 50px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+	/* background-image: url(bg.gif); */
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
 .largeButton {
     display: inline-block;
     padding: 5px 5px;
