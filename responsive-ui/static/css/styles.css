@@ -260,6 +260,42 @@ ul {
     width: 100%;
 }
 
+/* View One Styles */
+
+.viewOneImgCol {
+    float: left;
+    width: 50%;
+    margin-right: 1em;
+}
+
+.viewOneCapacityCol {
+    float: left;
+    width: 20%;
+    border-right: 2px solid #e5dddd;
+}
+
+.viewOneAttrCol {
+    float: left;
+    width: 20%;
+    padding-left: 1em;
+}
+
+.viewOneAttrCol ul, .viewOneCapacityCol ul {
+    list-style-type: none;
+}
+
+.roomInfo p, .roomInfo li {
+    font-size: 1.3em;
+}
+
+.viewOneLink {
+    margin-bottom: 1em;
+}
+
+.editBtn {
+    margin-left: 2em;
+}
+
 /* Footer Styles */
 
 .footer {
@@ -481,6 +517,19 @@ ul {
 @media only screen and (max-width: 844px) {
     body {
         background-color: red;
+    }
+    
+    .viewOneImgCol {
+       width: 100%;
+       margin-bottom: 2em;
+    }
+    
+    .viewOneCapacityCol {
+        width: 40%;
+    }
+    
+    .viewOneAttrCol {
+        width: 40%;
     }
     
     .footer .item {

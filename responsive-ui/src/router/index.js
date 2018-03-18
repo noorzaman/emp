@@ -5,6 +5,7 @@ import AddSpace from '@/components/AddSpace'
 import Search from '@/components/Search'
 import Booked from '@/components/Booked'
 import BrowseTheme from '@/components/BrowseTheme'
+import ViewOneSpace from '@/components/ViewOneSpace'
 
 Vue.use(Router)
 
@@ -38,6 +39,12 @@ export default new Router({
       path: '/booked-spaces',
       name: 'Booked',
       component: Booked,
+      pageTitle: 'TITLE'
+    },
+    {
+      path: '/space/:spaceId',
+      name: 'ViewOneSpace',
+      component: ViewOneSpace,
       pageTitle: 'TITLE'
     }
   ],

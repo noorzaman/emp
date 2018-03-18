@@ -38,7 +38,7 @@ export default {
     // hard coded space e-mails to store in local storage until Google calendar is used for booking
     // TODO - to be deleted when this functionality is added
     var bookedEmails = [
-      '"rodpg@emp.com"', '"ssxnd@emp.com"', '"obqjw@emp.com"', '"rytjj@emp.com"'
+      'hannahs_test@emp.com', 'test_for_stephen@emaias.com'
     ]
     localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
   },

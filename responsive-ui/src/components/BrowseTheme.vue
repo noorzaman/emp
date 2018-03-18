@@ -15,7 +15,7 @@
       <ul v-for="attribute of match.attributes" :key="attribute">
         <li>{{attribute}}</li>
       </ul>
-      <a href="#" class="btn btn-primary">Space Details</a>
+      <a :href="'/space/' + space.email" class="btn btn-primary">Space Details</a>
     </div>
   </div>
 </template>
@@ -73,6 +73,7 @@ export default {
           var entry = searchResult[n]._source
           this.matches.push({
             id: n,
+            email: entry.meeting_place.name,
             name: entry.meeting_place.name,
             image: entry.meeting_place.image_location,
             attributes: entry.tags
