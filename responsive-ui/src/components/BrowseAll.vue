@@ -5,7 +5,7 @@
     </div>
     <div v-else>
         <div class="browseAllTitle">
-        <h1>Explore Meeting Spaces</h1>
+        <h1>{{pageTitle}}</h1>
         </div>
     </div>
     <div v-for="(theme, index) in themes" v-bind:key="index" class="browseThemes">
@@ -45,10 +45,10 @@ export default {
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
-  mounted: function () {
+  mounted () {
     window.addEventListener('resize', this.handleResize)
   },
-  beforeDestroy: function () {
+  beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
   },
   methods: {
