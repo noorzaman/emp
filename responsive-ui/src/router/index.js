@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import BrowseAll from '@/components/BrowseAll'
 import AddSpace from '@/components/AddSpace'
+import EditSpace from '@/components/EditSpace'
 import Search from '@/components/Search'
 import Booked from '@/components/Booked'
 import BrowseTheme from '@/components/BrowseTheme'
@@ -27,6 +28,12 @@ export default new Router({
       path: '/add-space',
       name: 'AddSpace',
       component: AddSpace,
+      pageTitle: 'TITLE'
+    },
+    {
+      path: '/edit-space/:spaceId',
+      name: 'EditSpace',
+      component: EditSpace,
       pageTitle: 'TITLE'
     },
     {

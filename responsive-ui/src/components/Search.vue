@@ -58,7 +58,7 @@
     <div v-for="match in matches" :key="match.id" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
-      <img :src="match.image" :alt="match.name + 'image'" class="img-fluid img-thumbnail bookedImg">
+      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail bookedImg">
       <p>Email: {{match.email}}</p>
       <p>Capacity: {{match.capacity}}</p>
       <p>Theme: {{match.theme}}</p>
