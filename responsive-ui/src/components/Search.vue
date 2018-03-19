@@ -111,18 +111,6 @@ export default {
       var empType = 'rooms'
       this.empUrl = empHost + '/' + empIndex + '/' + empType
     },
-    searchByTheme (theme) {
-      var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["meeting_place.theme"], "query" : "' + theme + '"}}}'
-      this.sendSearchAndDisplayResult(jsonStr)
-    },
-    searchByEmail (email) {
-      var jsonStr = '{"query": {"ids" : {"values" : ["' + email + '"]}}}'
-      this.sendSearchAndDisplayResult(jsonStr)
-    },
-    searchByAttributes (attributes) {
-      var jsonStr = '{"query": {"simple_query_string" : {"fields" : ["tags"], "query" : "' + attributes + '"}}}'
-      this.sendSearchAndDisplayResult(jsonStr)
-    },
     searchByThemesAndAttributesAndCapacity () {
       // console.log('DEBUG: search by themes and attributes')
       var checkedThemes = []
@@ -161,34 +149,18 @@ export default {
       var jsonStr = ''
       if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
         (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
-        jsonStr = '{"query": {"range" : { "meeting_place.capacity" : { "gte" : ' + desiredCapacity + '}}}}'
+        jsonStr = '{"query": {"range" : { "space.capacity" : { "gte" : ' + desiredCapacity + '}}}}'
       } else {
         jsonStr = '{ "query": { "bool": { "must" : { "multi_match": { "query": "' +
-          spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["meeting_place.theme", "tags"] } }, ' +
-          '"filter": { "range" : { "meeting_place.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
+          spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["space.themes", "space.attributes"] } }, ' +
+          '"filter": { "range" : { "space.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
       }
 
       //  console.log('DEBUG: ' + jsonStr)
       this.sendSearchAndDisplayResult(jsonStr)
     },
-    searchByField (fields, keywords) {
-      var jsonStr = ''
-
-      if ((fields === null || fields === undefined || fields.trim() === '') &&
-        (keywords === null || keywords === undefined || keywords.trim() === '')) {
-        jsonStr = '{"query":{"match_all":{}},' + '"sort":[{"meeting_place.update_date":{"order":"desc"}}]}'
-      } else if ((keywords !== null && keywords !== undefined && keywords.trim() !== '') &&
-        (fields !== null && fields !== undefined && fields.trim() !== '')) {
-        jsonStr = '{"query": {"simple_query_string" : {"fields" : ["' + fields + '"], "query" : "' + keywords + '"}}}'
-      } else if (keywords === null || keywords === undefined || keywords.trim() === '') {
-        jsonStr = '{"query": {"simple_query_string" : {"fields" : ["' + fields + '"], "query" : "' + '*' + '"}}}'
-      } else if (fields === null || fields === undefined || fields.trim() === '') {
-        jsonStr = '{"query": {"multi_match" : ' + '{"fields" : ["' + '*' + '"],' + '"query" : "' + keywords + '"}}}'
-      }
-      this.sendSearchAndDisplayResult(jsonStr)
-    },
     matchAll () {
-      var jsonStr = '{"query":{"match_all":{}},' + '"sort":[{"meeting_place.update_date":{"order":"desc"}}]}'
+      var jsonStr = '{"query":{"match_all":{}},' + '"sort":[{"space.updated_ts":{"order":"desc"}}]}'
       this.sendSearchAndDisplayResult(jsonStr)
     },
     sendSearchAndDisplayResult (jsonStr) {
@@ -202,16 +174,16 @@ export default {
         this.matches.length = 0
         var searchResult = result.body.hits.hits
         for (var n = 0; n < Math.min(searchResult.length, 20); n++) {
-          var entry = searchResult[n]._source
+          var email = searchResult[n]._id
+          var entry = searchResult[n]._source.space
           this.matches.push({
-            id: n,
-            name: entry.meeting_place.name,
-            description: entry.meeting_place.description,
-            image: entry.meeting_place.image_location,
-            theme: entry.meeting_place.theme,
-            attributes: entry.tags,
-            email: entry.meeting_place.email,
-            capacity: entry.meeting_place.capacity
+            name: entry.name,
+            description: entry.description,
+            image: entry.image,
+            theme: entry.themes,
+            attributes: entry.attributes,
+            email: email,
+            capacity: entry.capacity
           })
         }
       }, error => {
