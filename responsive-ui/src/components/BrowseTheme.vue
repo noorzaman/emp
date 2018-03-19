@@ -1,14 +1,14 @@
 <template>
   <div class="main">
     <h1>{{pageTitle}}</h1>
-    <div v-for="match in matches" :key="match.id" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div v-for="match in matches" :key="match.email" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail bookedImg">
       <ul v-for="attribute of match.attributes" :key="attribute">
         <li>{{attribute}}</li>
       </ul>
-      <a :href="'/space/' + space.email" class="btn btn-primary">Space Details</a>
+      <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
     </div>
   </div>
 </template>
@@ -66,19 +66,14 @@ export default {
         var searchResult = result.body.hits.hits
 
         for (var n = 0; n < Math.min(searchResult.length, 5); n++) {
+          var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
           this.matches.push({
-            id: n,
-<<<<<<< HEAD
-            email: entry.meeting_place.name,
-            name: entry.meeting_place.name,
-            image: entry.meeting_place.image_location,
-            attributes: entry.tags
-=======
+            email: email,
             name: entry.name,
+            description: entry.description,
             image: entry.image,
             attributes: entry.attributes
->>>>>>> fixed browse by theme
           })
         }
       }, error => {
