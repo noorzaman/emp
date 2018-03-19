@@ -146,18 +146,44 @@ export default {
       }
       // console.log('DEBUG: ' + desiredCapacity)
 
-      var jsonStr = ''
+      var search = ''
       if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
         (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
-        jsonStr = '{"query": {"range" : { "space.capacity" : { "gte" : ' + desiredCapacity + '}}}}'
+        search = {
+          'query': {
+            'range': {
+              'space.capacity': {
+                'gte': desiredCapacity
+              }
+            }
+          }
+        }
       } else {
-        jsonStr = '{ "query": { "bool": { "must" : { "multi_match": { "query": "' +
-          spaceDelimitedThemes + ' ' + spaceDelimitedAttributes + '", "fields": ["space.themes", "space.attributes"] } }, ' +
-          '"filter": { "range" : { "space.capacity": { "gte": ' + desiredCapacity + '}}}}}}'
-      }
+        var multisearch = spaceDelimitedThemes + ' ' + spaceDelimitedAttributes
+        search = {
+          'query': {
+            'bool': {
+              'must': {
+                'multi_match': {
+                  'query': multisearch,
+                  'fields': ['space.themes', 'space.attributes']
+                }
+              },
+              'filter': {
+                'range': {
+                  'space.capacity': {
+                    'gte': desiredCapacity
+                  }
+                }
+              }
+            }
+          }
+        }
 
-      //  console.log('DEBUG: ' + jsonStr)
-      this.sendSearchAndDisplayResult(jsonStr)
+        //  console.log('DEBUG: ' + jsonStr)
+        var jsonStr = JSON.stringify(search)
+        this.sendSearchAndDisplayResult(jsonStr)
+      }
     },
     matchAll () {
       var jsonStr = '{"query":{"match_all":{}},' + '"sort":[{"space.updated_ts":{"order":"desc"}}]}'
