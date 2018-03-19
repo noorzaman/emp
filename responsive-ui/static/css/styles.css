@@ -271,13 +271,13 @@ ul {
 .viewOneCapacityCol {
     float: left;
     width: 20%;
-    border-right: 2px solid #e5dddd;
 }
 
 .viewOneAttrCol {
     float: left;
     width: 20%;
     padding-left: 1em;
+    border-left: 2px solid #e5dddd;
 }
 
 .viewOneAttrCol ul, .viewOneCapacityCol ul {
@@ -294,6 +294,11 @@ ul {
 
 .editBtn {
     margin-left: 2em;
+}
+
+.attributesList, .themesList {
+    height: 200px;
+    overflow: auto;
 }
 
 /* Footer Styles */

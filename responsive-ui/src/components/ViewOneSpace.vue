@@ -1,30 +1,35 @@
 <template>
   <div class="main">
-    <h1>Space Title Here</h1>
+    <h1>{{space.name}}</h1>
     <div class="viewOneImgCol">
-      <img src="/static/images/carousel/calm-room.jpeg" alt="Space image. " class="img-fluid img-thumbnail">
+      <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
       <a href="#" class="btn btn-primary viewOneLink">Set up meeting</a>
       <a href="#" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
-      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-      <br>
+      <p><strong>Description: </strong>{{space.description}}</p>
+      <p><strong>Capacity: </strong>{{space.capacity}}</p>
       <div class="viewOneCapacityCol">
-        <p><strong>Capacity: </strong>20</p>
         <p><strong>Themes:</strong></p>
-        <ul>
-          <li>Casual</li>
-          <li>Quiet</li>
-        </ul>
+          <div v-if="space.themes.length == 0">
+            <p>No themes have been added to this space yet.</p>
+          </div>
+          <div v-else>
+            <ul class="themesList">
+              <li v-for="theme in space.themes" :key="theme">{{theme}}</li>
+            </ul>
+          </div>
         </div>
         <div class="viewOneAttrCol">
           <p><strong>Attributes:</strong></p>
-          <ul>
-            <li>WiFi</li>
-            <li>Food</li>
-            <li>Tables</li>
-            <li>Chairs</li>
-          </ul>
+          <div v-if="space.attributes.length == 0">
+            <p>No attributes have been added to this space yet.</p>
+          </div>
+          <div v-else>
+            <ul class="attributesList">
+              <li v-for="attribute in space.attributes" :key="attribute">{{attribute}}</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="clearFix"></div>
@@ -36,7 +41,41 @@ export default {
   name: 'ViewOneSpace',
   data () {
     return {
-      placeHolder: []
+      spaceEmail: this.$route.params.spaceId,
+      space: {attributes: [], themes: []}
+    }
+  },
+  mounted () {
+    this.createElasticSearchUrl()
+    this.searchByEmail(this.spaceEmail)
+  },
+  methods: {
+    createElasticSearchUrl () {
+      var empHost = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com'
+      var empIndex = 'emp'
+      var empType = 'rooms'
+      this.empUrl = empHost + '/' + empIndex + '/' + empType
+    },
+    searchByEmail (email) {
+      var searchUrl = this.empUrl + '/' + email
+      this.$http.get(searchUrl, email, {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }).then(result => {
+        var spaceBody = result.body._source.space
+        var spaceObj = {
+          name: spaceBody.name,
+          description: spaceBody.description,
+          image: spaceBody.image,
+          capacity: spaceBody.capacity,
+          attributes: spaceBody.attributes,
+          themes: spaceBody.themes
+        }
+        this.space = spaceObj
+      }, error => {
+        console.error(error)
+      })
     }
   }
 }
