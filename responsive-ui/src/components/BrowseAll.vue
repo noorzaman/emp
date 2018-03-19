@@ -8,11 +8,13 @@
         <h1>{{pageTitle}}</h1>
         </div>
     </div>
-    <div v-for="(theme, index) in themes" v-bind:key="index" class="browseThemes">
-        <a :href="'/browse/' + theme.image">
-            <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption">
-            <p>{{theme.caption}}</p>
-        </a>
+    <div class="row">
+      <div v-for="(theme, index) in themes" v-bind:key="index" class="browseThemes">
+          <a :href="'/browse/' + theme.image">
+              <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption">
+              <p>{{theme.caption}}</p>
+          </a>
+      </div>
     </div>
   </div>
 </template>

@@ -66,7 +66,7 @@
       <ul v-for="attribute of match.attributes" :key="attribute">
         <li>{{attribute}}</li>
       </ul>
-      <a href="#" class="btn btn-primary">Space Details</a>
+      <a :href="'/space/' + match.email" target="_blank" class="btn btn-primary">Space Details</a>
     </div>
   </div>
 </template>

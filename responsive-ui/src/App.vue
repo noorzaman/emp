@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="pageWidth > 846">
+    <div v-if="pageWidth > 1000">
         <DesktopNav></DesktopNav>
         <div class="space"></div>
     </div>
@@ -8,7 +8,7 @@
         <MobileHeader></MobileHeader>
     </div>
     <router-view/>
-    <div v-if="pageWidth <= 846">
+    <div v-if="pageWidth <= 1000">
         <div class="clearFix"></div>
         <div class="footerSpace"></div>
         <MobileNav></MobileNav>
