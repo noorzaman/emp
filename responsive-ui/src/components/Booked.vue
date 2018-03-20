@@ -28,7 +28,7 @@ export default {
   },
   mounted: function () {
     this.bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
-    if (this.bookedEmails.length > 0) {
+    if (this.bookedEmails != null && this.bookedEmails.length > 0) {
       this.createElasticSearchUrl()
       for (var i = 0; i < this.bookedEmails.length; i++) {
         this.searchByEmail(this.bookedEmails[i])

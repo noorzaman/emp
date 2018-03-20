@@ -5,7 +5,7 @@
       <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
-      <a href="#" class="btn btn-primary viewOneLink">Set up meeting</a>
+      <a href="#" class="btn btn-primary viewOneLink" v-on:click="bookSpace()">Set up meeting</a>
       <a :href="'/edit-space/' + spaceEmail" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
       <p><strong>Description: </strong>{{space.description}}</p>
       <p><strong>Capacity: </strong>{{space.capacity}}</p>
@@ -76,6 +76,21 @@ export default {
       }, error => {
         console.error(error)
       })
+    },
+    bookSpace () {
+      var bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
+      console.log('BOOK SPACE! ' + bookedEmails)
+      if (bookedEmails == null) {
+        bookedEmails = [this.spaceEmail]
+        console.log('spaceEmail: ' + this.spaceEmail)
+      } else {
+        if (!bookedEmails.includes(this.spaceEmail)) {
+          bookedEmails.push(this.spaceEmail)
+        } else {
+          console.log('already in list!')
+        }
+      }
+      localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
     }
   }
 }
