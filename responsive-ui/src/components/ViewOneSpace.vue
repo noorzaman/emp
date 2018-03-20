@@ -79,15 +79,11 @@ export default {
     },
     bookSpace () {
       var bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
-      console.log('BOOK SPACE! ' + bookedEmails)
       if (bookedEmails == null) {
         bookedEmails = [this.spaceEmail]
-        console.log('spaceEmail: ' + this.spaceEmail)
       } else {
         if (!bookedEmails.includes(this.spaceEmail)) {
           bookedEmails.push(this.spaceEmail)
-        } else {
-          console.log('already in list!')
         }
       }
       localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
