@@ -89,9 +89,12 @@ export default {
       }
       localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
 
-      //try to schedule a meeting
-      this.$router.push({ name: 'ScheduleSpace', params: {spaceEmail: this.spaceEmail }})
-}
+      // try to schedule a meeting
+      this.$router.push({
+        name: 'ScheduleSpace',
+        params: {spaceEmail: this.spaceEmail}
+      })
+    }
   }
 }
 </script>

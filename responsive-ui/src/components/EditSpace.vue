@@ -42,7 +42,7 @@
       </ul>
     </div>
     <div class="form-group typeAhead">
-      <TypeAhead v-bind:tags="tags" ></TypeAhead>
+      <TypeAhead v-bind:tags="tags"></TypeAhead>
     </div>
     <button class="btn btn-primary" v-on:click="editSpace">Submit edit</button>
   </div>
