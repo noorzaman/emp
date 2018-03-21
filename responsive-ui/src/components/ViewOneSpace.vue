@@ -5,6 +5,7 @@
       <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
+      <!-- <a href="#" class="btn btn-primary viewOneLink" v-on:click="bookSpace()">Set up meeting</a> -->
       <a href="#" class="btn btn-primary viewOneLink" v-on:click="bookSpace()">Set up meeting</a>
       <a :href="'/edit-space/' + spaceEmail" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
       <p><strong>Description: </strong>{{space.description}}</p>
@@ -87,7 +88,10 @@ export default {
         }
       }
       localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
-    }
+
+      //try to schedule a meeting
+      this.$router.push({ name: 'ScheduleSpace', params: {spaceEmail: this.spaceEmail }})
+}
   }
 }
 </script>
