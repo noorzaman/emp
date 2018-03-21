@@ -3,18 +3,19 @@
     <h1>{{pageTitle}}</h1>
     <br>
     <div class="form-group">
+      <label>Space name</label><br>
+      <input type="text" v-model="name"><br>
+    </div>
+    <div class="form-group">
       <label>Space e-mail</label><br>
       <p>{{this.email}}</p>
     </div>
     <div class="row">
       <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8">
-        <img :src="imageData" :alt="'image'" class="img-fluid img-thumbnail bookedImg">
+        <img :src="imageData" :alt="'image'" class="img-fluid img-thumbnail">
       </div>
     </div>
-    <div class="form-group">
-      <label>Space name</label><br>
-      <input type="text" v-model="name"><br>
-    </div>
+
     <div class="form-group">
       <label>Description</label><br>
       <textarea rows="5" cols="50" placeholder="Enter the description" v-model="description"></textarea><br>
@@ -41,7 +42,7 @@
       </ul>
     </div>
     <div class="form-group typeAhead">
-      <TypeAhead></TypeAhead>
+      <TypeAhead v-bind:tags="tags" ></TypeAhead>
     </div>
     <button class="btn btn-primary" v-on:click="editSpace">Submit edit</button>
   </div>
@@ -63,15 +64,16 @@ export default {
       email: this.$route.params.spaceId,
       imageData: '',
       name: '',
-      description: ''
+      description: '',
+      tags: []
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
-  mounted: function () {
+  mounted () {
     window.addEventListener('resize', this.handleResize)
     this.searchByEmail()
   },
-  beforeDestroy: function () {
+  beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
   },
   methods: {
@@ -99,38 +101,39 @@ export default {
         this.imageData = space.image
         this.name = space.name
         this.description = space.description
+        this.tags = space.attributes
       }, error => {
         console.error(error)
       })
     },
     editSpace () {
-      // var themes = []
-      // var options = document.getElementsByName('themeCheckbox')
-      // for (var i = 0; i < options.length; i++) {
-      //   if (options[i].checked) {
-      //     themes.push(options[i].value)
-      //   }
-      // }
-      //
-      // var attributes = []
-      // options = document.getElementsByClassName('attr')
-      // for (i = 0; i < options.length; i++) {
-      //   attributes.push(options[i].id)
-      // }
-      //
-      // var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
-      // if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
-      //   desiredCapacity = 0
-      // }
+      var themes = []
+      var options = document.getElementsByName('themeCheckbox')
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].checked) {
+          themes.push(options[i].value)
+        }
+      }
+
+      var attributes = []
+      options = document.getElementsByClassName('attr')
+      for (i = 0; i < options.length; i++) {
+        attributes.push(options[i].id)
+      }
+
+      var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
+      if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
+        desiredCapacity = 0
+      }
 
       var data = {
         'placeId': this.email,
         'space': {
           'name': this.name,
-          'description': this.description
-          // 'capacity': desiredCapacity,
-          // 'themes': themes,
-          // 'attributes': attributes
+          'description': this.description,
+          'capacity': desiredCapacity,
+          'themes': themes,
+          'attributes': attributes
         }
       }
       var jsonData = JSON.stringify(data)
@@ -144,6 +147,7 @@ export default {
         this.$router.push('/space/' + this.email)
       }, error => {
         console.error(error)
+        this.$router.push('/space/' + this.email)
       })
     }
   }

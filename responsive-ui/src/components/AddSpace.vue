@@ -2,6 +2,10 @@
   <div class="main">
     <h1>{{pageTitle}}</h1>
     <div class="form-group">
+      <label>*Space name</label><br>
+      <input type="text" v-model="name"><br>
+    </div>
+    <div class="form-group">
       <label>Space e-mail</label><br>
       <input type="email" v-model="email"><br>
     </div>
@@ -10,7 +14,7 @@
         <input type="file" accept="image/*" @change="previewImage">
       </div>
       <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="imageData.length > 0">
-        <img :src="imageData" class="img-fluid img-thumbnail bookedImg">
+        <img :src="imageData" class="img-fluid img-thumbnail">
       </div>
     </div>
     <br>
@@ -31,15 +35,16 @@ export default {
     return {
       pageTitle: 'Add a New Space',
       pageWidth: document.documentElement.clientWidth,
-      imageData: '',
-      email: ''
+      name: '',
+      email: '',
+      imageData: ''
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
-  mounted: function () {
+  mounted () {
     window.addEventListener('resize', this.handleResize)
   },
-  beforeDestroy: function () {
+  beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
   },
   methods: {
@@ -67,7 +72,10 @@ export default {
     uploadPhoto () {
       var data = {
         'placeId': this.email,
-        'data': this.imageData
+        'data': this.imageData,
+        'space': {
+          'name': this.name
+        }
       }
       var jsonData = JSON.stringify(data)
       var url = 'https://txdydq8h71.execute-api.us-east-1.amazonaws.com/development/streams/tmp/record2'
@@ -80,6 +88,7 @@ export default {
         this.$router.push('/edit-space/' + this.email)
       }, error => {
         console.error(error)
+        this.$router.push('/edit-space/' + this.email)
       })
     }
   }

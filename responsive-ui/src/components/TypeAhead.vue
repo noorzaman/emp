@@ -16,11 +16,12 @@
     </div>
   </section>
 </template>
+
 <script>
 // import attributes from '../../assets/data/attributes.json'
 // import from server here
-
 export default {
+  props: ['tags'],
   data () {
     return {
       model: '',
@@ -28,7 +29,26 @@ export default {
       selectedItems: []
     }
   },
-  mounted: function () {
+  watch: {
+    tags (tags) {
+      for (var i = 0; i < tags.length; i++) {
+        this.selectedItems.push(tags[i])
+        var attributeItem = document.createElement('div')
+        attributeItem.id = tags[i]
+        var attributeText = document.createElement('p')
+        var cancelButton = document.createElement('a')
+        cancelButton.id = tags[i] + 'A'
+        cancelButton.innerHTML = ' remove'
+        cancelButton.addEventListener('click', this.handleRemoveClick)
+        attributeItem.classList.add('attr')
+        attributeText.innerHTML = tags[i]
+        attributeItem.appendChild(attributeText)
+        attributeText.appendChild(cancelButton)
+        document.getElementById('selectedItemsArea').appendChild(attributeItem)
+      }
+    }
+  },
+  mounted () {
     document.getElementById('attributes').addEventListener('keyup', this.handleEnter)
     document.getElementById('addAttrButton').addEventListener('click', this.handleButtonClick)
   },
@@ -90,4 +110,3 @@ export default {
   }
 }
 </script>
-<!-- typeahead-example.vue -->
