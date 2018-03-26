@@ -55,11 +55,14 @@
     <div class="clearFix"></div>
     <br>
     <br>
+    <h2 v-if="matches.length == 1">Search Results: {{matches.length}} result found</h2>
+    <h2 v-if="matches.length > 1">Search Results: {{matches.length}} results found</h2>
     <div v-for="match in matches" :key="match.id" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
-      <div>
-        <p>{{match.matchPercent}}%</p>
+      <div class="matchTitle">
+        <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
         <h2>{{match.name}}</h2>
       </div>
+      <div class="clearFix"></div>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       <div v-if="match.matchPercent !== 100">
@@ -68,24 +71,17 @@
         </div>
         <div v-if="match.missThemes.length > 0" class="missingThemes">
           <p><strong>Missing Themes</strong></p>
-          <ul class="missingThemesItems">
+          <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
             <li v-for="theme of match.missThemes" :key="theme">{{theme}}</li>
           </ul>
         </div>
         <div v-if="match.missAttributes.length > 0" class="missingAttributes">
           <p><strong>Missing Attributes</strong></p>
-          <ul v-for="attribute of match.missAttributes" :key="attribute">
-            <li>{{attribute}}</li>
+          <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
+            <li v-for="attribute of match.missAttributes" :key="attribute">{{attribute}}</li>
           </ul>
         </div>
       </div>
-      <!-- <p>Email: {{match.email}}</p>
-      <p>Capacity: {{match.capacity}}</p>
-      <p>Theme: {{match.theme}}</p>
-      <p>Attributes:</p>
-      <ul v-for="attribute of match.attributes" :key="attribute">
-        <li>{{attribute}}</li>
-      </ul> -->
       <div class="clearFix"></div>
       <a :href="'/space/' + match.email" target="_blank" class="btn btn-primary">Space Details</a>
     </div>

@@ -253,10 +253,11 @@ ul {
 
 .missingThemes {
     float: left;
-    width: 50%;
+    width: 40%;
+    margin-right: 2em;
 }
 
-.missingThemesItems {
+.missingItems {
     height: 100px;
     overflow: auto;
 }
@@ -272,6 +273,31 @@ ul {
 .missingAttributes {
     float: left;
     width: 50%;
+}
+
+.matchTitle h2 {
+    padding-top: 0.3em;
+    padding-left: 2.5em;
+}
+
+.matchPercent {
+    float: left;
+    border-radius: 50%;
+    padding: 15px;
+    color: white;
+    font-weight: bold;
+}
+
+.highMatch {
+    background-color: #318833;
+}
+
+.mediumMatch {
+    background-color: #ffa200;
+}
+
+.lowMatch {
+    background-color: #c65242;
 }
 
 /* Booked Spaces Styles */
@@ -736,6 +762,14 @@ ul {
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
+    }
+    
+    .missingThemes {
+        width: 100%;
+    }
+    
+    .missingAttributes {
+        width: 100%;
     }
 
     .checkbox-grid li {
