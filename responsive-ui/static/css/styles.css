@@ -61,6 +61,7 @@
 h1 {
     font-weight: bold;
     margin-top: 0.5em;
+    font-size: 20px;
 }
 
 hr {
@@ -306,16 +307,15 @@ ul {
     border-top-style: solid;
     border-top-color: #e5dddd;
     padding-top: 8px;
+    padding-bottom: 8px;
     background: white;
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 90px;
-    line-height: 40px;
     margin-top: 100px;
-}   
-    
+}
+
 .footer .item {
     vertical-align: top;
     display: inline-block;
@@ -350,11 +350,11 @@ ul {
     body {
         background-color: lightblue;
     }
-    
+
     .carousel {
         width: 48em;
     }
-    
+
     .introText li, .introText p {
         font-size: 1em;
     }
@@ -364,7 +364,7 @@ ul {
     body {
         background-color: pink;
     }
-    
+
     .carousel {
         width: 45em;
     }
@@ -372,7 +372,7 @@ ul {
     .sliderContainer {
         margin-left: 2px;
     }
-    
+
     .attributesList, .themesList {
         height: 130px;
     }
@@ -382,18 +382,18 @@ ul {
     body {
         background-color: green;
     }
-    
+
     .carousel {
         width: 20em;
     }
-    
+
     .browseThemes img {
         height: 100px;
         margin-left: 30%;
         margin-right: 30%;
         width: 40%;
     }
-    
+
     .bookedImg {
         height: 200px;
     }
@@ -403,20 +403,20 @@ ul {
     body {
         background-color: purple;
     }
-    
+
     .introText {
         width: 55%;
     }
-    
+
     .sliderContainer {
         width: 30%;
         margin-left: 0px;
     }
-    
+
     .footer .item {
         width: 24%;
     }
-    
+
     .attributesList, .themesList {
         height: 120px;
     }
@@ -438,37 +438,37 @@ ul {
     body {
         background-color: purple;
     }
-    
+
     .introText li, .introText p {
         line-height: 30px;
     }
 }
 
 @media only screen and (max-width: 885px) {
-    
-    body { 
+
+    body {
         background-color: pink;
     }
-    
+
     .navbar-header {
         width: 35%;
     }
-    
+
     .leftSearch {
         width: 100%;
         border-right: 0px solid #e5dddd;
         margin-right: 0;
     }
-    
+
     .rightSearch {
         width: 100%;
         margin-left: 0;
     }
-    
+
     .form-group {
         margin-bottom: 1em;
     }
-    
+
     .bookedImg {
         height: 150px;
     }
@@ -478,28 +478,28 @@ ul {
     body {
         background-color: red;
     }
-    
+
     .viewOneImgCol {
        width: 100%;
        margin-bottom: 2em;
     }
-    
+
     .viewOneCapacityCol {
         width: 50%;
     }
-    
+
     .viewOneAttrCol {
         width: 40%;
     }
-    
+
     .viewOneImgCol {
         width: 100%;
     }
 
     .roomInfo {
         width: 100%;
-    }    
-    
+    }
+
     .footerSpace {
         height: 110px;
     }
@@ -509,7 +509,7 @@ ul {
     body {
         background-color: red;
     }
-    
+
     .bookedImg {
         height: auto;
     }
@@ -525,11 +525,11 @@ ul {
     body {
         background-color: lightblue;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 2.5em;
     }
-    
+
     .browseThemes {
         width: 25%;
         float: left;
@@ -547,11 +547,11 @@ ul {
     body {
         background-color: lightgreen;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 2.5em;
     }
-    
+
     .browseThemes {
         width: 25%;
         float: left;
@@ -563,7 +563,7 @@ ul {
         margin-right: 25%;
         width: 50%;
     }
-    
+
     #attributes {
         width: 75%;
     }
@@ -573,7 +573,7 @@ ul {
     body {
         background-color: red;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 2em
     }
@@ -583,7 +583,7 @@ ul {
     body {
         background-color: pink;
     }
-    
+
     .browseThemes img {
         height: 80px;
         margin-left: 25%;
@@ -596,74 +596,70 @@ ul {
     body {
         background-color: lightyellow;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 1.5em;
     }
-    
+
     .browseThemes img {
-        height: 70px;
+        height: 40px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .footer img {
         height: 33px;
     }
-    
+
     .footer .item {
-        height: 60px;
+        height: 40px;
     }
 }
 
 @media only screen and (max-width: 430px) {
-    
+
     body {
         background-color: lightblue;
     }
-    
-    .footer {
-        height: 70px;
-    }
-    
+
     .browseThemes {
         width: 33%;
         float: left;
     }
-    
+
     .browseThemes img {
         height: 60px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .timePicker {
         float: left;
         width: 100%;
     }
-    
+
     .to p {
         margin-top: 0.5em;
     }
-    
+
     .checkbox-grid li {
         width: 33%;
     }
-    
+
    .viewOneCapacityCol {
         width: 45%;
     }
-    
+
     .viewOneAttrCol {
         width: 55%;
     }
-    
+
     .footer img {
         height: 33px;
     }
-    
+
     .footer .caption {
         font-size: 0.9em;
         height: 50px;
@@ -675,26 +671,26 @@ ul {
     body {
         background-color: pink;
     }
-    
+
     .mobile-header h2 {
         font-size: 2em;
     }
-    
+
     .mobile-header p {
         font-size: 0.9em;
     }
-    
+
     .browseThemes img {
         height: 70px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .footer img {
         height: 33px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
         height: 60px;
@@ -703,33 +699,28 @@ ul {
 }
 
 @media only screen and (max-width: 360px) {
-    
+
     body {
         background-color: lightblue;
     }
-    
+
     .browseThemes img {
         height: 70px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .checkbox-grid li {
         width: 50%;
     }
-    
+
     .footer img {
         height: 30px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -737,26 +728,21 @@ ul {
     body {
         background-color: pink;
     }
-    
+
     .mobile-header p {
         font-size: 0.8em;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 1.2em;
     }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -764,34 +750,29 @@ ul {
     body {
         background-color: lightyellow;
     }
-    
+
     .mobile-header h2 {
         font-size: 1.5em;
     }
-    
+
     .mobile-header {
         margin-bottom: 2em;
     }
-    
+
     .logo {
         width: 50px;
     }
-    
+
     .footer .item {
         width: 22%;
     }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -799,25 +780,20 @@ ul {
     body {
         background-color: white;
     }
-    
+
     .browseThemes img {
         height: 60px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -825,17 +801,12 @@ ul {
     body {
         background-color: red;
     }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }

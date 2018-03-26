@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>My Previously Booked Spaces</h1>
+    <h1>Previously Booked Spaces</h1>
    <div v-if="prevBookedSpaces.length == 0">
       <p>You have not booked any spaces yet.</p>
     </div>
