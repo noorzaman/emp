@@ -55,20 +55,38 @@
     <div class="clearFix"></div>
     <br>
     <br>
-    <div v-for="match in matches" :key="match.id" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div v-for="match in matches" :key="match.id" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div>
         <p>{{match.matchPercent}}%</p>
         <h2>{{match.name}}</h2>
       </div>
       <p>{{match.description}}</p>
-      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail">
-      <p>Email: {{match.email}}</p>
+      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+      <div v-if="match.matchPercent !== 100">
+        <div v-if="searchCriteria.capacity !== 0" class="missingCapacity">
+          <p><strong>Capacity not a match: {{match.capacity}}</strong></p>
+        </div>
+        <div v-if="match.missThemes.length > 0" class="missingThemes">
+          <p><strong>Missing Themes</strong></p>
+          <ul class="missingThemesItems">
+            <li v-for="theme of match.missThemes" :key="theme">{{theme}}</li>
+          </ul>
+        </div>
+        <div v-if="match.missAttributes.length > 0" class="missingAttributes">
+          <p><strong>Missing Attributes</strong></p>
+          <ul v-for="attribute of match.missAttributes" :key="attribute">
+            <li>{{attribute}}</li>
+          </ul>
+        </div>
+      </div>
+      <!-- <p>Email: {{match.email}}</p>
       <p>Capacity: {{match.capacity}}</p>
       <p>Theme: {{match.theme}}</p>
       <p>Attributes:</p>
       <ul v-for="attribute of match.attributes" :key="attribute">
         <li>{{attribute}}</li>
-      </ul>
+      </ul> -->
+      <div class="clearFix"></div>
       <a :href="'/space/' + match.email" target="_blank" class="btn btn-primary">Space Details</a>
     </div>
   </div>

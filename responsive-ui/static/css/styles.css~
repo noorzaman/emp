@@ -33,13 +33,13 @@
 }
 
 .container {
-    width: 1300px;
+    width: 100%;
 }
 
 /* Mobile Header Styles */
 
 .mobile-header {
-    margin-left: 3.7em;
+    margin-left: 2em;
     margin-bottom: 3.5em;
 }
 
@@ -49,8 +49,9 @@
 
 /* Main Content Styles */
 
-h1 {
-    margin-left: 1.5em;
+.main {
+    margin-left: 2em;
+    margin-right: 2em;
 }
 
 .intro {
@@ -60,12 +61,10 @@ h1 {
 h1 {
     font-weight: bold;
     margin-top: 0.5em;
+    font-size: 20px;
 }
 
 hr {
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
     border: 1px solid #e5dddd;
 }
 
@@ -107,7 +106,6 @@ hr {
 .introText {
     float: left;
     width: 40%;
-    margin-left: 4em;
 }
 
 .introText li, .introText p {
@@ -117,6 +115,10 @@ hr {
 
 .introText h1 {
     margin-left: 0px;
+}
+
+.introText ul {
+    padding-left: 1.5em;
 }
 
 .sliderContainer {
@@ -165,6 +167,166 @@ hr {
     width: 25px;
 }
 
+/* Search Styles */
+
+.search {
+    margin-left: 2em;
+}
+
+.leftSearch {
+    float: left;
+    width: 45%;
+    border-right: 2px solid #e5dddd;
+    margin-right: 10px;
+}
+
+.rightSearch {
+    float: left;
+    width: 45%;
+    margin-left: 10px;
+}
+
+.form-group {
+    margin-bottom: 2em;
+}
+
+label {
+    font-size: 1.5em;
+}
+
+.submitButton {
+    float: left;
+    margin-right: 80%;
+}
+
+.numberSlider {
+    width: 90%;
+    margin-top: 2.5em;
+}
+
+.timePicker {
+    float: left;
+}
+
+.to {
+    float: left;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.to p {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 2.5em;
+}
+
+.checkbox-grid li {
+    display: block;
+    float: left;
+    width: 25%;
+}
+
+ul {
+    padding-left: 0;
+}
+
+.themes {
+    margin-bottom: 100px;
+}
+
+.typeAhead {
+    margin-top: 8em;
+}
+
+#addAttrButton {
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+#attributes {
+    width: 50%;
+}
+
+.missingCapacity {
+
+} 
+
+.missingThemes {
+    float: left;
+    width: 50%;
+}
+
+.missingThemesItems {
+    height: 75px;
+    overflow: auto;
+}
+
+.missingThemes ul, .missingAttributes ul {
+    list-style-image: url("../images/notMatchedRed.png");
+}
+
+.missingThemes ul li, .missingAttributes ul li {
+    list-style-position: inside;
+}
+
+.missingAttributes {
+    float: left;
+    width: 50%;
+}
+
+/* Booked Spaces Styles */
+
+.bookedLocation, .searchLocation {
+    margin-bottom: 2em;
+}
+
+.bookedImg, .searchImg {
+    margin-bottom: 1em;
+    width: 100%;
+    height: 250px;
+}
+
+/* View One Styles */
+
+.viewOneImgCol {
+    float: left;
+    width: 50%;
+    margin-right: 1em;
+}
+
+.viewOneCapacityCol {
+    float: left;
+    width: 22%;
+}
+
+.viewOneAttrCol {
+    float: left;
+    width: 22%;
+    padding-left: 1em;
+    border-left: 2px solid #e5dddd;
+}
+
+.viewOneAttrCol ul, .viewOneCapacityCol ul {
+    list-style-type: none;
+}
+
+.roomInfo p, .roomInfo li {
+    font-size: 1.3em;
+}
+
+.viewOneLink {
+    margin-bottom: 1em;
+}
+
+.editBtn {
+    margin-left: 2em;
+}
+
+.attributesList, .themesList {
+    height: 200px;
+    overflow: auto;
+}
+
 /* Footer Styles */
 
 .footer {
@@ -172,16 +334,15 @@ hr {
     border-top-style: solid;
     border-top-color: #e5dddd;
     padding-top: 8px;
+    padding-bottom: 8px;
     background: white;
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 90px;
-    line-height: 40px;
     margin-top: 100px;
-}   
-    
+}
+
 .footer .item {
     vertical-align: top;
     display: inline-block;
@@ -216,15 +377,11 @@ hr {
     body {
         background-color: lightblue;
     }
-    
+
     .carousel {
         width: 48em;
     }
-    
-    .container {
-        width: 1200px;
-    }
-    
+
     .introText li, .introText p {
         font-size: 1em;
     }
@@ -234,7 +391,7 @@ hr {
     body {
         background-color: pink;
     }
-    
+
     .carousel {
         width: 45em;
     }
@@ -242,9 +399,9 @@ hr {
     .sliderContainer {
         margin-left: 2px;
     }
-    
-    .container {
-        width: 1100px;
+
+    .attributesList, .themesList {
+        height: 130px;
     }
 }
 
@@ -252,20 +409,20 @@ hr {
     body {
         background-color: green;
     }
-    
+
     .carousel {
         width: 20em;
     }
 
-    .container {
-        width: 1000px;
-    }
-    
     .browseThemes img {
         height: 100px;
         margin-left: 30%;
         margin-right: 30%;
         width: 40%;
+    }
+
+    .bookedImg, .searchImg {
+        height: 200px;
     }
 }
 
@@ -273,22 +430,22 @@ hr {
     body {
         background-color: purple;
     }
-    
+
     .introText {
         width: 55%;
     }
-    
+
     .sliderContainer {
         width: 30%;
         margin-left: 0px;
     }
 
-    .navbar-header {
-        width: 35%;
+    .footer .item {
+        width: 24%;
     }
-    
-    .navbar-right {
-        margin-right: 20px;
+
+    .attributesList, .themesList {
+        height: 120px;
     }
 }
 
@@ -296,31 +453,11 @@ hr {
     body {
         background-color: pink;
     }
-    
-    .navbar-header {
-        width: 35%;
-    }
-    
-    .navbar-right {
-        margin-right: 50px;
-    }
 }
 
 @media only screen and (max-width: 935px) {
     body {
         background-color: lightblue;
-    }
-    
-    .navbar-header {
-        width: 35%;
-    }
-    
-    .navbar-right {
-        margin-right: 80px;
-    }
-    
-    .navbar-nav > li > a {
-        font-size: 0.85em;
     }
 }
 
@@ -328,41 +465,39 @@ hr {
     body {
         background-color: purple;
     }
-    
+
     .introText li, .introText p {
         line-height: 30px;
-    }
-    
-    .navbar-header {
-        width: 35%;
-    }
-    
-    .navbar-right {
-        margin-right: 100px;
-    }
-    
-    .navbar-nav > li > a {
-        font-size: 0.85em;
     }
 }
 
 @media only screen and (max-width: 885px) {
+
     body {
         background-color: pink;
     }
-    
+
     .navbar-header {
         width: 35%;
     }
-    
-    .navbar-right {
-        margin-right: 140px;
+
+    .leftSearch {
+        width: 100%;
+        border-right: 0px solid #e5dddd;
+        margin-right: 0;
     }
-    
-    .navbar-nav > li > a {
-        font-size: 0.85em;
-        padding-left: 8px;
-        padding-right: 8px;
+
+    .rightSearch {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .form-group {
+        margin-bottom: 1em;
+    }
+
+    .bookedImg, .searchImg {
+        height: 150px;
     }
 }
 
@@ -370,29 +505,30 @@ hr {
     body {
         background-color: red;
     }
-    
-    .footer .item {
-        width: 200px;
-    }
-}
 
-@media only screen and (max-width: 830px) {
-    body {
-        background-color: gray;
+    .viewOneImgCol {
+       width: 100%;
+       margin-bottom: 2em;
     }
-    
-    .footer .item {
-        width: 180px;
-    }
-}
 
-@media only screen and (max-width: 800px) {
-    body {
-        background-color: lightyellow;
+    .viewOneCapacityCol {
+        width: 50%;
     }
-    
-    .footer .item {
-        width: 180px;
+
+    .viewOneAttrCol {
+        width: 40%;
+    }
+
+    .viewOneImgCol {
+        width: 100%;
+    }
+
+    .roomInfo {
+        width: 100%;
+    }
+
+    .footerSpace {
+        height: 110px;
     }
 }
 
@@ -400,9 +536,9 @@ hr {
     body {
         background-color: red;
     }
-    
-    .footer .item {
-        width: 175px;
+
+    .bookedImg, .searchImg {
+        height: auto;
     }
 }
 
@@ -410,26 +546,17 @@ hr {
     body {
         background-color: pink;
     }
-    
-    .footer .item {
-        width: 150px;
-    }
 }
 
 @media only screen and (max-width: 654px) {
     body {
         background-color: lightblue;
     }
-    
-    .mobile-header {
-        margin-left: 2.2em;
-    }
-    
+
     .browseAllTitle h1 {
         font-size: 2.5em;
-        margin-left: 0.9em;
     }
-    
+
     .browseThemes {
         width: 25%;
         float: left;
@@ -441,21 +568,17 @@ hr {
         margin-right: 25%;
         width: 50%;
     }
-        
-    .footer .item {
-        width: 140px;
-    }
 }
 
 @media only screen and (max-width: 590px) {
     body {
         background-color: lightgreen;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 2.5em;
     }
-    
+
     .browseThemes {
         width: 25%;
         float: left;
@@ -467,9 +590,9 @@ hr {
         margin-right: 25%;
         width: 50%;
     }
-    
-    .footer .item {
-        width: 130px;
+
+    #attributes {
+        width: 75%;
     }
 }
 
@@ -477,17 +600,9 @@ hr {
     body {
         background-color: red;
     }
-    
-    .mobile-header {
-        margin-left: 1.8em;
-    }
-    
+
     .browseAllTitle h1 {
         font-size: 2em
-    }
-    
-    .footer .item {
-        width: 120px;
     }
 }
 
@@ -495,16 +610,12 @@ hr {
     body {
         background-color: pink;
     }
-    
+
     .browseThemes img {
         height: 80px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
-    }
-    
-    .footer .item {
-        width: 110px;
     }
 }
 
@@ -512,62 +623,70 @@ hr {
     body {
         background-color: lightyellow;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 1.5em;
-        margin-left: 1.5em;
     }
-    
+
     .browseThemes img {
-        height: 70px;
+        height: 40px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .footer img {
         height: 33px;
     }
-    
+
     .footer .item {
-        width: 100px;
-        height: 60px;
+        height: 40px;
     }
 }
 
 @media only screen and (max-width: 430px) {
+
     body {
         background-color: lightblue;
     }
-    
-    .footerSpace {
-        height: 55px;
-    }
-    
-    .footer {
-        height: 70px;
-    }
-    
+
     .browseThemes {
         width: 33%;
         float: left;
     }
-    
+
     .browseThemes img {
         height: 60px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
-    .footer .item {
-        width: 90px;
+
+    .timePicker {
+        float: left;
+        width: 100%;
     }
-    
+
+    .to p {
+        margin-top: 0.5em;
+    }
+
+    .checkbox-grid li {
+        width: 33%;
+    }
+
+   .viewOneCapacityCol {
+        width: 45%;
+    }
+
+    .viewOneAttrCol {
+        width: 55%;
+    }
+
     .footer img {
         height: 33px;
     }
-    
+
     .footer .caption {
         font-size: 0.9em;
         height: 50px;
@@ -579,30 +698,26 @@ hr {
     body {
         background-color: pink;
     }
-    
+
     .mobile-header h2 {
         font-size: 2em;
     }
-    
+
     .mobile-header p {
         font-size: 0.9em;
     }
-    
+
     .browseThemes img {
         height: 70px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
-    .footer .item {
-        width: 80px;
-    }
-    
+
     .footer img {
         height: 33px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
         height: 60px;
@@ -611,36 +726,28 @@ hr {
 }
 
 @media only screen and (max-width: 360px) {
+
     body {
         background-color: lightblue;
     }
-    
+
     .browseThemes img {
         height: 70px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
-    .footerSpace {
-        height: 45px;
+
+    .checkbox-grid li {
+        width: 50%;
     }
-    
-    .footer .item {
-        width: 80px;
-    }
-    
+
     .footer img {
         height: 30px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -648,30 +755,21 @@ hr {
     body {
         background-color: pink;
     }
-    
+
     .mobile-header p {
         font-size: 0.8em;
     }
-    
+
     .browseAllTitle h1 {
         font-size: 1.2em;
     }
-    
-    .footer .item {
-        width: 75px;
-    }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -679,64 +777,50 @@ hr {
     body {
         background-color: lightyellow;
     }
-    
+
     .mobile-header h2 {
         font-size: 1.5em;
     }
-    
+
     .mobile-header {
         margin-bottom: 2em;
     }
-    
+
     .logo {
         width: 50px;
     }
-    
+
     .footer .item {
-        width: 70px;
+        width: 22%;
     }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
 @media only screen and (max-width: 305px) {
     body {
-        background-color: lightblue;
+        background-color: white;
     }
-    
+
     .browseThemes img {
         height: 60px;
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
     }
-    
-    .footer .item {
-        width: 65px;
-    }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }
 
@@ -744,21 +828,12 @@ hr {
     body {
         background-color: red;
     }
-    
-    .footer .item {
-        width: 60px;
-    }
-    
+
     .footer img {
         height: 25px;
     }
-    
+
     .footer .caption {
         font-size: 0.7em;
-    }
-    
-    .footer {
-        height: 60px;
-        line-height: 20px;
     }
 }

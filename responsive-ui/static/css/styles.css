@@ -167,7 +167,7 @@ hr {
     width: 25px;
 }
 
-/* Search Form Styles */
+/* Search Styles */
 
 .search {
     margin-left: 2em;
@@ -247,13 +247,40 @@ ul {
     width: 50%;
 }
 
+.missingCapacity {
+
+} 
+
+.missingThemes {
+    float: left;
+    width: 50%;
+}
+
+.missingThemesItems {
+    height: 100px;
+    overflow: auto;
+}
+
+.missingThemes ul, .missingAttributes ul {
+    list-style-image: url("../images/notMatchedRed.png");
+}
+
+.missingThemes ul li, .missingAttributes ul li {
+    list-style-position: inside;
+}
+
+.missingAttributes {
+    float: left;
+    width: 50%;
+}
+
 /* Booked Spaces Styles */
 
-.bookedLocation {
+.bookedLocation, .searchLocation {
     margin-bottom: 2em;
 }
 
-.bookedImg {
+.bookedImg, .searchImg {
     margin-bottom: 1em;
     width: 100%;
     height: 250px;
@@ -394,7 +421,7 @@ ul {
         width: 40%;
     }
 
-    .bookedImg {
+    .bookedImg, .searchImg {
         height: 200px;
     }
 }
@@ -469,7 +496,7 @@ ul {
         margin-bottom: 1em;
     }
 
-    .bookedImg {
+    .bookedImg, .searchImg {
         height: 150px;
     }
 }
@@ -510,7 +537,7 @@ ul {
         background-color: red;
     }
 
-    .bookedImg {
+    .bookedImg, .searchImg {
         height: auto;
     }
 }
