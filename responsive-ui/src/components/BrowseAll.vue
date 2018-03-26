@@ -48,6 +48,7 @@ export default {
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
+    document.title = 'Browse Spaces'
     window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy () {

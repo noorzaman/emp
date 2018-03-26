@@ -42,6 +42,7 @@ export default {
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
+    document.title = 'Add Space'
     window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy () {

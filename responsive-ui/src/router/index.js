@@ -16,50 +16,42 @@ export default new Router({
     {
       path: '/',
       name: 'BrowseAll',
-      component: BrowseAll,
-      pageTitle: 'TITLE'
+      component: BrowseAll
     },
     {
       path: '/browse/:theme',
       name: 'BrowseTheme',
-      component: BrowseTheme,
-      pageTitle: 'TITLE'
+      component: BrowseTheme
     },
     {
       path: '/add-space',
       name: 'AddSpace',
-      component: AddSpace,
-      pageTitle: 'TITLE'
+      component: AddSpace
     },
     {
       path: '/edit-space/:spaceId',
       name: 'EditSpace',
-      component: EditSpace,
-      pageTitle: 'TITLE'
+      component: EditSpace
     },
     {
       path: '/search-spaces',
       name: 'Search',
-      component: Search,
-      pageTitle: 'TITLE'
+      component: Search
     },
     {
       path: '/booked-spaces',
       name: 'Booked',
-      component: Booked,
-      pageTitle: 'TITLE'
+      component: Booked
     },
     {
       path: '/space/:spaceId',
       name: 'ViewOneSpace',
-      component: ViewOneSpace,
-      pageTitle: 'TITLE'
+      component: ViewOneSpace
     },
     {
       path: '/schedule-space',
       name: 'ScheduleSpace',
       component: ScheduleSpace,
-      pageTitle: 'TITLE',
       props: true
     }
   ],

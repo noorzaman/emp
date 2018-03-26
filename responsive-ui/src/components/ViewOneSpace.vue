@@ -47,6 +47,7 @@ export default {
     }
   },
   mounted () {
+    document.title = 'View Space'
     this.createElasticSearchUrl()
     this.searchByEmail(this.spaceEmail)
   },

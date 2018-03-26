@@ -70,6 +70,7 @@ export default {
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
+    document.title = 'Edit Space'
     window.addEventListener('resize', this.handleResize)
     this.searchByEmail()
   },

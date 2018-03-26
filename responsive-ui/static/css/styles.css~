@@ -558,14 +558,14 @@ ul {
     }
 }
 
-@media only screen and (max-width: 785px) {
+@media only screen and (max-width: 760px) {
     body {
-        background-color: red;
+        background-color: lightgreen;
     }
 
-    .bookedImg, .searchImg {
-        height: auto;
-    }
+    /*.bookedImg, .searchImg {
+        height: 300px;
+    }*/
 }
 
 @media only screen and (max-width: 725px) {
@@ -762,6 +762,14 @@ ul {
         margin-left: 25%;
         margin-right: 25%;
         width: 50%;
+    }
+    
+    .missingThemes {
+        width: 100%;
+    }
+    
+    .missingAttributes {
+        width: 100%;
     }
 
     .checkbox-grid li {

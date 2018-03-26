@@ -4,7 +4,7 @@
     <div v-for="match in matches" :key="match.email" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
-      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail">
+      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       <ul v-for="attribute of match.attributes" :key="attribute">
         <li>{{attribute}}</li>
       </ul>
@@ -26,6 +26,7 @@ export default {
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
+    document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
     window.addEventListener('resize', this.handleResize)
     this.searchByTheme(this.$route.params.theme)
   },

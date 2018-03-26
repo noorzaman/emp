@@ -27,6 +27,7 @@ export default {
     }
   },
   mounted: function () {
+    document.title = 'My Previously Booked Spaces'
     this.bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
     if (this.bookedEmails != null && this.bookedEmails.length > 0) {
       this.createElasticSearchUrl()

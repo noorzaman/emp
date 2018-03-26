@@ -67,7 +67,7 @@
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       <div v-if="match.matchPercent !== 100">
         <div v-if="searchCriteria.capacity !== 0" class="missingCapacity">
-          <p><strong>Capacity not a match: {{match.capacity}}</strong></p>
+          <p><strong>Capacity not a match:</strong> space has a capacity of {{match.capacity}}</p>
         </div>
         <div v-if="match.missThemes.length > 0" class="missingThemes">
           <p><strong>Missing Themes</strong></p>
@@ -113,6 +113,7 @@ export default {
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
+    document.title = 'Search Spaces'
     window.addEventListener('resize', this.handleResize)
     this.createElasticSearchUrl()
   },
@@ -240,13 +241,8 @@ export default {
           var entry = searchResult[n]._source.space
           // find matches
           var numMatches = 0
-          var capacityMatch = false
-          if (entry.capacity === this.searchCriteria.capacity) {
+          if (this.searchCriteria.capacity !== 0 && entry.capacity === this.searchCriteria.capacity) {
             numMatches = 1
-            capacityMatch = true
-          } else if (this.numCriteria === 0) {
-            // not searching by criteria, so technically a "match"
-            capacityMatch = true
           }
           var searchThemes = this.searchCriteria.themes
           var missingThemes = []
@@ -275,7 +271,6 @@ export default {
             attributes: entry.attributes,
             email: email,
             capacity: entry.capacity,
-            capMatch: capacityMatch,
             missThemes: missingThemes,
             missAttributes: missingAttributes,
             matchPercent: Math.round((numMatches / this.numCriteria) * 100)
