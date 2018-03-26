@@ -56,7 +56,10 @@
     <br>
     <br>
     <div v-for="match in matches" :key="match.id" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
-      <h2>{{match.name}}</h2>
+      <div>
+        <p>{{match.matchPercent}}%</p>
+        <h2>{{match.name}}</h2>
+      </div>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail">
       <p>Email: {{match.email}}</p>
@@ -89,7 +92,9 @@ export default {
       pageTitle: 'Search Meeting Spaces',
       pageWidth: document.documentElement.clientWidth,
       empUrl: '',
-      matches: []
+      matches: [],
+      searchCriteria: {},
+      numCriteria: 0
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -112,6 +117,7 @@ export default {
       this.empUrl = empHost + '/' + empIndex + '/' + empType
     },
     searchByThemesAndAttributesAndCapacity () {
+      this.numCriteria = 0
       // console.log('DEBUG: search by themes and attributes')
       var checkedThemes = []
       var options = document.getElementsByName('themeCheckbox')
@@ -143,10 +149,14 @@ export default {
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
       if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
         desiredCapacity = 0
+      } else if (desiredCapacity !== '0') {
+        this.numCriteria = 1
       }
       // console.log('DEBUG: ' + desiredCapacity)
 
       var search = ''
+      var themes = []
+      var attributes = []
       if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
         (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
         search = {
@@ -160,6 +170,14 @@ export default {
         }
       } else {
         var multisearch = spaceDelimitedThemes + ' ' + spaceDelimitedAttributes
+        themes = spaceDelimitedThemes.split(' ')
+        attributes = spaceDelimitedAttributes.split(' ')
+        if (themes[0] === '') {
+          themes = []
+        }
+        if (attributes[0] === '') {
+          attributes = []
+        }
         search = {
           'query': {
             'bool': {
@@ -179,7 +197,11 @@ export default {
             }
           }
         }
-
+        this.searchCriteria = {capacity: desiredCapacity, themes: themes, attributes: attributes}
+        console.log('themes.length: ' + themes.length + ' attributes.length: ' + attributes.length)
+        this.numCriteria += themes.length + attributes.length
+        console.log('NUM CRITERIA: ' + this.numCriteria)
+        // console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
         //  console.log('DEBUG: ' + jsonStr)
         var jsonStr = JSON.stringify(search)
         this.sendSearchAndDisplayResult(jsonStr)
@@ -202,6 +224,35 @@ export default {
         for (var n = 0; n < Math.min(searchResult.length, 20); n++) {
           var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
+          // find matches
+          var numMatches = 0
+          var capacityMatch = false
+          if (entry.capacity === this.searchCriteria.capacity) {
+            numMatches = 1
+            capacityMatch = true
+          } else if (this.numCriteria === 0) {
+            // not searching by criteria, so technically a "match"
+            capacityMatch = true
+          }
+          var searchThemes = this.searchCriteria.themes
+          var missingThemes = []
+          for (var i = 0; i < searchThemes.length; i++) {
+            if (entry.themes.includes(searchThemes[i])) {
+              numMatches++
+            } else {
+              missingThemes.push(searchThemes[i])
+            }
+          }
+          var searchAttributes = this.searchCriteria.attributes
+          var missingAttributes = []
+          for (var j = 0; j < searchAttributes.length; j++) {
+            if (entry.attributes.includes(searchAttributes[j])) {
+              numMatches++
+            } else {
+              missingAttributes.push(searchAttributes[j])
+            }
+          }
+          console.log('numMatches:' + numMatches)
           this.matches.push({
             name: entry.name,
             description: entry.description,
@@ -209,7 +260,11 @@ export default {
             theme: entry.themes,
             attributes: entry.attributes,
             email: email,
-            capacity: entry.capacity
+            capacity: entry.capacity,
+            capMatch: capacityMatch,
+            missThemes: missingThemes,
+            missAttributes: missingAttributes,
+            matchPercent: Math.round((numMatches / this.numCriteria) * 100)
           })
         }
       }, error => {
