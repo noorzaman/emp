@@ -3,41 +3,41 @@
     <h1>{{pageTitle}}</h1>
     <div class="form-group">
       <label>*Space name</label><br>
-      <input type="text" v-model="name"><br>
+      <input type="text" v-model="name">
+      <p class="text-danger">{{nameError}}</p>
     </div>
     <div class="form-group">
       <label>Space e-mail</label><br>
       <input type="email" v-model="email"><br>
+      <p class="text-danger">{{emailError}}</p>
     </div>
     <div class="row">
       <div>
         <input type="file" accept="image/*" @change="previewImage">
       </div>
-      <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="imageData.length > 0">
-        <img :src="imageData" class="img-fluid img-thumbnail">
+      <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="imageData.length">
+        <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
       </div>
     </div>
+    <p class="text-danger">{{imageError}}</p>
     <br>
-    <button class="btn btn-primary" v-on:click="uploadPhoto">Upload photo</button>
+    <button class="btn btn-primary" @click="checkForm">Upload photo</button>
   </div>
 </template>
 
 <script>
-import NumberSlider from './NumberSlider'
-import TypeAhead from './TypeAhead'
 export default {
   name: 'AddSpace',
-  components: {
-    'NumberSlider': NumberSlider,
-    'TypeAhead': TypeAhead
-  },
   data () {
     return {
       pageTitle: 'Add a New Space',
       pageWidth: document.documentElement.clientWidth,
       name: '',
       email: '',
-      imageData: ''
+      imageData: '',
+      nameError: '',
+      emailError: '',
+      imageError: ''
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -54,6 +54,7 @@ export default {
       this.pageWidth = document.documentElement.clientWidth
     },
     previewImage (event) {
+      this.imageError = ''
       // Reference to the DOM input element
       var input = event.target
       // Ensure that you have a file before attempting to read it
@@ -69,6 +70,34 @@ export default {
         // Start the reader job - read file as a data url (base64 format)
         reader.readAsDataURL(input.files[0])
       }
+    },
+    checkForm () {
+      var isError = false
+      if (!this.name.length) {
+        this.nameError = 'The name field is required'
+        isError = true
+      } else {
+        this.nameError = ''
+      }
+      if (this.email.length && !this.validEmail(this.email)) {
+        this.emailError = 'Please enter a valid email address'
+        isError = true
+      } else {
+        this.emailError = ''
+      }
+      if (!this.imageData.length) {
+        this.imageError = 'You must add an image'
+        isError = true
+      } else {
+        this.imageError = ''
+      }
+      if (!isError) {
+        this.uploadPhoto()
+      }
+    },
+    validEmail (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(email)
     },
     uploadPhoto () {
       var data = {
