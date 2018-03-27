@@ -175,14 +175,14 @@ hr {
 
 .leftSearch {
     float: left;
-    width: 45%;
+    width: 48%;
     border-right: 2px solid #e5dddd;
     margin-right: 10px;
 }
 
 .rightSearch {
     float: left;
-    width: 45%;
+    width: 48%;
     margin-left: 10px;
 }
 
@@ -192,6 +192,12 @@ hr {
 
 label {
     font-size: 1.5em;
+}
+
+.checkboxLabel {
+    font-size: 1em;
+    font-weight: normal;
+    margin-left: 5px;
 }
 
 .submitButton {
@@ -249,7 +255,7 @@ ul {
 
 .missingCapacity {
 
-} 
+}
 
 .missingThemes {
     float: left;
@@ -763,11 +769,11 @@ ul {
         margin-right: 25%;
         width: 50%;
     }
-    
+
     .missingThemes {
         width: 100%;
     }
-    
+
     .missingAttributes {
         width: 100%;
     }

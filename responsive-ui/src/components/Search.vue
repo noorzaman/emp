@@ -32,18 +32,30 @@
             <div class="form-group themes">
                 <label>Theme</label> <br>
                 <ul class="checkbox-grid">
-                    <li><input type="checkbox" name="themeCheckbox" value="casual" />Casual</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="celebratory" />Celebratory</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="cozy" />Cozy</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="fancy" />Fancy</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="fun" />Fun</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="lively" />Lively</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="modern" />Modern</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="professional" />Professional</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="quiet" />Quiet</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="rustic" />Rustic</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="studious" />Studious</li>
-                    <li><input type="checkbox" name="themeCheckbox" value="zen" />Zen</li>
+                  <li><input type="checkbox" name="themeCheckbox" value="casual" id="casual"/>
+                    <label for="casual" class="checkboxLabel">Casual</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="celebratory" id="celebratory"/>
+                    <label for="celebratory" class="checkboxLabel">Celebratory</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="cozy" id="cozy"/>
+                    <label for="cozy" class="checkboxLabel">Cozy</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="fancy" id="fancy"/>
+                    <label for="fancy" class="checkboxLabel">Fancy</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="fun" id="fun"/>
+                    <label for="fun" class="checkboxLabel">Fun</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="lively" id="lively"/>
+                    <label for="lively" class="checkboxLabel">Lively</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="modern" id="modern"/>
+                    <label for="modern" class="checkboxLabel">Modern</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="professional" id="professional"/>
+                    <label for="professional" class="checkboxLabel">Professional</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="quiet" id="quiet"/>
+                    <label for="quiet" class="checkboxLabel">Quiet</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="rustic" id="rustic"/>
+                    <label for="rustic" class="checkboxLabel">Rustic</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="studious" id="studious"/>
+                    <label for="studious" class="checkboxLabel">Studious</label></li>
+                  <li><input type="checkbox" name="themeCheckbox" value="zen" id="zen"/>
+                    <label for="zen" class="checkboxLabel">Zen</label></li>
                 </ul>
             </div>
             <div class="form-group typeAhead">
@@ -72,13 +84,13 @@
         <div v-if="match.missThemes.length > 0" class="missingThemes">
           <p><strong>Missing Themes</strong></p>
           <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
-            <li v-for="theme of match.missThemes" :key="theme">{{theme}}</li>
+            <li v-for="theme in match.missThemes" :key="theme">{{theme}}</li>
           </ul>
         </div>
         <div v-if="match.missAttributes.length > 0" class="missingAttributes">
           <p><strong>Missing Attributes</strong></p>
           <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
-            <li v-for="attribute of match.missAttributes" :key="attribute">{{attribute}}</li>
+            <li v-for="attribute in match.missAttributes" :key="attribute">{{attribute}}</li>
           </ul>
         </div>
       </div>
@@ -237,20 +249,10 @@ export default {
         console.log('NUM CRITERIA: ' + this.numCriteria)
         // console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
         //  console.log('DEBUG: ' + jsonStr)
-        var jsonStr = JSON.stringify(search)
-        this.sendSearchAndDisplayResult(jsonStr)
       }
-    },
 
-    /**
-    * Unused.
-    */
-    matchAll () {
-      var jsonStr = '{"query":{"match_all":{}},' + '"sort":[{"space.updated_ts":{"order":"desc"}}]}'
-      this.sendSearchAndDisplayResult(jsonStr)
-    },
-    sendSearchAndDisplayResult (jsonStr) {
-      var searchUrl = this.empUrl + '/_search?size=50&from=0'
+      var jsonStr = JSON.stringify(search)
+      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?size=50&from=0'
 
       this.$http.post(searchUrl, jsonStr, {
         headers: {

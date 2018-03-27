@@ -5,7 +5,7 @@
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-      <ul v-for="attribute of match.attributes" :key="attribute">
+      <ul v-for="attribute in match.attributes" :key="attribute">
         <li>{{attribute}}</li>
       </ul>
       <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>

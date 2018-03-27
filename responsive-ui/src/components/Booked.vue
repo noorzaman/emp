@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <div class="row">
-        <div v-for="space in prevBookedSpaces" :key="space.id" class="bookedLocation col-sm-4">
+        <div v-for="space in prevBookedSpaces" :key="space.id" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{space.name}}</h2>
           <p>{{space.description}}</p>
           <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
