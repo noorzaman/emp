@@ -176,7 +176,7 @@ export default {
       var spaceDelimitedThemes = this.getSelectedThemes()
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
       var spaceDelimitedAttributes = this.getSelectedAttributes()
-      console.log('DEBUG: ' + spaceDelimitedAttributes)
+      //  console.log('DEBUG: ' + spaceDelimitedAttributes)
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
       if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
@@ -189,6 +189,8 @@ export default {
       var search = ''
       var themes = []
       var attributes = []
+
+      //  If neither theme nor any attributes is selected, then just search by capacity.
       if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
         (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
         search = {
@@ -239,6 +241,10 @@ export default {
         this.sendSearchAndDisplayResult(jsonStr)
       }
     },
+
+    /**
+    * Unused.
+    */
     matchAll () {
       var jsonStr = '{"query":{"match_all":{}},' + '"sort":[{"space.updated_ts":{"order":"desc"}}]}'
       this.sendSearchAndDisplayResult(jsonStr)

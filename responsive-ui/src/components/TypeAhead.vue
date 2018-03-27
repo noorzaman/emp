@@ -3,6 +3,7 @@
     <label for="attributes">Attributes</label>
     <p>Ex: food, WiFi, projector, etc.</p>
     <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off">
+    <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
     <typeahead v-model="model" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
     <button id="addAttrButton" class="btn btn-primary">Add attribute</button>
     <br>
@@ -97,6 +98,9 @@ export default {
           attributeItem.appendChild(attributeText)
           attributeText.appendChild(cancelButton)
           document.getElementById('selectedItemsArea').appendChild(attributeItem)
+          //  Selected attribute has been added to the DOM.
+          //  Let's now remove it from typeahead.
+          this.model = null
         }
       } else {
         // the attribute is not in the list
