@@ -14,6 +14,7 @@ export default {
   components: {
     vueSlider
   },
+  props: ['capacity'],
   data () {
     return {
       value: 'Any',
@@ -49,6 +50,11 @@ export default {
         labelStyle: null,
         labelActiveStyle: null
       }
+    }
+  },
+  watch: {
+    capacity (value) {
+      this.value = value
     }
   }
 }

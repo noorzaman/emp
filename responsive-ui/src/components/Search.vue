@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <h1>Meeting Space Criteria</h1>
-    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="searchByThemesAndAttributesAndCapacity()">
+    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="search()">
         <div class="leftSearch">
         <p>Leave a space blank to indicate no preference.</p>
         <br>
@@ -30,32 +30,12 @@
         </div>
         <div class="rightSearch">
             <div class="form-group themes">
-                <label>Theme</label> <br>
-                <ul class="checkbox-grid">
-                  <li><input type="checkbox" name="themeCheckbox" value="casual" id="casual"/>
-                    <label for="casual" class="checkboxLabel">Casual</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="celebratory" id="celebratory"/>
-                    <label for="celebratory" class="checkboxLabel">Celebratory</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="cozy" id="cozy"/>
-                    <label for="cozy" class="checkboxLabel">Cozy</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="fancy" id="fancy"/>
-                    <label for="fancy" class="checkboxLabel">Fancy</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="fun" id="fun"/>
-                    <label for="fun" class="checkboxLabel">Fun</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="lively" id="lively"/>
-                    <label for="lively" class="checkboxLabel">Lively</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="modern" id="modern"/>
-                    <label for="modern" class="checkboxLabel">Modern</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="professional" id="professional"/>
-                    <label for="professional" class="checkboxLabel">Professional</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="quiet" id="quiet"/>
-                    <label for="quiet" class="checkboxLabel">Quiet</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="rustic" id="rustic"/>
-                    <label for="rustic" class="checkboxLabel">Rustic</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="studious" id="studious"/>
-                    <label for="studious" class="checkboxLabel">Studious</label></li>
-                  <li><input type="checkbox" name="themeCheckbox" value="zen" id="zen"/>
-                    <label for="zen" class="checkboxLabel">Zen</label></li>
+                <label>Theme</label><br>
+                <ul  class="checkbox-grid">
+                  <li v-for="theme in possibleThemes" :key="theme">
+                    <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="selectedThemes"/>
+                    <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
+                  </li>
                 </ul>
             </div>
             <div class="form-group typeAhead">
@@ -69,7 +49,7 @@
     <br>
     <h2 v-if="matches.length == 1">Search Results: {{matches.length}} result found</h2>
     <h2 v-if="matches.length > 1">Search Results: {{matches.length}} results found</h2>
-    <div v-for="match in matches" :key="match.id" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div v-for="match in matches" :key="match.email" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div class="matchTitle">
         <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
         <h2>{{match.name}}</h2>
@@ -120,7 +100,22 @@ export default {
       empUrl: '',
       matches: [],
       searchCriteria: {},
-      numCriteria: 0
+      numCriteria: 0,
+      selectedThemes: [],
+      possibleThemes: [
+        'casual',
+        'celebratory',
+        'cozy',
+        'fancy',
+        'fun',
+        'lively',
+        'modern',
+        'professional',
+        'quiet',
+        'rustic',
+        'studious',
+        'zen'
+      ]
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -148,19 +143,11 @@ export default {
     * This function returns a string of space delimited
     * themes. It returns empty string when no theme is selected.
     */
-    getSelectedThemes () {
-      var checkedThemes = []
-      var options = document.getElementsByName('themeCheckbox')
-      for (var i = 0; i < options.length; i++) {
-        if (options[i].checked) {
-          checkedThemes.push(options[i].value)
-        }
-      }
-
+    getSpaceDelimitedThemes () {
       var spaceDelimitedThemes = ''
-      for (var j = 0; j < checkedThemes.length; j++) {
-        spaceDelimitedThemes += checkedThemes[j]
-        if (j < checkedThemes.length - 1) {
+      for (var j = 0; j < this.selectedThemes.length; j++) {
+        spaceDelimitedThemes += this.selectedThemes[j]
+        if (j < this.selectedThemes.length - 1) {
           spaceDelimitedThemes += ' '
         }
       }
@@ -171,7 +158,7 @@ export default {
     * This function returns a string of space delimited
     * attributes. It returns empty string when no attribute is selected.
     */
-    getSelectedAttributes () {
+    getSpaceDelimitedAttributes () {
       var selectedAttributes = document.getElementsByClassName('attr')
       var spaceDelimitedAttributes = ''
       for (var k = 0; k < selectedAttributes.length; k++) {
@@ -182,12 +169,12 @@ export default {
       }
       return spaceDelimitedAttributes
     },
-    searchByThemesAndAttributesAndCapacity () {
+    search () {
       this.numCriteria = 0
       // console.log('DEBUG: search by themes and attributes')
-      var spaceDelimitedThemes = this.getSelectedThemes()
+      var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
-      var spaceDelimitedAttributes = this.getSelectedAttributes()
+      var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
       //  console.log('DEBUG: ' + spaceDelimitedAttributes)
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText

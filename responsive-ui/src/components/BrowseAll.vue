@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="row">
-      <div v-for="(theme, index) in themes" v-bind:key="index" class="browseThemes">
+      <div v-for="theme in themes" :key="theme.image" class="browseThemes">
           <a :href="'/browse/' + theme.image">
               <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption">
               <p>{{theme.caption}}</p>

@@ -13,7 +13,7 @@
       </div>
       <div class="row">
         <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">
-          <img :src="imageData" :alt="'image'" class="img-fluid img-thumbnail">
+          <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
         </div>
       </div>
       <br>
@@ -23,38 +23,18 @@
       </div>
       <div class="form-group">
         <Label>Capacity</label>
-        <NumberSlider></NumberSlider>
+        <NumberSlider v-bind:capacity="capacity"></NumberSlider>
       </div>
     </div>
 
     <div class="rightSearch">
       <div class="form-group themes">
-        <label>Themes</label> <br>
-        <ul class="checkbox-grid">
-          <li><input type="checkbox" name="themeCheckbox" value="casual" id="casual"/>
-            <label for="casual" class="checkboxLabel">Casual</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="celebratory" id="celebratory"/>
-            <label for="celebratory" class="checkboxLabel">Celebratory</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="cozy" id="cozy"/>
-            <label for="cozy" class="checkboxLabel">Cozy</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="fancy" id="fancy"/>
-            <label for="fancy" class="checkboxLabel">Fancy</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="fun" id="fun"/>
-            <label for="fun" class="checkboxLabel">Fun</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="lively" id="lively"/>
-            <label for="lively" class="checkboxLabel">Lively</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="modern" id="modern"/>
-            <label for="modern" class="checkboxLabel">Modern</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="professional" id="professional"/>
-            <label for="professional" class="checkboxLabel">Professional</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="quiet" id="quiet"/>
-            <label for="quiet" class="checkboxLabel">Quiet</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="rustic" id="rustic"/>
-            <label for="rustic" class="checkboxLabel">Rustic</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="studious" id="studious"/>
-            <label for="studious" class="checkboxLabel">Studious</label></li>
-          <li><input type="checkbox" name="themeCheckbox" value="zen" id="zen"/>
-            <label for="zen" class="checkboxLabel">Zen</label></li>
+        <label>Themes</label><br>
+        <ul  class="checkbox-grid">
+          <li v-for="theme in possibleThemes" :key="theme">
+            <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="themes"/>
+            <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
+          </li>
         </ul>
       </div>
       <div class="form-group typeAhead">
@@ -82,7 +62,23 @@ export default {
       imageData: '',
       name: '',
       description: '',
-      tags: []
+      tags: [],
+      themes: [],
+      capacity: 0,
+      possibleThemes: [
+        'casual',
+        'celebratory',
+        'cozy',
+        'fancy',
+        'fun',
+        'lively',
+        'modern',
+        'professional',
+        'quiet',
+        'rustic',
+        'studious',
+        'zen'
+      ]
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -100,42 +96,28 @@ export default {
       this.pageWidth = document.documentElement.clientWidth
     },
     searchByEmail () {
-      var search = {
-        'query': {
-          'term': {
-            '_id': this.email
-          }
-        }
-      }
-      var jsonStr = JSON.stringify(search)
-      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?size=50&from=0'
-
-      this.$http.post(searchUrl, jsonStr, {
+      var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
+      var searchUrl = empUrl + '/' + this.email
+      this.$http.get(searchUrl, this.email, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         }
       }).then(result => {
-        var space = result.body.hits.hits[0]._source.space
+        var space = result.body._source.space
         this.imageData = space.image
         this.name = space.name
         this.description = space.description
         this.tags = space.attributes
+        this.themes = space.themes
+        this.capacity = space.capacity
       }, error => {
         console.error(error)
       })
     },
     editSpace () {
-      var themes = []
-      var options = document.getElementsByName('themeCheckbox')
-      for (var i = 0; i < options.length; i++) {
-        if (options[i].checked) {
-          themes.push(options[i].value)
-        }
-      }
-
       var attributes = []
-      options = document.getElementsByClassName('attr')
-      for (i = 0; i < options.length; i++) {
+      var options = document.getElementsByClassName('attr')
+      for (var i = 0; i < options.length; i++) {
         attributes.push(options[i].id)
       }
 
@@ -150,7 +132,7 @@ export default {
           'name': this.name,
           'description': this.description,
           'capacity': desiredCapacity,
-          'themes': themes,
+          'themes': this.themes,
           'attributes': attributes
         }
       }
