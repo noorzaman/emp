@@ -81,10 +81,16 @@ export default {
       alert.innerHTML = ''
       alert.classList.remove('alert')
       alert.classList.remove('alert-info')
-      if (that.model.name !== undefined) {
+      //  no attribute was selected in the typeahead
+      if (that.model === null) {
+        //  do nothing
+      } else if (that.model.name !== undefined) {
         if (that.selectedItems.includes(that.model.name)) {
-          // item already in list - may remove this or show an alert?
+          //  This attribute has been previously added to DOM.
+          //  So, let's remove it from typeahead.
+          this.model = null
         } else {
+          //  Add the new attribute to DOM.
           that.selectedItems.push(that.model.name)
           var attributeItem = document.createElement('div')
           attributeItem.id = that.model.name
