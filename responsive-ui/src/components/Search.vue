@@ -134,7 +134,7 @@ export default {
 
     /**
     * This function returns a string of space delimited
-    * themes. Returns empty string when no theme is selected.
+    * themes. It returns empty string when no theme is selected.
     */
     getSelectedThemes () {
       var checkedThemes = []
@@ -154,12 +154,12 @@ export default {
       }
       return spaceDelimitedThemes
     },
-    searchByThemesAndAttributesAndCapacity () {
-      this.numCriteria = 0
-      // console.log('DEBUG: search by themes and attributes')
-      var spaceDelimitedThemes = this.getSelectedThemes()
-      //  console.log('DEBUG: ' + spaceDelimitedThemes)
 
+    /**
+    * This function returns a string of space delimited
+    * attributes. It returns empty string when no attribute is selected.
+    */
+    getSelectedAttributes () {
       var selectedAttributes = document.getElementsByClassName('attr')
       var spaceDelimitedAttributes = ''
       for (var k = 0; k < selectedAttributes.length; k++) {
@@ -168,7 +168,15 @@ export default {
           spaceDelimitedAttributes += ' '
         }
       }
-      // console.log('DEBUG: ' + spaceDelimitedAttributes)
+      return spaceDelimitedAttributes
+    },
+    searchByThemesAndAttributesAndCapacity () {
+      this.numCriteria = 0
+      // console.log('DEBUG: search by themes and attributes')
+      var spaceDelimitedThemes = this.getSelectedThemes()
+      //  console.log('DEBUG: ' + spaceDelimitedThemes)
+      var spaceDelimitedAttributes = this.getSelectedAttributes()
+      console.log('DEBUG: ' + spaceDelimitedAttributes)
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
       if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
