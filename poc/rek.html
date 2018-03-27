@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+
+
+<head>
+    <title>Add meeting space</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.213.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<style>
+.largeButton {
+	width: 400px;
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    background-color: #4CAF50;
+    border-radius: 15px;
+    box-shadow: 0 3px #999;
+  }
+</style>
+<script>
+	//https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Rekognition.html
+
+
+	//////////////////////// Declaration of some library and convenience methods
+	
+	
+	function getUUID4() {
+	  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+		(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+	  )
+	}
+	
+	function getRandomEmail() {
+		var randomEmail = "";
+		for (i = 0; i < 5; i++) { 
+			randomEmail += String.fromCharCode(Math.floor(Math.random() * 26 + 97));
+		}
+		return randomEmail + "@emp.com";
+	}
+	
+	function getBinary(encodedFile) {
+		var base64Image = encodedFile.split("data:image/jpeg;base64,")[1];
+		var binaryImg = atob(base64Image);
+		var length = binaryImg.length;
+		var ab = new ArrayBuffer(length);
+		var ua = new Uint8Array(ab);
+		for (var i = 0; i < length; i++) {
+		  ua[i] = binaryImg.charCodeAt(i);
+		}
+
+		var blob = new Blob([ab], {
+		  type: "image/jpeg"
+		});
+
+		return ab;
+	}
+
+	var empStorageUrl = "https://s3.amazonaws.com/empstorage/";
+	AWS.config.region = 'us-east-1'; 
+
+	AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    	IdentityPoolId: 'us-east-1:20b70abe-c545-4142-b684-e36913ad3d3a' 
+	});
+
+	AWS.config.credentials.get(function(err) {
+		if (err) alert(err);
+		console.log(AWS.config.credentials);
+	});
+
+	
+	var bucketName = 'empstorage'; 
+	var bucket = new AWS.S3({
+		params: {
+			Bucket: bucketName
+		}
+	});	
+	
+	var rekognition = new AWS.Rekognition({apiVersion: '2016-06-27'});
+	var resMap = new Object();  //map returned to client
+	var t_start = 0.0; //performance metrics
+	var imageBase64; //image in Base64 format used in the methods
+	
+	
+	//////////////////////// The main methods to store the file and generate labels
+		
+	
+	/**
+	 * The following two methods work in tendem.
+	 * - store the image in S3
+	 * - generate labels from Rekognition
+	 */
+	function storeAndGetLabels() {
+	
+		if (!busyScreen()) return;
+		
+		var file = fileChooser.files[0];
+		
+		var objKey = getUUID4();
+		var params = {
+			Key: objKey,
+			ContentType: file.type,
+			Body: file,
+			ACL: 'public-read'
+		};
+
+		t_start = performance.now();
+		bucket.putObject(params, function(err, data) {
+			if (err) {
+				showErr(err);
+			} else {
+				resMap["store"] = performance.now() - t_start;
+				t_start = performance.now();
+				getLabelsFromRekognition(objKey)
+			}
+		});
+	}
+	function getLabelsFromRekognition(imageName) {
+		var params = {
+			Image: {
+				S3Object: {
+						Bucket: "empstorage", 
+						Name: imageName
+					} 
+				}, 
+				MaxLabels: 5, 
+				MinConfidence: 50
+			};	
+		
+		rekognition.detectLabels(params, function(err, data) {
+			if (err) {
+				showErr(err);
+			} else {
+				resMap["labels"] = data; 
+				resMap["labels_time"] = (performance.now() - t_start); 
+				showResults(resMap);
+
+			}
+		});
+	}
+	
+	
+	/*
+	 * For this method we dont need to store the image as it is carried as 
+	 * part of the payload.
+	 */
+	function getLabelsUsingBase64() {
+	
+		if (!busyScreen()) return;
+		
+		t_start = performance.now();
+		var params = {
+			Image: {
+				//Bytes: imageBase64
+				Bytes: getBinary(imageBase64)
+			}, 
+			MaxLabels: 5, 
+			MinConfidence: 50
+		};	
+	
+		rekognition.detectLabels(params, function(err, data) {
+			if (err) {
+				showErr(err);
+			} else {
+				resMap["labels"] = data; 
+				resMap["labels_time"] = (performance.now() - t_start);
+				resMap["store"] = 0; 
+				showResults(resMap);
+
+			}
+		});
+	}
+	
+	
+	function existingUploadPhoto () {
+		
+		if (!busyScreen()) return;
+			
+		var placeId = getRandomEmail();
+		var name = getRandomEmail();
+		
+		var data = {
+			'placeId': placeId,
+			'data': imageBase64,
+			'space': {
+				'name': name
+			}
+		}
+		console.log(JSON.stringify(data));
+
+		var proxyUrl = "https://cors-anywhere.herokuapp.com/";
+		var apiUrl = 'https://txdydq8h71.execute-api.us-east-1.amazonaws.com/development/streams/tmp/record2'
+		var targetUrl = proxyUrl + apiUrl;
+
+		$.ajax({
+			url: targetUrl, 
+			method: 'PUT', 
+			data: JSON.stringify(data), 
+			success: function() {
+				console.log("success")
+			},
+			fail: function() {
+				console.log("failure")
+			}
+			
+		});
+
+	}
+	
+	//////////////////////// UI methods to clean up and display UI elements
+	
+	
+	function clearScreen() {
+		document.getElementById("tags").innerHTML = "";
+	}
+	
+	function showErr(msg) {
+		document.getElementById("tags").innerHTML = msg;
+		console.log(err); 
+	}
+	
+	function busyScreen() {	
+		document.getElementById("tags").innerHTML = "";
+		
+		if (fileChooser.files[0] == null || fileChooser.files[0] == undefined) {
+			var errMsg = "Take a picture or select an image";
+			document.getElementById("tags").innerHTML = '<h4>' + errMsg + '</h4>';
+			console.log(errMsg);
+			return false;
+		} else {
+			document.getElementById("tags").innerHTML = 
+			'<br>Loading and generating labels: <img src="http://ayeshamd.com/ajax-loader.gif" />';
+			return true;
+		}
+	}
+	
+	function previewImage(event) {
+		clearScreen();
+		var reader = new FileReader();
+		reader.onload = function() {
+			var output = document.getElementById('output_image');
+			output.src = reader.result;
+			resMap["image_size"] = output.src.length;
+			
+			imageBase64 = reader.result;
+            //imageBase64Corrected = img64Hdr.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
+			
+		}
+		reader.readAsDataURL(event.target.files[0]);
+    }
+    
+    function showResults() {
+	
+		var labelArr = new Array();
+    	var labels = resMap["labels"].Labels;
+    	for (var i = 0; i < labels.length; i++) {
+    		labelArr.push(labels[i].Name);
+    	}
+    	
+    	var output = 
+    		"<br>image size: (bytes): " + resMap["image_size"]
+    		+ "<br>storage time (ms): " + Math.round(resMap["store"])
+    		+ "<br>label time (ms): " + Math.round(resMap["labels_time"])
+    		+ "<br><br>labels : " + labelArr;
+    		
+    	document.getElementById("tags").innerHTML = output;
+    }
+</script>
+
+</head>
+
+<body>
+<img id="output_image" style="float: top; width: 250px; height: 175px; border: 1px solid #000; margin: 5px" 
+            src="https://s3.amazonaws.com/empstorage/placeholder.jpeg"/>
+<br>
+<input type="file" class="largeButton"  id="fileChooser" accept="image/*" onchange="previewImage(event)">
+<br><br>
+<button class="largeButton" id="upload-button" onclick='storeAndGetLabels()'>Store file in AWS and get labels..</button>
+<br><br>
+<button class="largeButton" id="getBase64Labels" onclick='getLabelsUsingBase64()'>Get labels using Base 64 image..</button>
+<br><br>
+<button class="largeButton" id="existingUploadPhoto" onclick='existingUploadPhoto()'>Store photos using existing ..</button>
+
+<div id="tags">
+</div>
+
+</body>
+</html>
