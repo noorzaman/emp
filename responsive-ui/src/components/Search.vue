@@ -131,9 +131,12 @@ export default {
       var empType = 'rooms'
       this.empUrl = empHost + '/' + empIndex + '/' + empType
     },
-    searchByThemesAndAttributesAndCapacity () {
-      this.numCriteria = 0
-      // console.log('DEBUG: search by themes and attributes')
+
+    /**
+    * This function returns a string of space delimited
+    * themes. Returns empty string when no theme is selected.
+    */
+    getSelectedThemes () {
       var checkedThemes = []
       var options = document.getElementsByName('themeCheckbox')
       for (var i = 0; i < options.length; i++) {
@@ -149,6 +152,12 @@ export default {
           spaceDelimitedThemes += ' '
         }
       }
+      return spaceDelimitedThemes
+    },
+    searchByThemesAndAttributesAndCapacity () {
+      this.numCriteria = 0
+      // console.log('DEBUG: search by themes and attributes')
+      var spaceDelimitedThemes = this.getSelectedThemes()
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
 
       var selectedAttributes = document.getElementsByClassName('attr')
