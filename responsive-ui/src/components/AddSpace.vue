@@ -1,23 +1,29 @@
 <template>
   <div class="main">
-    <h1>{{pageTitle}}</h1>
+
+    <h1 class="pageTitle">{{pageTitle}}</h1>
+
+    <div class="row">
+      <!-- <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="imageData.length"> -->
+      <div>
+        <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+      </div>
+      <div>
+        <input class="fileChooserButton" type="file" accept="image/*" @change="previewImage">
+      </div>
+      <br>
+    </div>
     <div class="form-group">
-      <label>*Space name</label><br>
-      <input type="text" v-model="name">
+      <label class="empLabel">*Space name</label>
+      <br>
+      <input class="empText" type="text" placeholder="Meeting place name (required)" v-model="name">
       <p class="text-danger">{{nameError}}</p>
     </div>
     <div class="form-group">
-      <label>Space e-mail</label><br>
-      <input type="email" v-model="email"><br>
+      <label class="empLabel" >Space e-mail</label>
+      <br>
+      <input class="empText" type="email" placeholder="Meeting place email" v-model="email"><br>
       <p class="text-danger">{{emailError}}</p>
-    </div>
-    <div class="row">
-      <div>
-        <input type="file" accept="image/*" @change="previewImage">
-      </div>
-      <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="imageData.length">
-        <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
-      </div>
     </div>
     <p class="text-danger">{{imageError}}</p>
     <br>
@@ -34,7 +40,7 @@ export default {
       pageWidth: document.documentElement.clientWidth,
       name: '',
       email: '',
-      imageData: '',
+      imageData: 'https://s3.amazonaws.com/empstorage/placeholder.jpeg',
       nameError: '',
       emailError: '',
       imageError: ''
@@ -126,4 +132,45 @@ export default {
 </script>
 
 <style scoped>
+.pageTitle {
+	font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+	font-weight: normal;
+  font-size: 1.75em;
+  color: rgb(95, 78, 194);
+  font-size: 16px;
+	letter-spacing: .2em;
+	line-height: 1.1em;
+	margin:0px;
+	text-align: left;
+	text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+img {
+    display: block;
+    margin-left: 10px;
+    margin-right: auto;
+    width: 80%;
+}
+.fileChooserButton {
+    width: 80%;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    background-color: #4CAF50;
+    /* border-radius: 15px; */
+    box-shadow: 0 3px #999;
+    margin-left:10px;
+    margin-right:auto;
+}
+.empLabel {
+    margin-left:0px;
+    font-size: 16px;
+}
+.empText {
+  width: 70%;
+  font-size: 16px;
+}
+
 </style>
