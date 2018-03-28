@@ -15,9 +15,12 @@
     "jquery": "^3.3.1",
     "uiv": "^0.21.0",
     "vue": "^2.5.2",
+    "vue-auto-virtual-scroll-list": "^0.1.1",
     "vue-resource": "^1.5.0",
     "vue-router": "^3.0.1",
+    "vue-scroll": "^2.1.7",
     "vue-slider-component": "^2.5.8",
+    "vue-virtual-scroll-list": "^1.2.4",
     "vue2-datepicker": "^1.8.3"
   },
   "devDependencies": {

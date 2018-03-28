@@ -355,7 +355,6 @@ ul {
 }
 
 .attributesList, .themesList {
-    height: 200px;
     overflow: auto;
 }
 

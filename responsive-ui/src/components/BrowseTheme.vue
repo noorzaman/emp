@@ -5,15 +5,18 @@
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-      <ul v-for="attribute in match.attributes" :key="attribute">
-        <li>{{attribute}}</li>
-      </ul>
+      <VueAutoVirtualScrollList :totalHeight="100" :defaultHeight="20" style="width: 100%;">
+        <div v-for="attribute in match.attributes" :key="attribute" :style="{ height: '20px' }">
+          {{ attribute }}
+        </div>
+      </VueAutoVirtualScrollList>
       <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
     </div>
   </div>
 </template>
 
 <script>
+import VueAutoVirtualScrollList from 'vue-auto-virtual-scroll-list'
 export default {
   name: 'BrowseTheme',
   data () {
@@ -24,6 +27,7 @@ export default {
       matches: []
     }
   },
+  components: { VueAutoVirtualScrollList },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
