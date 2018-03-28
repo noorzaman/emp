@@ -5,12 +5,16 @@
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-      <p>Capacity: {{match.capacity}}</p>
-      <VueAutoVirtualScrollList :totalHeight="100" :defaultHeight="20" style="width: 100%;">
-        <div v-for="attribute in match.attributes" :key="attribute" :style="{ height: '20px' }">
-          {{ attribute }}
-        </div>
-      </VueAutoVirtualScrollList>
+      <p><strong>Capacity:</strong> {{match.capacity}}</p>
+      <p><strong>Attributes</strong></p>
+      <div v-if="match.attributes.length > 0">
+        <ul v-bind:class="{ 'browseAttributesList' : longAttrList }">
+          <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
+        </ul>
+      </div>
+      <div v-else>
+        <p>No attributes have been added for this space yet.</p>
+      </div>
       <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
     </div>
   </div>
@@ -25,7 +29,8 @@ export default {
       pageTitle: this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces',
       pageWidth: document.documentElement.clientWidth,
       empUrl: '',
-      matches: []
+      matches: [],
+      longAttrList: false
     }
   },
   components: { VueAutoVirtualScrollList },
@@ -64,6 +69,10 @@ export default {
         for (var n = 0; n < Math.min(searchResult.length, 5); n++) {
           var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
+          // check if will need to add scrollbar to any attributes list
+          if (entry.attributes.length >= 5) {
+            this.longAttrList = true
+          }
           this.matches.push({
             email: email,
             name: entry.name,

@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <h1>Previously Booked Spaces</h1>
-   <div v-if="prevBookedSpaces.length == 0">
+   <div v-if="prevBookedSpaces.length === 0">
       <p>You have not booked any spaces yet.</p>
     </div>
     <div v-else>
@@ -10,6 +10,16 @@
           <h2>{{space.name}}</h2>
           <p>{{space.description}}</p>
           <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
+          <p><strong>Capacity:</strong> {{space.capacity}}</p>
+          <p><strong>Attributes</strong></p>
+          <div v-if="space.attributes.length > 0">
+            <ul v-bind:class="{ 'browseAttributesList' : longAttrList }">
+              <li v-for="attribute in space.attributes" :key="attribute">{{attribute}}</li>
+            </ul>
+          </div>
+          <div v-else>
+            <p>No attributes have been added for this space yet.</p>
+          </div>
           <a :href="'/space/' + space.email" class="btn btn-primary">Space Details</a>
         </div>
       </div>
@@ -23,7 +33,8 @@ export default {
   data () {
     return {
       bookedEmails: [],
-      prevBookedSpaces: []
+      prevBookedSpaces: [],
+      longAttrList: false
     }
   },
   mounted: function () {
@@ -51,10 +62,16 @@ export default {
         }
       }).then(result => {
         var spaceBody = result.body._source.space
+        // check if will need to add scrollbar to any attributes list
+        if (spaceBody.attributes.length >= 5) {
+          this.longAttrList = true
+        }
         var space = {
           email: email,
           name: spaceBody.name,
           description: spaceBody.description,
+          capacity: spaceBody.capacity,
+          attributes: spaceBody.attributes,
           image: spaceBody.image
         }
         this.prevBookedSpaces.push(space)

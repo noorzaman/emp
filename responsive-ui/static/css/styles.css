@@ -263,7 +263,7 @@ ul {
     margin-right: 2em;
 }
 
-.missingItems {
+.missingItems, .browseAttributesList {
     height: 100px;
     overflow: auto;
 }

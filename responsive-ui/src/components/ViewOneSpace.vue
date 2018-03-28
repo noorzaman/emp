@@ -26,7 +26,7 @@
             <p>No attributes have been added to this space yet.</p>
           </div>
           <div v-else>
-            <ul class="attributesList">
+            <ul class="browseAttributesList">
               <li v-for="attribute in attributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>
