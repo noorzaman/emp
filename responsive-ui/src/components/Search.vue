@@ -259,22 +259,28 @@ export default {
           }
           var searchThemes = this.searchCriteria.themes
           var missingThemes = []
-          for (var i = 0; i < searchThemes.length; i++) {
-            if (entry.themes.includes(searchThemes[i])) {
-              numMatches++
-            } else {
-              missingThemes.push(searchThemes[i])
+          if (searchThemes !== null && searchThemes !== undefined) {
+            for (var i = 0; i < searchThemes.length; i++) {
+              if (entry.themes.includes(searchThemes[i])) {
+                numMatches++
+              } else {
+                missingThemes.push(searchThemes[i])
+              }
             }
           }
+
           var searchAttributes = this.searchCriteria.attributes
           var missingAttributes = []
-          for (var j = 0; j < searchAttributes.length; j++) {
-            if (entry.attributes.includes(searchAttributes[j])) {
-              numMatches++
-            } else {
-              missingAttributes.push(searchAttributes[j])
+          if (searchAttributes !== null && searchAttributes !== undefined) {
+            for (var j = 0; j < searchAttributes.length; j++) {
+              if (entry.attributes.includes(searchAttributes[j])) {
+                numMatches++
+              } else {
+                missingAttributes.push(searchAttributes[j])
+              }
             }
           }
+
           console.log('numMatches:' + numMatches)
           this.matches.push({
             name: entry.name,
