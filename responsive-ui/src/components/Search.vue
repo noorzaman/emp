@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <h1>Meeting Space Criteria</h1>
-    <form method="GET" action="/" class="searchForm" v-on:submit.self.prevent v-on:click="search()">
+    <div>
         <div class="leftSearch">
         <p>Leave a space blank to indicate no preference.</p>
         <br>
@@ -42,13 +42,14 @@
                 <TypeAhead></TypeAhead>
             </div>
         </div>
-        <input type="submit" value="Search Spaces" class="btn btn-primary submitButton"/>
-    </form>
+        <button class="btn btn-primary submitButton" @click="search">Search Spaces</button>
+    </div>
     <div class="clearFix"></div>
     <br>
     <br>
-    <h2 v-if="matches.length == 1">Search Results: {{matches.length}} result found</h2>
-    <h2 v-if="matches.length > 1">Search Results: {{matches.length}} results found</h2>
+    <div id="searchResults"></div>
+    <h2 v-if="matches.length == 1" id="searchResults1">Search Results: {{matches.length}} space found</h2>
+    <h2 v-if="matches.length > 1" id="searchResults2">Search Results: {{matches.length}} spaces found</h2>
     <div v-for="match in matches" :key="match.email" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div class="matchTitle">
         <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
@@ -235,7 +236,7 @@ export default {
         this.numCriteria += themes.length + attributes.length
         console.log('NUM CRITERIA: ' + this.numCriteria)
         // console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
-        //  console.log('DEBUG: ' + jsonStr)
+        // console.log('DEBUG: ' + jsonStr)
       }
 
       var jsonStr = JSON.stringify(search)
@@ -288,6 +289,11 @@ export default {
             matchPercent: Math.round((numMatches / this.numCriteria) * 100)
           })
         }
+        // scroll to search results
+        this.$nextTick(function () {
+          // new elements finished rendering to the DOM
+          document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
+        })
       }, error => {
         console.error(error)
       })
