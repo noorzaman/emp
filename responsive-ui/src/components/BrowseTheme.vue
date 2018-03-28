@@ -5,6 +5,7 @@
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+      <p>Capacity: {{match.capacity}}</p>
       <VueAutoVirtualScrollList :totalHeight="100" :defaultHeight="20" style="width: 100%;">
         <div v-for="attribute in match.attributes" :key="attribute" :style="{ height: '20px' }">
           {{ attribute }}
@@ -68,6 +69,7 @@ export default {
             name: entry.name,
             description: entry.description,
             image: entry.image,
+            capacity: entry.capacity,
             attributes: entry.attributes
           })
         }
