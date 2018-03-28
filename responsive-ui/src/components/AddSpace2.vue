@@ -1,51 +1,37 @@
 <template>
   <div class="main">
-    <h1>{{pageTitle}}</h1><br>
+
+    <h1 class="pageTitle">{{pageTitle}}</h1>
+
+    <div class="row">
+      <!-- <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="imageData.length"> -->
+      <div>
+        <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+      </div>
+      <div>
+        <input class="fileChooserButton" type="file" accept="image/*" @change="previewImage">
+      </div>
+      <br>
+    </div>
     <div class="form-group">
       <label class="empLabel">*Space name</label>
       <br>
-      <input class="empText" type="text" v-model="name">
+      <input class="empText" type="text" placeholder="Meeting place name (required)" v-model="name">
       <p class="text-danger">{{nameError}}</p>
     </div>
     <div class="form-group">
       <label class="empLabel" >Space e-mail</label>
       <br>
-      <input class="empText" type="email" v-model="email"><br>
+      <input class="empText" type="email" placeholder="Meeting place email" v-model="email"><br>
       <p class="text-danger">{{emailError}}</p>
     </div>
-    <image-uploader
-      hidden=true
-      :debug="1"
-      :maxSize="1"
-      :maxWidth="512"
-      :maxHeight="512"
-      :quality="0.9"
-      :autoRotate=true
-      outputFormat="string"
-      @input="setImage">
-    </image-uploader>
-    <label for="fileInput" slot="upload-label">
-      <figure>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-          <path class="path1" d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"></path>
-        </svg>
-      </figure>
-      <span>{{ hasImage ? 'Replace' : 'Upload' }}</span>
-    </label>
     <p class="text-danger">{{imageError}}</p>
-    <div class="row">
-      <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="hasImage">
-        <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
-      </div>
-    </div>
-    <br><br>
+    <br>
     <button class="btn btn-primary" @click="checkForm">Upload photo</button>
   </div>
 </template>
 
 <script>
-import { ImageUploader } from 'vue-image-upload-resize'
-
 export default {
   name: 'AddSpace',
   data () {
@@ -54,15 +40,11 @@ export default {
       pageWidth: document.documentElement.clientWidth,
       name: '',
       email: '',
-      imageData: '',
-      hasImage: false,
+      imageData: 'https://s3.amazonaws.com/empstorage/placeholder.jpeg',
       nameError: '',
       emailError: '',
       imageError: ''
     }
-  },
-  components: {
-    ImageUploader
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
@@ -76,6 +58,24 @@ export default {
     // whenever the document is resized, re-set the 'pageWidth' variable
     handleResize (event) {
       this.pageWidth = document.documentElement.clientWidth
+    },
+    previewImage (event) {
+      this.imageError = ''
+      // Reference to the DOM input element
+      var input = event.target
+      // Ensure that you have a file before attempting to read it
+      if (input.files && input.files[0]) {
+        // create a new FileReader to read this image and convert to base64 format
+        var reader = new FileReader()
+        // Define a callback function to run, when FileReader finishes its job
+        reader.onload = (e) => {
+          // Note: arrow function used here, so that "this.imageData" refers to the imageData of Vue component
+          // Read image as base64 and set to imageData
+          this.imageData = e.target.result
+        }
+        // Start the reader job - read file as a data url (base64 format)
+        reader.readAsDataURL(input.files[0])
+      }
     },
     checkForm () {
       var isError = false
@@ -91,7 +91,7 @@ export default {
       } else {
         this.emailError = ''
       }
-      if (!this.hasImage) {
+      if (!this.imageData.length) {
         this.imageError = 'You must add an image'
         isError = true
       } else {
@@ -126,15 +126,51 @@ export default {
         console.error(error)
         this.$router.push('/edit-space/' + this.email)
       })
-    },
-    setImage (img) {
-      this.imageError = ''
-      this.hasImage = true
-      this.imageData = img
     }
   }
 }
 </script>
 
 <style scoped>
+.pageTitle {
+	font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+	font-weight: normal;
+  font-size: 1.75em;
+  color: rgb(95, 78, 194);
+  font-size: 16px;
+	letter-spacing: .2em;
+	line-height: 1.1em;
+	margin:0px;
+	text-align: left;
+	text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+img {
+    display: block;
+    margin-left: 10px;
+    margin-right: auto;
+    width: 80%;
+}
+.fileChooserButton {
+    width: 80%;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    background-color: #4CAF50;
+    /* border-radius: 15px; */
+    box-shadow: 0 3px #999;
+    margin-left:10px;
+    margin-right:auto;
+}
+.empLabel {
+    margin-left:0px;
+    font-size: 16px;
+}
+.empText {
+  width: 70%;
+  font-size: 16px;
+}
+
 </style>
