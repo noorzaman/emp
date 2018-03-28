@@ -12,7 +12,7 @@
           <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
         </ul>
       </div>
-      <div v-else>
+      <div v-else v-bind:class="{ 'browseAttributesList' : longAttrList }">
         <p>No attributes have been added for this space yet.</p>
       </div>
       <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>

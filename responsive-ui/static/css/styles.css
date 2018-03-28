@@ -318,6 +318,10 @@ ul {
     height: 250px;
 }
 
+.bookedLocation ul {
+    list-style-type: none;
+}
+
 /* View One Styles */
 
 .viewOneImgCol {

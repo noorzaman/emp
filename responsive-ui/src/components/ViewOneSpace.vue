@@ -75,20 +75,22 @@ export default {
       })
     },
     bookSpace () {
+      console.log('this.email: ' + this.email)
       var bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
       if (bookedEmails == null) {
-        bookedEmails = [this.spaceEmail]
+        bookedEmails = [this.email]
       } else {
-        if (!bookedEmails.includes(this.spaceEmail)) {
-          bookedEmails.push(this.spaceEmail)
+        if (!bookedEmails.includes(this.email)) {
+          bookedEmails.push(this.email)
         }
       }
+      console.log('bookedEmails: ' + bookedEmails)
       localStorage.setItem('bookedEmails', JSON.stringify(bookedEmails))
 
       // try to schedule a meeting
       this.$router.push({
         name: 'ScheduleSpace',
-        params: {spaceEmail: this.spaceEmail}
+        params: {spaceEmail: this.email}
       })
     }
   }
