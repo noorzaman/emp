@@ -59,12 +59,12 @@
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       <div v-if="match.matchPercent !== 100">
-        <div v-if="searchCriteria.capacity !== 0 && searchCriteria.capacity > match.capacity" class="missingCapacity">
+        <div v-if="searchCriteria.capacity !== 0 && parseFloat(searchCriteria.capacity) > parseFloat(match.capacity)" class="missingCapacity">
           <ul>
             <li class="missingCapacity"><strong>Capacity NOT a match:</strong> space has a capacity of {{match.capacity}}</li>
           </ul>
         </div>
-        <div v-else>
+        <div v-if="searchCriteria.capacity === 0 || parseFloat(searchCriteria.capacity) <= parseFloat(match.capacity)">
           <p><strong>Capacity sufficient:</strong> space has a capacity of {{match.capacity}}</p>
         </div>
         <div v-if="match.missThemes.length > 0" class="missingThemes">
@@ -180,7 +180,7 @@ export default {
         this.numCriteria = 1
       }
       // search for half the capacity, but report capacity is not a match if actualCapacity < desiredCapacity
-      var searchCapacity = desiredCapacity / 2
+      var searchCapacity = parseFloat(desiredCapacity) / 2
       // console.log('DEBUG: ' + desiredCapacity)
       // console.log('DEBUG: ' + searchCapacity)
 
@@ -254,7 +254,7 @@ export default {
           var entry = searchResult[n]._source.space
           // find matches
           var numMatches = 0
-          if (this.searchCriteria.capacity !== 0 && entry.capacity >= this.searchCriteria.capacity) {
+          if (this.searchCriteria.capacity !== 0 && parseFloat(entry.capacity) >= parseFloat(this.searchCriteria.capacity)) {
             numMatches = 1
           }
           var searchThemes = this.searchCriteria.themes
