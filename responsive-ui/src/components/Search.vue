@@ -103,7 +103,6 @@ export default {
     return {
       pageTitle: 'Search Meeting Spaces',
       pageWidth: document.documentElement.clientWidth,
-      empUrl: '',
       matches: [],
       searchCriteria: {},
       numCriteria: 0,
@@ -128,7 +127,6 @@ export default {
   mounted () {
     document.title = 'Search Spaces'
     window.addEventListener('resize', this.handleResize)
-    this.createElasticSearchUrl()
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
@@ -138,13 +136,6 @@ export default {
     handleResize (event) {
       this.pageWidth = document.documentElement.clientWidth
     },
-    createElasticSearchUrl () {
-      var empHost = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com'
-      var empIndex = 'emp'
-      var empType = 'rooms'
-      this.empUrl = empHost + '/' + empIndex + '/' + empType
-    },
-
     /**
     * This function returns a string of space delimited
     * themes. It returns empty string when no theme is selected.
@@ -159,7 +150,6 @@ export default {
       }
       return spaceDelimitedThemes
     },
-
     /**
     * This function returns a string of space delimited
     * attributes. It returns empty string when no attribute is selected.
