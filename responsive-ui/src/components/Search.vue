@@ -60,7 +60,9 @@
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       <div v-if="match.matchPercent !== 100">
         <div v-if="searchCriteria.capacity !== 0 && searchCriteria.capacity > match.capacity" class="missingCapacity">
-          <p><strong>Capacity NOT a match:</strong> space has a capacity of {{match.capacity}}</p>
+          <ul>
+            <li class="missingCapacity"><strong>Capacity NOT a match:</strong> space has a capacity of {{match.capacity}}</li>
+          </ul>
         </div>
         <div v-else>
           <p><strong>Capacity sufficient:</strong> space has a capacity of {{match.capacity}}</p>

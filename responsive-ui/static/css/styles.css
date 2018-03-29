@@ -268,11 +268,11 @@ ul {
     overflow: auto;
 }
 
-.missingThemes ul, .missingAttributes ul {
+.missingThemes ul, .missingAttributes ul, .missingCapacity ul {
     list-style-image: url("../images/notMatchedRed.png");
 }
 
-.missingThemes ul li, .missingAttributes ul li {
+.missingThemes ul li, .missingAttributes ul li, .missingCapacity ul li {
     list-style-position: inside;
 }
 
