@@ -59,8 +59,11 @@
       <p>{{match.description}}</p>
       <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       <div v-if="match.matchPercent !== 100">
-        <div v-if="searchCriteria.capacity !== 0" class="missingCapacity">
-          <p><strong>Capacity not a match:</strong> space has a capacity of {{match.capacity}}</p>
+        <div v-if="searchCriteria.capacity !== 0 && searchCriteria.capacity > match.capacity" class="missingCapacity">
+          <p><strong>Capacity NOT a match:</strong> space has a capacity of {{match.capacity}}</p>
+        </div>
+        <div v-else>
+          <p><strong>Capacity sufficient:</strong> space has a capacity of {{match.capacity}}</p>
         </div>
         <div v-if="match.missThemes.length > 0" class="missingThemes">
           <p><strong>Missing Themes</strong></p>
@@ -184,7 +187,10 @@ export default {
       } else if (desiredCapacity !== '0') {
         this.numCriteria = 1
       }
+      // search for half the capacity, but report capacity is not a match if actualCapacity < desiredCapacity
+      var searchCapacity = desiredCapacity / 2
       // console.log('DEBUG: ' + desiredCapacity)
+      // console.log('DEBUG: ' + searchCapacity)
 
       var search = ''
       var themes = []
@@ -197,11 +203,13 @@ export default {
           'query': {
             'range': {
               'space.capacity': {
-                'gte': desiredCapacity
+                'gte': searchCapacity
               }
             }
           }
         }
+        this.searchCriteria = {capacity: desiredCapacity}
+        console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
       } else {
         var multisearch = spaceDelimitedThemes + ' ' + spaceDelimitedAttributes
         themes = spaceDelimitedThemes.split(' ')
@@ -224,7 +232,7 @@ export default {
               'filter': {
                 'range': {
                   'space.capacity': {
-                    'gte': desiredCapacity
+                    'gte': searchCapacity
                   }
                 }
               }
@@ -235,7 +243,7 @@ export default {
         console.log('themes.length: ' + themes.length + ' attributes.length: ' + attributes.length)
         this.numCriteria += themes.length + attributes.length
         console.log('NUM CRITERIA: ' + this.numCriteria)
-        // console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
+        console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
         // console.log('DEBUG: ' + jsonStr)
       }
 
@@ -254,7 +262,7 @@ export default {
           var entry = searchResult[n]._source.space
           // find matches
           var numMatches = 0
-          if (this.searchCriteria.capacity !== 0 && entry.capacity === this.searchCriteria.capacity) {
+          if (this.searchCriteria.capacity !== 0 && entry.capacity >= this.searchCriteria.capacity) {
             numMatches = 1
           }
           var searchThemes = this.searchCriteria.themes
