@@ -292,7 +292,9 @@ export default {
             capacity: entry.capacity,
             missThemes: missingThemes,
             missAttributes: missingAttributes,
-            matchPercent: Math.round((numMatches / this.numCriteria) * 100)
+            //  Match percent: Make sure that match percent is never greater than 100%.
+            //  This could happen when no criteria are selected and therefore numCriteria is zero.
+            matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
           })
         }
         // scroll to search results
