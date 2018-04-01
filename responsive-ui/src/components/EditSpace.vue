@@ -109,7 +109,7 @@ export default {
         this.description = space.description
         this.tags = space.attributes
         this.themes = space.themes ? space.themes : []
-        this.capacity = parseInt(space.capacity)
+        this.capacity = space.capacity
       }, error => {
         console.error(error)
       })
@@ -131,7 +131,7 @@ export default {
         'space': {
           'name': this.name,
           'description': this.description,
-          'capacity': desiredCapacity,
+          'capacity': parseInt(desiredCapacity),
           'themes': this.themes,
           'attributes': attributes
         }
