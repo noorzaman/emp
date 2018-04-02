@@ -11,20 +11,16 @@
     <div id="selectedItemsAlert">
     </div>
     <p><strong>Attributes for the space:</strong></p>
-
-    <!-- Beginning of attribute list -->
-    <div>
-      <div v-bind:id="item" v-bind:key="item" v-for="item in selectedItems" class="" style="margin-right: 2px">
-        <span class="attr">{{item}}</span>
-        <button class="delete is-small" @click="removeAttribute(item)">x</button>
-      </div>
-    </div>
-    <!-- End of attribute list -->
-
     <div v-if="selectedItems.length == 0">
       <p>No attributes added yet.</p>
     </div>
     <div id="selectedItemsArea">
+        <!-- Beginning of attribute list -->
+        <div v-bind:id="item" v-bind:key="item" v-for="item in selectedItems" class="tag is-info" style="margin-right: 2px">
+            <span class="attr">{{item}}</span>
+            <button class="delete is-small" @click="removeAttribute(item)"><strong>x</strong></button>
+        </div>
+        <!-- End of attribute list -->
     </div>
   </section>
 </template>
