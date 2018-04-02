@@ -6,10 +6,21 @@
     <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
     <typeahead v-model="model" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
     <button id="addAttrButton" class="btn btn-primary">Add attribute</button>
+
     <br>
     <div id="selectedItemsAlert">
     </div>
     <p><strong>Attributes for the space:</strong></p>
+
+    <!-- Beginning of attribute list -->
+    <div>
+      <div v-bind:id="item" v-bind:key="item" v-for="item in selectedItems" class="" style="margin-right: 2px">
+        <span class="attr">{{item}}</span>
+        <button class="delete is-small" @click="removeAttribute(item)">x</button>
+      </div>
+    </div>
+    <!-- End of attribute list -->
+
     <div v-if="selectedItems.length == 0">
       <p>No attributes added yet.</p>
     </div>
@@ -31,29 +42,34 @@ export default {
     }
   },
   watch: {
+    /**  This watch is invoked when the Edit Space page is loaded with bunch of attributes.
+    */
     tags (tags) {
       for (var i = 0; i < tags.length; i++) {
         this.selectedItems.push(tags[i])
-        var attributeItem = document.createElement('div')
-        attributeItem.id = tags[i]
-        var attributeText = document.createElement('p')
-        var cancelButton = document.createElement('a')
-        cancelButton.id = tags[i] + 'A'
-        cancelButton.innerHTML = ' remove'
-        cancelButton.addEventListener('click', this.handleRemoveClick)
-        attributeItem.classList.add('attr')
-        attributeText.innerHTML = tags[i]
-        attributeItem.appendChild(attributeText)
-        attributeText.appendChild(cancelButton)
-        document.getElementById('selectedItemsArea').appendChild(attributeItem)
       }
     }
   },
+
   mounted () {
     document.getElementById('attributes').addEventListener('keyup', this.handleEnter)
     document.getElementById('addAttrButton').addEventListener('click', this.handleButtonClick)
   },
+
   methods: {
+    /**  This method removes attribute with given span id from the list of selected attributes.
+    */
+    removeAttribute (attrSpanId) {
+      document.getElementById(attrSpanId).remove()
+      // remove from selectedItems array
+      for (var i = 0; i < this.selectedItems.length; i++) {
+        //  Note: The id of the attribute span id is also the attribute value.
+        if (this.selectedItems[i] === attrSpanId) {
+          this.selectedItems.splice(i, 1)
+        }
+      }
+    },
+
     handleEnter (event) {
       event.preventDefault()
       if (event.keyCode === 13) {
@@ -63,17 +79,11 @@ export default {
     handleButtonClick (event) {
       this.addAttribute()
     },
-    handleRemoveClick (event) {
-      var that = this
-      var divId = event.target.id.slice(0, -1)
-      document.getElementById(divId).remove()
-      // remove from array
-      for (var i = 0; i < that.selectedItems.length; i++) {
-        if (that.selectedItems[i] === divId) {
-          that.selectedItems.splice(i, 1)
-        }
-      }
-    },
+
+    /** This method adds a valid attribute to the array of selectedItems,
+    * shows an alert message for invalid attribute.
+    * It also clears the typeahead input box.
+    */
     addAttribute () {
       var that = this
       // remove invalid entry alert from screen
@@ -81,32 +91,16 @@ export default {
       alert.innerHTML = ''
       alert.classList.remove('alert')
       alert.classList.remove('alert-info')
-      //  no attribute was selected in the typeahead
+
+      //  If no attribute was selected in the typeahead
       if (that.model === null) {
-        //  do nothing
+        //  then do nothing.
       } else if (that.model.name !== undefined) {
         if (that.selectedItems.includes(that.model.name)) {
-          //  This attribute has been previously added to DOM.
-          //  So, let's remove it from typeahead.
-          this.model = null
+          //  This attribute has been previously added to array.
         } else {
-          //  Add the new attribute to DOM.
+          //  Add the new attribute to array.
           that.selectedItems.push(that.model.name)
-          var attributeItem = document.createElement('div')
-          attributeItem.id = that.model.name
-          var attributeText = document.createElement('p')
-          var cancelButton = document.createElement('a')
-          cancelButton.id = that.model.name + 'A'
-          cancelButton.innerHTML = ' remove'
-          cancelButton.addEventListener('click', this.handleRemoveClick)
-          attributeItem.classList.add('attr')
-          attributeText.innerHTML = that.model.name
-          attributeItem.appendChild(attributeText)
-          attributeText.appendChild(cancelButton)
-          document.getElementById('selectedItemsArea').appendChild(attributeItem)
-          //  Selected attribute has been added to the DOM.
-          //  Let's now remove it from typeahead.
-          this.model = null
         }
       } else {
         // the attribute is not in the list
@@ -116,6 +110,8 @@ export default {
         alert.classList.add('alert')
         alert.classList.add('alert-info')
       }
+      //  Clear the typeahead input box.
+      this.model = null
     }
   }
 }

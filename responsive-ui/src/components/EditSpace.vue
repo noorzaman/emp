@@ -41,7 +41,7 @@
         <TypeAhead v-bind:tags="tags"></TypeAhead>
       </div>
     </div>
-    <button class="btn btn-primary submitButton" v-on:click="editSpace">Submit edit</button>
+    <button class="btn btn-primary submitButton" v-on:click="editSpace">Save</button>
   </div>
 </template>
 
@@ -118,7 +118,7 @@ export default {
       var attributes = []
       var options = document.getElementsByClassName('attr')
       for (var i = 0; i < options.length; i++) {
-        attributes.push(options[i].id)
+        attributes.push(options[i].innerText)
       }
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText

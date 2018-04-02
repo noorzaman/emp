@@ -158,7 +158,7 @@ export default {
       var selectedAttributes = document.getElementsByClassName('attr')
       var spaceDelimitedAttributes = ''
       for (var k = 0; k < selectedAttributes.length; k++) {
-        spaceDelimitedAttributes += selectedAttributes[k].id
+        spaceDelimitedAttributes += selectedAttributes[k].innerText
         if (k < selectedAttributes.length - 1) {
           spaceDelimitedAttributes += ' '
         }
@@ -171,7 +171,7 @@ export default {
       var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
       //  console.log('DEBUG: ' + spaceDelimitedThemes)
       var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
-      //  console.log('DEBUG: ' + spaceDelimitedAttributes)
+      //  console.log('DEBUG: spaceDelimitedAttributes are: ' + spaceDelimitedAttributes)
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
       if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
