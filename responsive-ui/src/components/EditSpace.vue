@@ -131,7 +131,7 @@ export default {
         'space': {
           'name': this.name,
           'description': this.description,
-          'capacity': desiredCapacity,
+          'capacity': parseInt(desiredCapacity),
           'themes': this.themes,
           'attributes': attributes
         }
