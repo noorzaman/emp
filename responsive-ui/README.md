@@ -11,6 +11,15 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+# run unit tests
+npm run unit
+
+# run end to end integration tests
+npm run e2e
+
+# run both unit and end to end integration tests
+npm run tests
+
 # build for production with minification
 npm run build
 
