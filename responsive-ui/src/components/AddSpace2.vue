@@ -133,16 +133,16 @@ export default {
 
 <style scoped>
 .pageTitle {
-	font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
-	font-weight: normal;
+  font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+  font-weight: normal;
   font-size: 1.75em;
   color: rgb(95, 78, 194);
   font-size: 16px;
-	letter-spacing: .2em;
-	line-height: 1.1em;
-	margin:0px;
-	text-align: left;
-	text-transform: uppercase;
+  letter-spacing: .2em;
+  line-height: 1.1em;
+  margin:0px;
+  text-align: left;
+  text-transform: uppercase;
   margin-bottom: 10px;
 }
 

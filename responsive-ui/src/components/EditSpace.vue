@@ -38,7 +38,7 @@
         </ul>
       </div>
       <div class="form-group typeAhead">
-        <TypeAhead v-bind:tags="tags"></TypeAhead>
+        <TypeAhead v-bind:selectedAttributes="tags"></TypeAhead>
       </div>
     </div>
     <button class="btn btn-primary submitButton" v-on:click="editSpace">Save</button>
