@@ -1,6 +1,6 @@
 <template>
   <section>
-    <label for="attributes">Tags</label>
+    <label for="attributes">Attributes</label>
     <p>Ex: food, WiFi, projector, etc.</p>
 
     <div id="attributeContainer">
@@ -42,7 +42,6 @@ export default {
     return {
       newAttribute: '',
       newAttributeError: ''
-      // attributes: [ {name: 'chairs'}, {name: 'chalkboard'}, {name: 'food'}, {name: 'projector'}, {name: 'tables'}, {name: 'wifi'}, {name: 'whiteboard'} ]
     }
   },
 
@@ -57,6 +56,8 @@ export default {
         }
       }
     },
+
+    // doesn't this just do the same thing as Array.includes()?
 
     /** This method returns true if given item exists in the given array,
     * otherwise returns false.
@@ -86,7 +87,7 @@ export default {
       } else if (this.newAttribute.name === undefined) {
         // the attribute is not in the list
         this.newAttributeError = 'There are no spaces tagged with \'' + this.newAttribute + '\'.'
-      } else if (!this.isExist(this.selectedAttributes, this.newAttribute.name)) {
+      } else if (!this.selectedAttributes.includes(this.newAttribute.name)) {
         // If newAttribute does has not been previously added to selectedAttributes,
         //  then add it to selectedAttributes array.
         this.selectedAttributes.push(this.newAttribute.name)
@@ -94,7 +95,7 @@ export default {
       //  Clear the typeahead input box.
       this.newAttribute = null
     },
-    attributes: function () {
+    attributes () {
       var arrUniq = []
       var search = {
         'query': {

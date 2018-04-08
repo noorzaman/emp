@@ -1,17 +1,18 @@
 <template>
-  <div class="main">
+  <NotFound v-if="notFound"></NotFound>
+  <div v-else class="main">
     <h1>{{name}}</h1>
     <div class="viewOneImgCol">
       <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
-      <a href="#" class="btn btn-primary viewOneLink" v-on:click="bookSpace()">Set up meeting</a>
+      <button class="btn btn-primary viewOneLink" @click="bookSpace">Set up meeting</button>
       <a :href="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
       <p><strong>Description: </strong>{{description}}</p>
       <p><strong>Capacity: </strong>{{capacity}}</p>
       <div class="viewOneCapacityCol">
         <p><strong>Themes:</strong></p>
-          <div v-if="themes.length == 0">
+          <div v-if="!themes.length">
             <p>No themes have been added to this space yet.</p>
           </div>
           <div v-else>
@@ -21,9 +22,9 @@
           </div>
         </div>
         <div class="viewOneAttrCol">
-          <p><strong>Tags:</strong></p>
-          <div v-if="attributes.length == 0">
-            <p>No tags have been added to this space yet.</p>
+          <p><strong>Attributes:</strong></p>
+          <div v-if="!attributes.length">
+            <p>No attributes have been added to this space yet.</p>
           </div>
           <div v-else>
             <ul class="browseAttributesList">
@@ -37,10 +38,16 @@
 </template>
 
 <script>
+import NotFound from './NotFound'
+
 export default {
   name: 'ViewOneSpace',
+  components: {
+    'NotFound': NotFound
+  },
   data () {
     return {
+      notFound: false,
       email: this.$route.params.spaceId,
       attributes: [],
       themes: [],
@@ -67,11 +74,15 @@ export default {
         this.imageData = space.image
         this.name = space.name
         this.description = space.description
-        this.attributes = space.attributes
-        this.themes = space.themes
-        this.capacity = space.capacity
+        this.attributes = space.attributes ? space.attributes : []
+        this.themes = space.themes ? space.themes : []
+        this.capacity = space.capacity ? space.capacity : 0
+        if (this.capacity === 50) {
+          this.capacity += '+'
+        }
       }, error => {
         console.error(error)
+        this.notFound = true
       })
     },
     bookSpace () {
@@ -96,3 +107,6 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+</style>

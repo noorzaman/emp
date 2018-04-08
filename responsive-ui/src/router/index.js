@@ -9,6 +9,7 @@ import BrowseTheme from '@/components/BrowseTheme'
 import BrowseName from '@/components/BrowseName'
 import ViewOneSpace from '@/components/ViewOneSpace'
 import ScheduleSpace from '@/components/ScheduleSpace'
+import NotFound from '@/components/NotFound'
 
 Vue.use(Router)
 
@@ -57,8 +58,12 @@ export default new Router({
     {
       path: '/schedule-space',
       name: 'ScheduleSpace',
-      component: ScheduleSpace,
-      props: true
+      component: ScheduleSpace
+    },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
     }
   ],
   mode: 'history'

@@ -4,6 +4,7 @@
     :formatter=getSliderTooltip />
   </div>
 </template>
+
 <script>
 // Used only in vue2.x version
 import vueSlider from 'vue-slider-component'
@@ -44,7 +45,7 @@ export default {
       } else if (newSliderValue >= 50) {
         //  If the new slider value is equal to 50,
         //  then set the tooltip to 50+
-        return '50 +'
+        return '50+'
       }
       return newSliderValue
     }

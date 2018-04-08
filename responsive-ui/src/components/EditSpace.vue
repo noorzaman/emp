@@ -1,5 +1,6 @@
 <template>
-  <div class="main">
+  <NotFound v-if="notFound"></NotFound>
+  <div v-else class="main">
     <h1>{{pageTitle}}</h1>
     <br>
     <div class="leftSearch">
@@ -46,16 +47,20 @@
 </template>
 
 <script>
+import NotFound from './NotFound'
 import NumberSlider from './NumberSlider'
 import TypeAhead from './TypeAhead'
+
 export default {
   name: 'AddSpace',
   components: {
+    'NotFound': NotFound,
     'NumberSlider': NumberSlider,
     'TypeAhead': TypeAhead
   },
   data () {
     return {
+      notFound: false,
       pageTitle: 'Edit Space',
       pageWidth: document.documentElement.clientWidth,
       email: this.$route.params.spaceId,
@@ -112,6 +117,7 @@ export default {
         this.capacity = space.capacity
       }, error => {
         console.error(error)
+        this.notFound = true
       })
     },
     editSpace () {
@@ -147,7 +153,6 @@ export default {
         this.$router.push('/space/' + this.email)
       }, error => {
         console.error(error)
-        this.$router.push('/space/' + this.email)
       })
     }
   }

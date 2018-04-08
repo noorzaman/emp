@@ -242,7 +242,8 @@ export default {
       }
 
       var jsonStr = JSON.stringify(search)
-      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?size=50&from=0'
+      var searchSize = '20'
+      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?from=0&size=' + searchSize
 
       this.$http.post(searchUrl, jsonStr, {
         headers: {
@@ -251,7 +252,7 @@ export default {
       }).then(result => {
         this.matches.length = 0
         var searchResult = result.body.hits.hits
-        for (var n = 0; n < Math.min(searchResult.length, 20); n++) {
+        for (var n = 0; n < searchResult.length; n++) {
           var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
           // find matches
