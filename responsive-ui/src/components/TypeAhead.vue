@@ -1,19 +1,15 @@
 <template>
   <section>
-    <label for="attributes">Attributes</label>
+    <label for="attributes">Tags</label>
     <p>Ex: food, WiFi, projector, etc.</p>
     <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
     <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
     <typeahead v-model="newAttribute" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
-    <button id="addAttrButton" class="btn btn-primary" @click="addAttribute">Add attribute</button>
+    <p class="text-danger">{{newAttributeError}}</p>
+    <button id="addAttrButton" class="btn btn-primary" @click="addAttribute">Add</button>
 
     <br>
-    <div id="selectedItemsAlert">
-    </div>
-    <p><strong>Attributes for the space:</strong></p>
-    <div v-if="selectedAttributes.length == 0">
-      <p>No attributes added yet.</p>
-    </div>
+
     <div id="selectedItemsArea">
         <!-- Beginning of attribute list -->
         <div v-bind:id="item" v-bind:key="item" v-for="item in selectedAttributes" class="tag is-info" style="margin-right: 2px">
@@ -26,8 +22,6 @@
 </template>
 
 <script>
-// import attributes from '../../assets/data/attributes.json'
-// import from server here
 export default {
   props: {
     //  initialize selectedAttributes as empty array
@@ -42,21 +36,35 @@ export default {
   data () {
     return {
       newAttribute: '',
-      attributes: [{name: 'whiteboard'}, {name: 'chairs'}, {name: 'tables'}, {name: 'chalkboard'}, {name: 'food'}]
+      newAttributeError: '',
+      attributes: [ {name: 'chairs'}, {name: 'chalkboard'}, {name: 'food'}, {name: 'projector'}, {name: 'tables'}, {name: 'wifi'}, {name: 'whiteboard'} ]
     }
   },
 
   methods: {
-    /**  This method removes attribute with given span id from the list of selected attributes.
+    /**  This method removes attribute with given name from the list of selected attributes.
     */
     removeAttribute (attributeName) {
       // remove from selectedAttributes array
       for (var i = 0; i < this.selectedAttributes.length; i++) {
-        //  Note: The id of the attribute span id is also the attribute value.
         if (this.selectedAttributes[i] === attributeName) {
           this.selectedAttributes.splice(i, 1)
         }
       }
+    },
+
+    /** This method returns true if given item exists in the given array,
+    * otherwise returns false.
+    * Caution: This method does not perform any null/ type checks on
+    * given arguments.
+    */
+    isExist (array, item) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i] === item) {
+          return true
+        }
+      }
+      return false
     },
 
     /** This method adds a valid attribute to the array of selectedAttributes,
@@ -64,30 +72,19 @@ export default {
     * It also clears the typeahead input box.
     */
     addAttribute () {
-      var that = this
       // remove invalid entry alert from screen
-      var alert = document.getElementById('selectedItemsAlert')
-      alert.innerHTML = ''
-      alert.classList.remove('alert')
-      alert.classList.remove('alert-info')
+      this.newAttributeError = ''
 
-      //  If no attribute was selected in the typeahead
-      if (that.newAttribute === null) {
+      if (this.newAttribute === null || this.newAttribute.name === undefined) {
+        //  If no attribute was selected in the typeahead
         //  then do nothing.
-      } else if (that.newAttribute.name !== undefined) {
-        if (that.selectedAttributes.includes(that.newAttribute.name)) {
-          //  This attribute has been previously added to array.
-        } else {
-          //  Add the new attribute to array.
-          that.selectedAttributes.push(that.newAttribute.name)
-        }
+      } else if (!this.isExist(this.selectedAttributes, this.newAttribute.name)) {
+        // If newAttribute does has not been previously added to selectedAttributes,
+        //  then add it to selectedAttributes array.
+        this.selectedAttributes.push(this.newAttribute.name)
       } else {
         // the attribute is not in the list
-        var info = document.createElement('p')
-        info.innerHTML = 'There are no spaces with the attribute \'' + that.newAttribute + '.\' Please choose one from the list.'
-        alert.appendChild(info)
-        alert.classList.add('alert')
-        alert.classList.add('alert-info')
+        this.newAttributeError = 'There are no spaces tagged with \'' + this.newAttribute + '\'.'
       }
       //  Clear the typeahead input box.
       this.newAttribute = null

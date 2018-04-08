@@ -4,16 +4,18 @@
     <div v-for="match in matches" :key="match.email" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <h2>{{match.name}}</h2>
       <p>{{match.description}}</p>
-      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+      <a :href="'/space/' + match.email">
+        <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+      </a>
       <p><strong>Capacity:</strong> {{match.capacity}}</p>
-      <p><strong>Attributes</strong></p>
+      <p><strong>Tags</strong></p>
       <div v-if="match.attributes.length > 0">
         <ul v-bind:class="{ 'browseAttributesList' : longAttrList }">
           <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
         </ul>
       </div>
       <div v-else v-bind:class="{ 'browseAttributesList' : longAttrList }">
-        <p>No attributes have been added for this space yet.</p>
+        <p>No tags have been added for this space yet.</p>
       </div>
       <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
     </div>

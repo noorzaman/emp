@@ -21,9 +21,9 @@
           </div>
         </div>
         <div class="viewOneAttrCol">
-          <p><strong>Attributes:</strong></p>
+          <p><strong>Tags:</strong></p>
           <div v-if="attributes.length == 0">
-            <p>No attributes have been added to this space yet.</p>
+            <p>No tags have been added to this space yet.</p>
           </div>
           <div v-else>
             <ul class="browseAttributesList">

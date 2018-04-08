@@ -57,7 +57,9 @@
       </div>
       <div class="clearFix"></div>
       <p>{{match.description}}</p>
-      <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+      <a :href="'/space/' + match.email" target="_blank">
+        <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+      </a>
       <div v-if="match.matchPercent !== 100">
         <div v-if="searchCriteria.capacity !== 0 && parseInt(searchCriteria.capacity) > parseInt(match.capacity)" class="missingCapacity">
           <ul>
