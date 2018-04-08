@@ -292,12 +292,13 @@ ul {
 }
 
 #addAttrButton {
-    margin-top: 1em;
+    margin-left: 0.5em;
+    margin-top: 0em;
     margin-bottom: 2em;
 }
 
 #attributes {
-    width: 50%;
+    width: 100%;
 }
 
 .missingThemes {
@@ -670,7 +671,7 @@ ul {
     }
 
     #attributes {
-        width: 75%;
+        width: 95%;
     }
 }
 

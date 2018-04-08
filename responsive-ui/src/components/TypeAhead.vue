@@ -2,13 +2,17 @@
   <section>
     <label for="attributes">Tags</label>
     <p>Ex: food, WiFi, projector, etc.</p>
-    <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
-    <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
-    <typeahead v-model="newAttribute" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
-    <p class="text-danger">{{newAttributeError}}</p>
-    <button id="addAttrButton" class="btn btn-primary" @click="addAttribute">Add</button>
-
-    <br>
+    <div id="attributeContainer">
+      <div>
+        <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
+        <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
+        <typeahead v-model="newAttribute" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
+        <p class="text-danger">{{newAttributeError}}</p>
+      </div>
+      <div>
+        <button id="addAttrButton" class="btn btn-primary" @click="addAttribute">Add</button>
+      </div>
+    </div>
 
     <div id="selectedItemsArea">
         <!-- Beginning of attribute list -->
@@ -136,3 +140,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #attributeContainer {
+    display: flex;
+  }
+</style>
