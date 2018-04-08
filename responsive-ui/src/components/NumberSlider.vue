@@ -1,6 +1,6 @@
 <template>
   <div class="numberSlider">
-    <vue-slider ref="slider" v-model="value" id="capacity-slider"></vue-slider>
+    <vue-slider ref="slider" v-model="value" id="capacity-slider" @callback="sliderMoved"></vue-slider>
   </div>
 </template>
 <script>
@@ -55,6 +55,22 @@ export default {
   watch: {
     capacity (value) {
       this.value = value
+    }
+  },
+  methods: {
+
+    /** This method sets the slider value to 'Any' instead of zero.
+    * This method is invoked by vue-slider-component when the slider moves.
+    */
+    sliderMoved (newSliderValue) {
+      if (newSliderValue === 0) {
+        //  If the new slider value is zero,
+        //  then get the reference to vue-slider-component instance
+        //  and set the value to 'Any'.
+        //  Make sure to set the callback to false,
+        //  so that setValue() doesn't trigger another invocation of sliderMoved().
+        this.$refs.slider.setValue('Any', false)
+      }
     }
   }
 }
