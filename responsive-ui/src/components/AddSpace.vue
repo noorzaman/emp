@@ -39,12 +39,13 @@
       </div>
     </div>
     <br><br>
-    <button class="btn btn-primary" @click="checkForm">Upload photo</button>
+    <button class="btn btn-primary" @click="send">Upload photo</button>
   </div>
 </template>
 
 <script>
 import { ImageUploader } from 'vue-image-upload-resize'
+import axios from 'axios'
 
 export default {
   name: 'AddSpace',
@@ -77,54 +78,74 @@ export default {
     handleResize (event) {
       this.pageWidth = document.documentElement.clientWidth
     },
-    checkForm () {
-      var isError = false
+    validateInput () {
+      let hasErrors = false
       if (!this.name.length) {
         this.nameError = 'The name field is required'
-        isError = true
+        hasErrors = true
       } else {
         this.nameError = ''
       }
-      if (this.email.length && !this.validEmail(this.email)) {
+      if (!this.email.length) {
         this.emailError = 'Please enter a valid email address'
-        isError = true
+        hasErrors = true
       } else {
         this.emailError = ''
       }
       if (!this.hasImage) {
         this.imageError = 'You must add an image'
-        isError = true
-      } else {
-        this.imageError = ''
+        hasErrors = true
       }
-      if (!isError) {
+      return hasErrors
+    },
+    async send () {
+      if (!this.validateInput()) {
+        let data = {
+          'size': 0,
+          'aggs': {
+            'uniq_attrs': {
+              'terms': {
+                'size': 1000, // TODO compare with all hits and bring more?
+                'field': '_id'
+              }
+            }
+          }
+        }
+
+        let jsonData = JSON.stringify(data)
+        let url = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search'
+
+        const response = await axios.post(url, jsonData, {
+          headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        })
+        let keys = response.data.aggregations.uniq_attrs.buckets
+        let lst = []
+        Object.assign(lst, ...Object.values(keys).map(k => lst.push(k.key)))
+        if (lst.indexOf(this.email) > -1) {
+          this.emailError = 'Room with the email already exists'
+          return
+        }
         this.uploadPhoto()
       }
     },
-    validEmail (email) {
-      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return re.test(email)
-    },
     uploadPhoto () {
-      var data = {
+      let data = {
         'placeId': this.email,
         'data': this.imageData,
         'space': {
           'name': this.name
         }
       }
-      var jsonData = JSON.stringify(data)
-      var url = 'https://txdydq8h71.execute-api.us-east-1.amazonaws.com/development/streams/tmp/record2'
+      let jsonData = JSON.stringify(data)
+      let url = 'https://txdydq8h71.execute-api.us-east-1.amazonaws.com/development/streams/tmp/record2'
 
-      this.$http.put(url, jsonData, {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
+      axios.put(url, jsonData, {
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
+        console.log(result)
         this.$router.push('/edit-space/' + this.email)
       }, error => {
         console.error(error)
-        this.$router.push('/edit-space/' + this.email)
       })
     },
     setImage (img) {
