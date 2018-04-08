@@ -37,7 +37,7 @@ export default {
     return {
       newAttribute: '',
       newAttributeError: '',
-      attributes: [ {name: 'chairs'}, {name: 'chalkboard'}, {name: 'food'}, {name: 'projector'}, {name: 'tables'}, {name: 'wifi'}, {name: 'whiteboard'} ]
+      // attributes: [ {name: 'chairs'}, {name: 'chalkboard'}, {name: 'food'}, {name: 'projector'}, {name: 'tables'}, {name: 'wifi'}, {name: 'whiteboard'} ]
     }
   },
 
@@ -89,6 +89,49 @@ export default {
       //  Clear the typeahead input box.
       this.newAttribute = null
     }
+  },
+  computed: {
+    attributes: function () {
+      var arrUniq = []
+
+      var search = {
+        'query': {
+          'term': {
+            'space.themes': 'casual'
+          }
+        }
+      }
+      var jsonStr = JSON.stringify(search)
+      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?pretty&_source=space.attributes'
+      this.$http.post(searchUrl, jsonStr, {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }).then(result => {
+        var arr = []
+        for (var i = 0; i < result.body.hits.hits.length; i++) {
+          var attribs = result.body.hits.hits[i]._source.space.attributes
+          arr = arr.concat(attribs)
+        }
+        // sort
+        arr = arr.sort()
+        // drop duplicates
+        var seen = {}
+        for (var j = 0; j < arr.length; j++) {
+          if (arr[j] in seen) {
+            ;
+          } else {
+            seen[arr[j]] = 1
+            var obj = {'name': arr[j]}
+            arrUniq.push(obj)
+          }
+        }
+      }, error => {
+        console.log(error)
+      })
+      return arrUniq
+    }
+
   }
 }
 </script>
