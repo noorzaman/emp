@@ -60,8 +60,9 @@ export default {
     searchByName (name) {
       var search = {
         'query': {
-          'term': {
-            'space.name': name
+          'simple_query_string': {
+            'fields': ['space.name'],
+            'query': name
           }
         }
       }
