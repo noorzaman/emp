@@ -1,6 +1,7 @@
 <template>
   <div class="numberSlider">
-    <vue-slider ref="slider" v-model="value" id="capacity-slider" @callback="sliderMoved"></vue-slider>
+    <vue-slider ref="slider" v-model="value" id="capacity-slider" :min=0 :max=50
+    :formatter=getSliderTooltip />
   </div>
 </template>
 <script>
@@ -17,39 +18,7 @@ export default {
   props: ['capacity'],
   data () {
     return {
-      value: 'Any',
-      options: {
-        eventType: 'auto',
-        width: 'auto',
-        height: 6,
-        dotSize: 10,
-        dotHeight: null,
-        dotWidth: null,
-        min: 1,
-        max: 100,
-        interval: 1,
-        show: true,
-        speed: 0.5,
-        disabled: false,
-        piecewise: false,
-        piecewiseStyle: false,
-        piecewiseLabel: false,
-        tooltip: false,
-        tooltipDir: 'top',
-        reverse: false,
-        data: null,
-        clickable: true,
-        realTime: false,
-        lazy: false,
-        formatter: null,
-        bgStyle: null,
-        sliderStyle: null,
-        processStyle: null,
-        piecewiseActiveStyle: null,
-        tooltipStyle: null,
-        labelStyle: null,
-        labelActiveStyle: null
-      }
+      value: '0'
     }
   },
   watch: {
@@ -57,20 +26,27 @@ export default {
       this.value = value
     }
   },
+
   methods: {
 
-    /** This method sets the slider value to 'Any' instead of zero.
-    * This method is invoked by vue-slider-component when the slider moves.
+    /** This method returns the slider tooltip for the given
+    * slider value. It is invoked by vue-slider-component when
+    * slider value changes.
     */
-    sliderMoved (newSliderValue) {
-      if (newSliderValue === 0) {
+    getSliderTooltip (newSliderValue) {
+      //  Workaround: There seems to be a bug in vue-slider-component
+      //  where during page load it invokes this method with value '0'
+      //  instead of 0. We workaround that bug in the if condition below.
+      if (newSliderValue === '0' || newSliderValue === 0) {
         //  If the new slider value is zero,
-        //  then get the reference to vue-slider-component instance
-        //  and set the value to 'Any'.
-        //  Make sure to set the callback to false,
-        //  so that setValue() doesn't trigger another invocation of sliderMoved().
-        this.$refs.slider.setValue('Any', false)
+        //  then set the toolttip to 'Any'
+        return 'Any'
+      } else if (newSliderValue >= 50) {
+        //  If the new slider value is equal to 50,
+        //  then set the tooltip to 50+
+        return '50 +'
       }
+      return newSliderValue
     }
   }
 }
