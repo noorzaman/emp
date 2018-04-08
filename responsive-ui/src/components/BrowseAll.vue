@@ -11,14 +11,9 @@
     <div class="search-wrapper">
       <h4>Know what you're after?</h4>
       <form>
-        <input type="text" size="50" v-model="search" placeholder="Search by name..."/>
+        <input type="text" v-model="search" placeholder="Search by name..."/>
         <router-link :to="'/browsename/' + this.search" tag="button" class="btn btn-primary">Search</router-link>
       </form>
-
-      <!--button class="btn btn-primary" v-on:click="">Search</button-->
-      <!--a :href="'/browse/' + document.getElementById('name').value">
-        <button class="btn btn-primary">Search</button>
-      </a-->
     </div>
     <h4>Or browse by theme:</h4>
     <div class="row">
