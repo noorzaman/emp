@@ -2,11 +2,12 @@
   <section>
     <label for="attributes">Tags</label>
     <p>Ex: food, WiFi, projector, etc.</p>
+
     <div id="attributeContainer">
       <div>
         <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
         <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
-        <typeahead v-model="newAttribute" target="#attributes" :data="attributes" item-key="name" :open-on-empty="true"/>
+        <typeahead v-model="newAttribute" target="#attributes" :data="attributes()" item-key="name" :open-on-empty="true"/>
         <p class="text-danger">{{newAttributeError}}</p>
       </div>
       <div>
@@ -92,13 +93,9 @@ export default {
       }
       //  Clear the typeahead input box.
       this.newAttribute = null
-    }
-  },
-
-  computed: {
+    },
     attributes: function () {
       var arrUniq = []
-
       var search = {
         'query': {
           'term': {
@@ -108,7 +105,7 @@ export default {
       }
       var jsonStr = JSON.stringify(search)
       var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?pretty&_source=space.attributes'
-      this.$http.post(searchUrl, jsonStr, {
+      this.$http.get(searchUrl, jsonStr, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         }
@@ -136,7 +133,6 @@ export default {
       })
       return arrUniq
     }
-
   }
 }
 </script>
