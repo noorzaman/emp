@@ -8,6 +8,19 @@
         <h1>{{pageTitle}}</h1>
         </div>
     </div>
+    <div class="search-wrapper">
+      <h4>Know what you're after?</h4>
+      <form>
+        <input type="text" size="50" v-model="search" placeholder="Search by name..."/>
+        <router-link :to="'/browsename/' + this.search" tag="button" class="btn btn-primary">Search</router-link>
+      </form>
+
+      <!--button class="btn btn-primary" v-on:click="">Search</button-->
+      <!--a :href="'/browse/' + document.getElementById('name').value">
+        <button class="btn btn-primary">Search</button>
+      </a-->
+    </div>
+    <h4>Or browse by theme:</h4>
     <div class="row">
       <div v-for="theme in themes" :key="theme.image" class="browseThemes">
           <a :href="'/browse/' + theme.image">
@@ -43,7 +56,8 @@ export default {
         {image: 'zen', caption: 'Zen'}
       ],
       pageTitle: 'Explore Meeting Spaces',
-      pageWidth: document.documentElement.clientWidth
+      pageWidth: document.documentElement.clientWidth,
+      search: []
     }
   },
   // bind event handlers to the `handleResize` method (defined below)

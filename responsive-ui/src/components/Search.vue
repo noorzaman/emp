@@ -3,7 +3,7 @@
     <h1>Meeting Space Criteria</h1>
     <div>
         <div class="leftSearch">
-        <p>Leave a space blank to indicate no preference.</p>
+        <p>Leave a criteria blank to indicate no preference.</p>
         <br>
             <div class="form-group">
                 <label>Capacity</label>

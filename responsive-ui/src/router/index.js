@@ -6,6 +6,7 @@ import EditSpace from '@/components/EditSpace'
 import Search from '@/components/Search'
 import Booked from '@/components/Booked'
 import BrowseTheme from '@/components/BrowseTheme'
+import BrowseName from '@/components/BrowseName'
 import ViewOneSpace from '@/components/ViewOneSpace'
 import ScheduleSpace from '@/components/ScheduleSpace'
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/browse/:theme',
       name: 'BrowseTheme',
       component: BrowseTheme
+    },
+    {
+      path: '/browsename/:name',
+      name: 'BrowseName',
+      component: BrowseName
     },
     {
       path: '/add-space',

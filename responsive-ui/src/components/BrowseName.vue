@@ -23,7 +23,7 @@
       <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
     </div>
     <div v-if="this.searchFinished == true && matches.length == 0">
-      <p>No matches were found for this theme.</p>
+      <p>No matches were found for this name.</p>
     </div>
   </div>
 </template>
@@ -31,10 +31,10 @@
 <script>
 import VueAutoVirtualScrollList from 'vue-auto-virtual-scroll-list'
 export default {
-  name: 'BrowseTheme',
+  name: 'BrowseName',
   data () {
     return {
-      pageTitle: this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces',
+      pageTitle: 'Search by Name: ' + this.$route.params.name,
       pageWidth: document.documentElement.clientWidth,
       empUrl: '',
       matches: [],
@@ -45,9 +45,9 @@ export default {
   components: { VueAutoVirtualScrollList },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
-    document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
+    document.title = 'Search by Name: ' + this.$route.params.name
     window.addEventListener('resize', this.handleResize)
-    this.searchByTheme(this.$route.params.theme)
+    this.searchByName(this.$route.params.name)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.handleResize)
@@ -57,11 +57,11 @@ export default {
     handleResize (event) {
       this.pageWidth = document.documentElement.clientWidth
     },
-    searchByTheme (theme) {
+    searchByName (name) {
       var search = {
         'query': {
           'term': {
-            'space.themes': theme
+            'space.name': name
           }
         }
       }
