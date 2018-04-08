@@ -76,7 +76,7 @@
           </ul>
         </div>
         <div v-if="match.missAttributes.length > 0" class="missingAttributes">
-          <p><strong>Missing Attributes</strong></p>
+          <p><strong>Missing tags</strong></p>
           <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
             <li v-for="attribute in match.missAttributes" :key="attribute">{{attribute}}</li>
           </ul>

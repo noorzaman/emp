@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       newAttribute: '',
-      newAttributeError: '',
+      newAttributeError: ''
       // attributes: [ {name: 'chairs'}, {name: 'chalkboard'}, {name: 'food'}, {name: 'projector'}, {name: 'tables'}, {name: 'wifi'}, {name: 'whiteboard'} ]
     }
   },
@@ -75,21 +75,22 @@ export default {
       // remove invalid entry alert from screen
       this.newAttributeError = ''
 
-      if (this.newAttribute === null || this.newAttribute.name === undefined) {
+      if (this.newAttribute === null) {
         //  If no attribute was selected in the typeahead
         //  then do nothing.
+      } else if (this.newAttribute.name === undefined) {
+        // the attribute is not in the list
+        this.newAttributeError = 'There are no spaces tagged with \'' + this.newAttribute + '\'.'
       } else if (!this.isExist(this.selectedAttributes, this.newAttribute.name)) {
         // If newAttribute does has not been previously added to selectedAttributes,
         //  then add it to selectedAttributes array.
         this.selectedAttributes.push(this.newAttribute.name)
-      } else {
-        // the attribute is not in the list
-        this.newAttributeError = 'There are no spaces tagged with \'' + this.newAttribute + '\'.'
       }
       //  Clear the typeahead input box.
       this.newAttribute = null
     }
   },
+
   computed: {
     attributes: function () {
       var arrUniq = []
