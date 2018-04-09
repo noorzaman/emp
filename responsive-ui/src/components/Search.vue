@@ -7,7 +7,7 @@
         <br>
             <div class="form-group">
                 <label>Capacity</label>
-                <NumberSlider></NumberSlider>
+                <NumberSlider v-bind:allowAny="true"></NumberSlider>
             </div>
             <div class="form-group">
                 <label>Meeting Day</label>

@@ -16,7 +16,20 @@ export default {
   components: {
     vueSlider
   },
-  props: ['capacity'],
+  props: {
+    capacity: {
+      capacity: Number,
+      default () {
+        return 0
+      }
+    },
+    allowAny: {
+      type: Boolean,
+      default () {
+        return false
+      }
+    }
+  },
   data () {
     return {
       value: '0'
@@ -38,7 +51,7 @@ export default {
       //  Workaround: There seems to be a bug in vue-slider-component
       //  where during page load it invokes this method with value '0'
       //  instead of 0. We workaround that bug in the if condition below.
-      if (newSliderValue === '0' || newSliderValue === 0) {
+      if (this.allowAny && (newSliderValue === '0' || newSliderValue === 0)) {
         //  If the new slider value is zero,
         //  then set the toolttip to 'Any'
         return 'Any'
