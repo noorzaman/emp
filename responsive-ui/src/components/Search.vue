@@ -69,13 +69,13 @@
         <div v-else>
           <p><strong>Capacity sufficient:</strong> space has a capacity of {{match.capacity}}</p>
         </div>
-        <div v-if="match.missThemes.length > 0" class="missingThemes">
+        <div v-if="match.missThemes.length" class="missingThemes">
           <p><strong>Missing Themes</strong></p>
           <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
             <li v-for="theme in match.missThemes" :key="theme">{{theme}}</li>
           </ul>
         </div>
-        <div v-if="match.missAttributes.length > 0" class="missingAttributes">
+        <div v-if="match.missAttributes.length" class="missingAttributes">
           <p><strong>Missing tags</strong></p>
           <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
             <li v-for="attribute in match.missAttributes" :key="attribute">{{attribute}}</li>
@@ -93,6 +93,7 @@ import NumberSlider from './NumberSlider'
 import DatePicker from './DatePicker'
 import TypeAhead from './TypeAhead'
 import TimePicker from './TimePicker'
+
 export default {
   name: 'Search',
   components: {

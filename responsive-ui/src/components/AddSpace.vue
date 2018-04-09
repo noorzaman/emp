@@ -1,45 +1,51 @@
 <template>
   <div class="main">
-    <h1>{{pageTitle}}</h1><br>
-    <div class="form-group">
-      <label class="empLabel">*Space name</label>
-      <br>
-      <input class="empText" type="text" v-model="name">
-      <p class="text-danger">{{nameError}}</p>
+    <h1>{{pageTitle}}</h1>
+    <div v-if="this.uploading">
+      <p>Uploading image...</p>
     </div>
-    <div class="form-group">
-      <label class="empLabel" >Space e-mail</label>
+    <div v-else>
       <br>
-      <input class="empText" type="email" v-model="email"><br>
-      <p class="text-danger">{{emailError}}</p>
-    </div>
-    <image-uploader
-      hidden=true
-      :debug="1"
-      :maxSize="1"
-      :maxWidth="512"
-      :maxHeight="512"
-      :quality="0.9"
-      :autoRotate=true
-      outputFormat="string"
-      @input="setImage">
-    </image-uploader>
-    <label for="fileInput" slot="upload-label">
-      <figure style="margin-left:50px">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-          <path class="path1" d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"></path>
-        </svg>
-      </figure>
-      <span>{{ hasImage ? 'Replace Image' : 'Capture Image' }}</span>
-    </label>
-    <p class="text-danger">{{imageError}}</p>
-    <div class="row">
-      <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="hasImage">
-        <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+      <div class="form-group">
+        <label class="empLabel">*Space name</label>
+        <br>
+        <input class="empText" type="text" v-model="name">
+        <p class="text-danger">{{nameError}}</p>
       </div>
+      <div class="form-group">
+        <label class="empLabel" >Space e-mail</label>
+        <br>
+        <input class="empText" type="email" v-model="email"><br>
+        <p class="text-danger">{{emailError}}</p>
+      </div>
+      <image-uploader
+        hidden=true
+        :debug="1"
+        :maxSize="1"
+        :maxWidth="512"
+        :maxHeight="512"
+        :quality="0.9"
+        :autoRotate=true
+        outputFormat="string"
+        @input="setImage">
+      </image-uploader>
+      <label for="fileInput" slot="upload-label">
+        <figure style="margin-left:50px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+            <path class="path1" d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"></path>
+          </svg>
+        </figure>
+        <span>{{ hasImage ? 'Replace Image' : 'Capture Image' }}</span>
+      </label>
+      <p class="text-danger">{{imageError}}</p>
+      <div class="row">
+        <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="hasImage">
+          <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+        </div>
+      </div>
+      <br><br>
+      <button class="btn btn-primary" @click="send">Upload photo</button>
     </div>
-    <br><br>
-    <button class="btn btn-primary" @click="send">Upload photo</button>
   </div>
 </template>
 
@@ -59,7 +65,8 @@ export default {
       hasImage: false,
       nameError: '',
       emailError: '',
-      imageError: ''
+      imageError: '',
+      uploading: false
     }
   },
   components: {
@@ -129,6 +136,7 @@ export default {
       }
     },
     uploadPhoto () {
+      this.uploading = true
       let data = {
         'placeId': this.email,
         'data': this.imageData,

@@ -8,7 +8,7 @@
     <div class="roomInfo">
       <button class="btn btn-primary viewOneLink" @click="bookSpace">Set up meeting</button>
       <a :href="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
-      <p><strong>Description: </strong>{{description}}</p>
+      <p v-if="description"><strong>Description: </strong>{{description}}</p>
       <p><strong>Capacity: </strong>{{capacity}}</p>
       <div class="viewOneCapacityCol">
         <p><strong>Themes:</strong></p>

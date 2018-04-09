@@ -115,7 +115,7 @@ export default {
             name: entry.name,
             description: entry.description,
             image: entry.image,
-            capacity: entry.capacity,
+            capacity: entry.capacity ? entry.capacity : 0,
             attributes: entry.attributes
           })
         }

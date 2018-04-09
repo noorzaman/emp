@@ -69,7 +69,7 @@ export default {
         }
       }
       var jsonStr = JSON.stringify(search)
-      var searchSize = '5'
+      var searchSize = '10'
       var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?from=0&size=' + searchSize
 
       this.$http.post(searchUrl, jsonStr, {
@@ -91,7 +91,7 @@ export default {
             name: entry.name,
             description: entry.description,
             image: entry.image,
-            capacity: entry.capacity,
+            capacity: entry.capacity ? entry.capacity : 0,
             attributes: entry.attributes
           })
         }

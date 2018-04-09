@@ -2,47 +2,52 @@
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
     <h1>{{pageTitle}}</h1>
-    <br>
-    <div class="leftSearch">
-      <div class="form-group">
-        <label>Space name</label><br>
-        <input type="text" v-model="name"><br>
-      </div>
-      <div class="form-group">
-        <label>Space e-mail</label><br>
-        <p>{{this.email}}</p>
-      </div>
-      <div class="row">
-        <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">
-          <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+    <div v-if="this.uploading">
+      <p>Saving...</p>
+    </div>
+    <div v-else>
+      <br>
+      <div class="leftSearch">
+        <div class="form-group">
+          <label>Space name</label><br>
+          <input type="text" v-model="name"><br>
+        </div>
+        <div class="form-group">
+          <label>Space e-mail</label><br>
+          <p>{{this.email}}</p>
+        </div>
+        <div class="row">
+          <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">
+            <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+          </div>
+        </div>
+        <br>
+        <div class="form-group">
+          <label>Description</label><br>
+          <textarea style="width:80%" rows="5" placeholder="Enter the description" v-model="description"></textarea><br>
+        </div>
+        <div class="form-group">
+          <Label>Capacity</label>
+          <NumberSlider v-bind:capacity="capacity"></NumberSlider>
         </div>
       </div>
-      <br>
-      <div class="form-group">
-        <label>Description</label><br>
-        <textarea style="width:80%" rows="5" placeholder="Enter the description" v-model="description"></textarea><br>
-      </div>
-      <div class="form-group">
-        <Label>Capacity</label>
-        <NumberSlider v-bind:capacity="capacity"></NumberSlider>
-      </div>
-    </div>
 
-    <div class="rightSearch">
-      <div class="form-group themes">
-        <label>Themes</label><br>
-        <ul  class="checkbox-grid">
-          <li v-for="theme in possibleThemes" :key="theme">
-            <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="themes"/>
-            <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
-          </li>
-        </ul>
+      <div class="rightSearch">
+        <div class="form-group themes">
+          <label>Themes</label><br>
+          <ul  class="checkbox-grid">
+            <li v-for="theme in possibleThemes" :key="theme">
+              <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="themes"/>
+              <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
+            </li>
+          </ul>
+        </div>
+        <div class="form-group typeAhead">
+          <TypeAhead v-bind:selectedAttributes="tags" v-bind:allowCustom="true"></TypeAhead>
+        </div>
       </div>
-      <div class="form-group typeAhead">
-        <TypeAhead v-bind:selectedAttributes="tags" v-bind:allowCustom="true"></TypeAhead>
-      </div>
+      <button class="btn btn-primary submitButton" v-on:click="editSpace">Save</button>
     </div>
-    <button class="btn btn-primary submitButton" v-on:click="editSpace">Save</button>
   </div>
 </template>
 
@@ -70,6 +75,7 @@ export default {
       tags: [],
       themes: [],
       capacity: 0,
+      uploading: false,
       possibleThemes: [
         'casual',
         'celebratory',
@@ -121,6 +127,7 @@ export default {
       })
     },
     editSpace () {
+      this.uploading = true
       var attributes = []
       var options = document.getElementsByClassName('attr')
       for (var i = 0; i < options.length; i++) {
