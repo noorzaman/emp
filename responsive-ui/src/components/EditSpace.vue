@@ -26,13 +26,13 @@
           <label>Description</label><br>
           <textarea style="width:80%" rows="5" placeholder="Enter the description" v-model="description"></textarea><br>
         </div>
+      </div>
+
+      <div class="rightSearch">
         <div class="form-group">
           <Label>Capacity</label>
           <NumberSlider v-bind:capacity="capacity"></NumberSlider>
         </div>
-      </div>
-
-      <div class="rightSearch">
         <div class="form-group themes">
           <label>Themes</label><br>
           <ul  class="checkbox-grid">
