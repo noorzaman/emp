@@ -17,7 +17,7 @@
 
     <div id="selectedItemsArea">
         <!-- Beginning of attribute list -->
-        <div v-bind:id="item" v-bind:key="item" v-for="item in selectedAttributes" class="tag is-info" style="margin-right: 2px">
+        <div v-for="item in selectedAttributes" :key="item" class="tag is-info" style="margin-right: 2px">
             <span class="attr">{{item}}</span>
             <button class="delete is-small" @click="removeAttribute(item)"><strong>x</strong></button>
         </div>
@@ -32,8 +32,14 @@ export default {
     //  initialize selectedAttributes as empty array
     selectedAttributes: {
       type: Array,
-      default: function () {
+      default () {
         return []
+      }
+    },
+    allowCustom: {
+      type: Boolean,
+      default () {
+        return false
       }
     }
   },
@@ -53,26 +59,10 @@ export default {
       for (var i = 0; i < this.selectedAttributes.length; i++) {
         if (this.selectedAttributes[i] === attributeName) {
           this.selectedAttributes.splice(i, 1)
+          return
         }
       }
     },
-
-    // doesn't this just do the same thing as Array.includes()?
-
-    /** This method returns true if given item exists in the given array,
-    * otherwise returns false.
-    * Caution: This method does not perform any null/ type checks on
-    * given arguments.
-    */
-    isExist (array, item) {
-      for (var i = 0; i < array.length; i++) {
-        if (array[i] === item) {
-          return true
-        }
-      }
-      return false
-    },
-
     /** This method adds a valid attribute to the array of selectedAttributes,
     * shows an alert message for invalid attribute.
     * It also clears the typeahead input box.
@@ -81,19 +71,25 @@ export default {
       // remove invalid entry alert from screen
       this.newAttributeError = ''
 
-      if (this.newAttribute === null) {
-        //  If no attribute was selected in the typeahead
-        //  then do nothing.
-      } else if (this.newAttribute.name === undefined) {
+      if (!this.newAttribute) {
+        //  If no attribute was selected in the typeahead then do nothing.
+        return
+      }
+      if (!this.allowCustom && this.newAttribute.name === undefined) {
         // the attribute is not in the list
-        this.newAttributeError = 'There are no spaces tagged with \'' + this.newAttribute + '\'.'
-      } else if (!this.selectedAttributes.includes(this.newAttribute.name)) {
-        // If newAttribute does has not been previously added to selectedAttributes,
-        //  then add it to selectedAttributes array.
-        this.selectedAttributes.push(this.newAttribute.name)
+        this.newAttributeError = 'There are no spaces with attribute \'' + this.newAttribute + '\'.'
+      } else {
+        if (this.newAttribute.name !== undefined) {
+          this.newAttribute = this.newAttribute.name
+        }
+        if (!this.selectedAttributes.includes(this.newAttribute)) {
+          // If newAttribute has not been previously added to selectedAttributes,
+          // then add it to selectedAttributes array.
+          this.selectedAttributes.push(this.newAttribute)
+        }
       }
       //  Clear the typeahead input box.
-      this.newAttribute = null
+      this.newAttribute = ''
     },
     attributes () {
       var arrUniq = []
@@ -121,9 +117,7 @@ export default {
         // drop duplicates
         var seen = {}
         for (var j = 0; j < arr.length; j++) {
-          if (arr[j] in seen) {
-            ;
-          } else {
+          if (!(arr[j] in seen)) {
             seen[arr[j]] = 1
             var obj = {'name': arr[j]}
             arrUniq.push(obj)
