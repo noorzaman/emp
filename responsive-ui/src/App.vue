@@ -51,4 +51,5 @@ export default {
 <style>
  @import 'https://getbootstrap.com/docs/3.3/dist/css/bootstrap.min.css';
  @import '../static/css/styles.css';
+ @import '../static/css/truncation.css';
 </style>

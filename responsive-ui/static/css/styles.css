@@ -169,6 +169,18 @@ hr {
 
 /* Search Styles */
 
+.searchLocation {
+    height: 33em;
+}
+
+.searchLocationMedMissing {
+    height: 38em;
+}
+
+.searchLocationManyMissing {
+    height: 42em;
+}
+
 .search {
     margin-left: 2em;
 }

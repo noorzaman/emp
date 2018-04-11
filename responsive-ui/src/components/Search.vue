@@ -50,13 +50,13 @@
     <div id="searchResults"></div>
     <h2 v-if="matches.length == 1" id="searchResults1">Search Results: {{matches.length}} space found</h2>
     <h2 v-if="matches.length > 1" id="searchResults2">Search Results: {{matches.length}} spaces found</h2>
-    <div v-for="match in matches" :key="match.email" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div v-for="match in matches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div class="matchTitle">
         <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
         <h2>{{match.name}}</h2>
       </div>
       <div class="clearFix"></div>
-      <p>{{match.description}}</p>
+      <p class="block-with-text">{{match.description}}</p>
       <a :href="'/space/' + match.email" target="_blank">
         <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
       </a>
@@ -127,7 +127,8 @@ export default {
         'rustic',
         'studious',
         'zen'
-      ]
+      ],
+      results: ''
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -288,8 +289,14 @@ export default {
               }
             }
           }
-
-          console.log('numMatches:' + numMatches)
+          console.log('missing themes length: ' + missingThemes.length)
+          if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
+            this.results = 'medium'
+            if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
+              this.results = 'long'
+            }
+          }
+          // console.log('numMatches:' + numMatches)
           this.matches.push({
             name: entry.name,
             description: entry.description,
