@@ -6,8 +6,9 @@
       <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
-      <button class="btn btn-primary viewOneLink" @click="bookSpace">Set up meeting</button>
+      <a :href="'/schedule-space/' + email" class="btn btn-primary viewOneLink editBtn">Set up meeting</a>
       <a :href="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
+
       <p v-if="description"><strong>Description: </strong>{{description}}</p>
       <p><strong>Capacity: </strong>{{capacity}}</p>
       <div class="viewOneCapacityCol">
@@ -83,14 +84,6 @@ export default {
       }, error => {
         console.error(error)
         this.notFound = true
-      })
-    },
-    bookSpace () {
-      console.log('this.email: ' + this.email)
-      // try to schedule a meeting
-      this.$router.push({
-        name: 'ScheduleSpace',
-        params: {spaceEmail: this.email}
       })
     }
   }

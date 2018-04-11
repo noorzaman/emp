@@ -19,7 +19,7 @@ export default {
   name: 'Test',
   data () {
     return {
-      spaceEmail: this.$route.params.spaceEmail
+      spaceEmail: this.$route.params.spaceId
     }
   },
   computed: {
@@ -64,7 +64,7 @@ export default {
     }
   },
   mounted: function () {
-    //  Add this space to list of booked spaces
+    //  Let's add this space to list of booked spaces.
     this.updateListOfBookedSpaces(this.spaceEmail)
     //  And redirect to Google Calendar for creating the meeting.
     this.$nextTick(function () {
