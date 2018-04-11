@@ -1,7 +1,11 @@
 <template>
   <div class="main">
     <div v-if="pageWidth > 846">
+        <!-- commenting out Intro.vue based on Nico's feedback.
+        We can try out BrowseAll without the Intro for few days and
+        see if we want to delete Intro or re-add it to BrowseAll.
         <Intro></Intro>
+        -->
     </div>
     <div v-else>
         <div class="browseAllTitle">
