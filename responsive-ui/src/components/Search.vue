@@ -63,11 +63,11 @@
       <div v-if="match.matchPercent !== 100">
         <div v-if="searchCriteria.capacity !== 0 && parseInt(searchCriteria.capacity) > parseInt(match.capacity)" class="missingCapacity">
           <ul>
-            <li class="missingCapacity"><strong>Capacity NOT a match:</strong> space has a capacity of {{match.capacity}}</li>
+            <li class="missingCapacity"><strong>Capacity NOT a match:</strong> has a capacity of {{match.capacity}}</li>
           </ul>
         </div>
         <div v-else>
-          <p><strong>Capacity sufficient:</strong> space has a capacity of {{match.capacity}}</p>
+          <p><strong>Capacity sufficient:</strong> has a capacity of {{match.capacity}}</p>
         </div>
         <div v-if="match.missThemes.length" class="missingThemes">
           <p><strong>Missing Themes</strong></p>
@@ -77,7 +77,7 @@
         </div>
         <div v-if="match.missAttributes.length" class="missingAttributes">
           <p><strong>Missing tags</strong></p>
-          <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
+          <ul v-bind:class="{ 'missingItems': match.missAttributes.length > 5 }">
             <li v-for="attribute in match.missAttributes" :key="attribute">{{attribute}}</li>
           </ul>
         </div>

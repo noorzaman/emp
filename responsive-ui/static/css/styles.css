@@ -174,11 +174,11 @@ hr {
 }
 
 .searchLocationMedMissing {
-    height: 38em;
+    height: 39em;
 }
 
 .searchLocationManyMissing {
-    height: 42em;
+    height: 43em;
 }
 
 .search {
@@ -265,7 +265,6 @@ ul {
     border-radius: 290486px;
     color: #4a4a4a;
     display: inline-flex;
-    /*font-size: .75rem;*/
     font-size: 0.8em;
     height: 2em;
     justify-content: center;
@@ -505,6 +504,14 @@ ul {
         /*background-color: green;*/
     }
     
+    .searchLocation {
+        height: 32em;
+    }
+    
+    .searchLocationMedMissing {
+        height: 34em;
+    }
+    
     .searchLocationManyMissing {
         height: 40em;
     }
@@ -530,6 +537,14 @@ ul {
         /*background-color: purple;*/
     }
     
+    .searchLocation {
+        height: 31em;
+    }
+    
+    .searchLocationMedMissing {
+        height: 36em;
+    }
+    
     .searchLocationManyMissing {
         height: 38em;
     }
@@ -552,17 +567,21 @@ ul {
     }
 }
 
-@media only screen and (max-width: 965px) {
+@media only screen and (max-width: 985px) {
     body {
         /*background-color: pink;*/
     }
     
+    .searchLocation {
+        height: 28.5em;
+    }
+    
     .searchLocationMedMissing {
-        height: 32em;
+        height: 36em;
     }
     
     .searchLocationManyMissing {
-        height: 30em;
+        height: 39em;
     }
 }
 
@@ -580,6 +599,10 @@ ul {
 
     body {
         /*background-color: pink;*/
+    }
+    
+    .searchLocationManyMissing {
+        height: 35em;
     }
 
     .navbar-header {
@@ -609,6 +632,10 @@ ul {
 @media only screen and (max-width: 844px) {
     body {
         /*background-color: red;*/
+    }
+    
+    .searchLocationMedMissing {
+        height: 32em;
     }
 
     .viewOneImgCol {
