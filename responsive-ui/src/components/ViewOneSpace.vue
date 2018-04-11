@@ -6,7 +6,7 @@
       <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
-      <a :href="'/schedule-space/' + email" class="btn btn-primary viewOneLink editBtn">Set up meeting</a>
+      <a :href="'/schedule-space/' + email" class="btn btn-primary viewOneLink">Set up meeting</a>
       <a :href="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
 
       <p v-if="description"><strong>Description: </strong>{{description}}</p>
