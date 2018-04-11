@@ -83,7 +83,10 @@
         </div>
       </div>
       <div class="clearFix"></div>
-      <a :href="'/space/' + match.email" target="_blank" class="btn btn-primary">Space Details</a>
+      <div style="text-align: center;">
+        <a href="javascript:;" class="btn btn-primary" style="margin-right: 10px;">Book</a>
+        <a :href="'/space/' + match.email" target="_blank" class="btn btn-primary">Space Details</a>
+      </div>
     </div>
   </div>
 </template>
