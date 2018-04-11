@@ -504,6 +504,10 @@ ul {
     body {
         /*background-color: green;*/
     }
+    
+    .searchLocationManyMissing {
+        height: 40em;
+    }
 
     .carousel {
         width: 20em;
@@ -524,6 +528,10 @@ ul {
 @media only screen and (max-width: 1000px) {
     body {
         /*background-color: purple;*/
+    }
+    
+    .searchLocationManyMissing {
+        height: 38em;
     }
 
     .introText {
@@ -548,11 +556,13 @@ ul {
     body {
         /*background-color: pink;*/
     }
-}
-
-@media only screen and (max-width: 935px) {
-    body {
-        /*background-color: lightblue;*/
+    
+    .searchLocationMedMissing {
+        height: 32em;
+    }
+    
+    .searchLocationManyMissing {
+        height: 30em;
     }
 }
 
@@ -630,6 +640,18 @@ ul {
 @media only screen and (max-width: 760px) {
     body {
         /*background-color: lightgreen;*/
+    }
+    
+    .searchLocationMedMissing {
+        height: auto;
+    }
+    
+    .searchLocationManyMissing {
+        height: auto;
+    }
+    
+    .searchLocation {
+        height: auto;
     }
 
     .bookedImg, .searchImg {
