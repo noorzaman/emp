@@ -67,7 +67,6 @@ export default {
     return {
       notFound: false,
       pageTitle: 'Edit Space',
-      pageWidth: document.documentElement.clientWidth,
       email: this.$route.params.spaceId,
       imageData: '',
       name: '',
@@ -95,17 +94,9 @@ export default {
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Edit Space'
-    window.addEventListener('resize', this.handleResize)
     this.searchByEmail()
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
-  },
   methods: {
-    // whenever the document is resized, re-set the 'pageWidth' variable
-    handleResize (event) {
-      this.pageWidth = document.documentElement.clientWidth
-    },
     searchByEmail () {
       var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
       var searchUrl = empUrl + '/' + this.email

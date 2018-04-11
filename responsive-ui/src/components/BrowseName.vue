@@ -38,7 +38,6 @@ export default {
   data () {
     return {
       pageTitle: 'Search by Name: ' + this.$route.params.name,
-      pageWidth: document.documentElement.clientWidth,
       empUrl: '',
       matches: [],
       longAttrList: false,
@@ -48,17 +47,9 @@ export default {
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Search by Name: ' + this.$route.params.name
-    window.addEventListener('resize', this.handleResize)
     this.searchByName(this.$route.params.name)
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
-  },
   methods: {
-    // whenever the document is resized, re-set the 'pageWidth' variable
-    handleResize (event) {
-      this.pageWidth = document.documentElement.clientWidth
-    },
     searchByName (name) {
       var search = {
         'query': {

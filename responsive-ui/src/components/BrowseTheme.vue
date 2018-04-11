@@ -10,9 +10,9 @@
         <p>No matches were found for this theme.</p>
       </div>
       <div v-else class="row">
-        <div v-for="match in matches" :key="match.email" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div v-for="match in matches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
-          <p>{{match.description}}</p>
+          <p class="block-with-text">{{match.description}}</p>
           <a :href="'/space/' + match.email">
             <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
           </a>
@@ -22,7 +22,7 @@
             <p>No attributes have been added for this space yet.</p>
           </div>
           <div v-else>
-            <ul v-bind:class="{ 'browseAttributesList' : longAttrList }">
+            <ul v-bind:class="{ 'browseAttributesList' : match.spaceLongAttrList }" class="attrList">
               <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>
@@ -45,10 +45,8 @@ export default {
     return {
       notFound: false,
       pageTitle: this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces',
-      pageWidth: document.documentElement.clientWidth,
       empUrl: '',
       matches: [],
-      longAttrList: false,
       searchFinished: false,
       possibleThemes: [
         'casual',
@@ -63,23 +61,16 @@ export default {
         'rustic',
         'studious',
         'zen'
-      ]
+      ],
+      results: ''
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
-    window.addEventListener('resize', this.handleResize)
     this.searchByTheme(this.$route.params.theme)
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
-  },
   methods: {
-    // whenever the document is resized, re-set the 'pageWidth' variable
-    handleResize (event) {
-      this.pageWidth = document.documentElement.clientWidth
-    },
     searchByTheme (theme) {
       if (!this.possibleThemes.includes(theme)) {
         this.notFound = true
@@ -106,9 +97,16 @@ export default {
         for (var n = 0; n < searchResult.length; n++) {
           var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
+          var longAttrList = false
           // check if will need to add scrollbar to any attributes list
           if (entry.attributes.length >= 5) {
-            this.longAttrList = true
+            longAttrList = true
+          }
+          if (entry.attributes.length >= 2) {
+            this.results = 'medium'
+            if (entry.attributes.length >= 4) {
+              this.results = 'long'
+            }
           }
           this.matches.push({
             email: email,
@@ -116,7 +114,8 @@ export default {
             description: entry.description,
             image: entry.image,
             capacity: entry.capacity ? entry.capacity : 0,
-            attributes: entry.attributes
+            attributes: entry.attributes,
+            spaceLongAttrList: longAttrList
           })
         }
         this.searchFinished = true

@@ -5,9 +5,9 @@
       <p>You have not booked any spaces yet.</p>
     </div>
     <div v-else class="row">
-      <div v-for="space in prevBookedSpaces" :key="space.email" class="bookedLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+      <div v-for="space in prevBookedSpaces" :key="space.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <h2>{{space.name}}</h2>
-        <p>{{space.description}}</p>
+        <p class="block-with-text">{{space.description}}</p>
         <a :href="'/space/' + space.email">
           <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
         </a>
@@ -34,7 +34,8 @@ export default {
     return {
       bookedEmails: [],
       prevBookedSpaces: [],
-      longAttrList: false
+      longAttrList: false,
+      results: ''
     }
   },
   mounted: function () {
@@ -59,6 +60,12 @@ export default {
         // check if will need to add scrollbar to any attributes list
         if (space.attributes.length >= 5) {
           this.longAttrList = true
+        }
+        if (space.attributes.length >= 2) {
+          this.results = 'medium'
+          if (space.attributes.lengt >= 4) {
+            this.results = 'long'
+          }
         }
         this.prevBookedSpaces.push({
           email: email,

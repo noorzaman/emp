@@ -109,7 +109,6 @@ export default {
   data () {
     return {
       pageTitle: 'Search Meeting Spaces',
-      pageWidth: document.documentElement.clientWidth,
       matches: [],
       searchCriteria: {},
       numCriteria: 0,
@@ -134,16 +133,8 @@ export default {
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Search Spaces'
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
-    // whenever the document is resized, re-set the 'pageWidth' variable
-    handleResize (event) {
-      this.pageWidth = document.documentElement.clientWidth
-    },
     /**
     * This function returns a string of space delimited
     * themes. It returns empty string when no theme is selected.
@@ -289,7 +280,6 @@ export default {
               }
             }
           }
-          console.log('missing themes length: ' + missingThemes.length)
           if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
             this.results = 'medium'
             if (missingThemes.length >= 4 || missingAttributes.length >= 4) {

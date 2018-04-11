@@ -58,7 +58,6 @@ export default {
   data () {
     return {
       pageTitle: 'Add a New Space',
-      pageWidth: document.documentElement.clientWidth,
       name: '',
       email: '',
       imageData: '',
@@ -72,19 +71,10 @@ export default {
   components: {
     ImageUploader
   },
-  // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Add Space'
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
-    // whenever the document is resized, re-set the 'pageWidth' variable
-    handleResize (event) {
-      this.pageWidth = document.documentElement.clientWidth
-    },
     validateInput () {
       let hasErrors = false
       if (!this.name.length) {

@@ -101,6 +101,10 @@ hr {
     clear: both;
 }
 
+.attrList {
+    list-style-type: none;
+}
+
 /* Intro and Slider Styles */
 
 .introText {
@@ -573,7 +577,7 @@ ul {
     }
     
     .searchLocation {
-        height: 28.5em;
+        height: 31em;
     }
     
     .searchLocationMedMissing {
