@@ -64,10 +64,30 @@ export default {
     }
   },
   mounted: function () {
+    //  Add this space to list of booked spaces
+    this.updateListOfBookedSpaces(this.spaceEmail)
+    //  And redirect to Google Calendar for creating the meeting.
     this.$nextTick(function () {
-      // redirect to Google calendar
       document.googleCalInput.submit()
     })
+  },
+  methods: {
+
+    /** This method adds given space email address
+    * to list of booked spaces. This list of booked
+    * spaces is persisted on local storage.
+    */
+    updateListOfBookedSpaces (spaceEmail) {
+      var bookedSpaces = JSON.parse(localStorage.getItem('bookedEmails'))
+      if (bookedSpaces == null) {
+        bookedSpaces = [spaceEmail]
+      } else {
+        if (!bookedSpaces.includes(spaceEmail)) {
+          bookedSpaces.push(spaceEmail)
+        }
+      }
+      localStorage.setItem('bookedEmails', JSON.stringify(bookedSpaces))
+    }
   }
 }
 </script>
