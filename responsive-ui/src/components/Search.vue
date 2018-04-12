@@ -11,19 +11,19 @@
             </div>
             <div class="form-group">
                 <label>Meeting Day</label>
-                <DatePicker v-on:change="fromDateChanged"></DatePicker>
+                <DatePicker v-on:change="startDateChanged"></DatePicker>
             </div>
             <div class="form-group">
                 <label>Meeting Time</label>
                 <br>
                 <div class="timePicker">
-                  <TimePicker></TimePicker>
+                  <TimePicker v-on:change="startTimeChanged"/>
                 </div>
                 <div class="to">
                   <p>to</p>
                 </div>
                 <div class="timePicker">
-                  <TimePicker></TimePicker>
+                  <TimePicker v-on:change="endTimeChanged"/>
                 </div>
                 <div class="clearFix"></div>
             </div>
@@ -128,7 +128,9 @@ export default {
         'zen'
       ],
       results: '',
-      fromDate: null
+      startDate: null,
+      startTime: null,
+      endTime: null
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -136,11 +138,24 @@ export default {
     document.title = 'Search Spaces'
   },
   methods: {
+
     /** This method is called when user selects a date on the date picker.
     */
-    fromDateChanged (newDate) {
-      this.fromDate = newDate
-      // console.log(this.fromDate)
+    startDateChanged (newDate) {
+      this.startDate = newDate
+      // console.log(this.startDate)
+    },
+
+    /** This method is called when user selects meeting start time.
+    */
+    startTimeChanged (newValue) {
+      this.startTime = newValue
+    },
+
+    /** This method is called when user selects meeting end time.
+    */
+    endTimeChanged (newValue) {
+      this.endTime = newValue
     },
 
     /**
