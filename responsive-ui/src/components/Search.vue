@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
                 <label>Meeting Day</label>
-                <DatePicker></DatePicker>
+                <DatePicker v-on:change="fromDateChanged"></DatePicker>
             </div>
             <div class="form-group">
                 <label>Meeting Time</label>
@@ -127,7 +127,8 @@ export default {
         'studious',
         'zen'
       ],
-      results: ''
+      results: '',
+      fromDate: null
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -135,6 +136,13 @@ export default {
     document.title = 'Search Spaces'
   },
   methods: {
+    /** This method is called when user selects a date on the date picker.
+    */
+    fromDateChanged (newDate) {
+      this.fromDate = newDate
+      // console.log(this.fromDate)
+    },
+
     /**
     * This function returns a string of space delimited
     * themes. It returns empty string when no theme is selected.
