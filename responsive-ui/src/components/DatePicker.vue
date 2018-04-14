@@ -26,19 +26,19 @@ export default {
 
     /** The following code triggers when user selects/ removes
     * a date in the date-picker. This code then notifies the parent
-    * component of the date change via 'change' event.
+    * component of the date change via 'change' event. Parent should
+    * expect an ISO date. Example: 2018-12-25
     */
     startDate: function (newDate) {
       //  Check whether given value is a proper date
       //  See: https://stackoverflow.com/questions/643782/how-to-check-whether-an-object-is-a-date
-      if (typeof newDate.getMonth === 'function') {
-        this.$emit('change', newDate)
-      } else {
-        //  When user removes a date from date-picker then 'newDate'
-        //  will not be a date object. Let's notify the parent so
-        //  that parent can update its state.
-        this.$emit('change', null)
+      if (typeof newDate.getMonth !== 'function') {
+        //  if user has not selected a date, then default to today
+        newDate = new Date()
       }
+      var month = newDate.getMonth() + 1
+      var isoDate = newDate.getFullYear() + '-' + month + '-' + newDate.getDate()
+      this.$emit('change', isoDate)
     }
   }
 }

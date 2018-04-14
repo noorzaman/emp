@@ -17,13 +17,13 @@
                 <label>Meeting Time</label>
                 <br>
                 <div class="timePicker">
-                  <TimePicker v-on:change="startTimeChanged"/>
+                  <TimePicker v-on:change="startTimeChanged"></TimePicker>
                 </div>
                 <div class="to">
                   <p>to</p>
                 </div>
                 <div class="timePicker">
-                  <TimePicker v-on:change="endTimeChanged"/>
+                  <TimePicker v-on:change="endTimeChanged"></TimePicker>
                 </div>
                 <div class="clearFix"></div>
             </div>
@@ -85,7 +85,10 @@
       <div class="clearFix"></div>
       <div class="searchBtns">
         <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
-        <a href="javascript:;" class="btn btn-primary btnMargin">Book</a>
+
+        <a :href="'/schedule-space/' + match.email + '/' + startDate + '/' + startTime + '/' + endTime"
+        class="btn btn-primary btnMargin">Book</a>
+
         <a :href="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</a>
       </div>
     </div>
@@ -128,9 +131,9 @@ export default {
         'zen'
       ],
       results: '',
-      startDate: null,
-      startTime: null,
-      endTime: null
+      startDate: 'u', //  undefined
+      startTime: 'u',
+      endTime: 'u'
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
@@ -139,7 +142,7 @@ export default {
   },
   methods: {
 
-    /** This method is called when user selects a date on the date picker.
+    /** This method is called when user selects/ deselects meeting start date.
     */
     startDateChanged (newDate) {
       this.startDate = newDate

@@ -56,7 +56,7 @@ export default new Router({
       component: ViewOneSpace
     },
     {
-      path: '/schedule-space/:spaceId',
+      path: '/schedule-space/:spaceId/:startDate?/:startTime?/:endTime?',
       name: 'ScheduleSpace',
       component: ScheduleSpace
     },

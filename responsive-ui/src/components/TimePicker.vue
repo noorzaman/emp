@@ -12,10 +12,11 @@ export default {
 
     /** The following code triggers when user selects/ changes
     * time in the time-picker. This code then notifies the parent
-    * component of the change via 'change' event.
+    * component of the change via 'change' event. Parent should
+    * expect HH:MM format. Example: 23:59
     */
     time: function (newValue) {
-      this.$emit('change', newValue)
+      this.$emit('change', newValue.getHours() + ':' + newValue.getMinutes())
     }
   }
 }

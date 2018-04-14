@@ -19,47 +19,51 @@ export default {
   name: 'Test',
   data () {
     return {
-      spaceEmail: this.$route.params.spaceId
+      spaceEmail: this.$route.params.spaceId,
+      startDate: this.$route.params.startDate,
+      startTime: this.$route.params.startTime,
+      endTime: this.$route.params.endTime
     }
   },
   computed: {
-    // getSpaceEmail: function(){
-    //   return this.spaceEmail
-    // },
 
     time: function () {
-      // date time start to the nearest half hour
       var ds = new Date()
-      ds.setMinutes(ds.getMinutes() + 59)
-      ds.setMinutes(0)
 
-      var syear = ds.getFullYear()
-      var smonth = String(ds.getMonth() + 1)
-      smonth = smonth.length < 2 ? '0' + smonth : smonth
-      var sday = String(ds.getDate())
-      sday = sday.length < 2 ? '0' + sday : sday
-      var shour = String(ds.getHours())
-      shour = shour.length < 2 ? '0' + shour : shour
-      var smin = String(ds.getMinutes())
-      smin = smin.length < 2 ? '0' + smin : smin
+      if (this.startDate && this.startDate !== 'u') {
+        ds = new Date(this.startDate)
+      }
+
+      if (this.startTime && this.startTime !== 'u') {
+        var startHours = this.startTime.split(':')[0]
+        var startMinutes = this.startTime.split(':')[1]
+        ds.setHours(startHours)
+        ds.setMinutes(startMinutes)
+      } else {
+        // date time start to the nearest half hour
+        ds.setMinutes(ds.getMinutes() + 59)
+        ds.setMinutes(0)
+      }
+      var startDateStr = this.dateToString(ds)
 
       // date time end
       var de = ds
-      de.setMinutes(de.getMinutes() + 30)
-      var eyear = de.getFullYear()
-      var emonth = String(de.getMonth() + 1)
-      emonth = emonth.length < 2 ? '0' + emonth : emonth
-      var eday = String(de.getDate())
-      eday = eday.length < 2 ? '0' + eday : eday
-      var ehour = String(de.getHours())
-      ehour = ehour.length < 2 ? '0' + ehour : ehour
-      var emin = String(de.getMinutes())
-      emin = emin.length < 2 ? '0' + emin : emin
 
-      var dateTimeStr = syear + '' + smonth + '' + sday + 'T' + shour + smin + '00/' +
-                        eyear + '' + emonth + '' + eday + 'T' + ehour + emin + '00'
+      if (this.endTime && this.endTime !== 'u') {
+        var endHours = this.endTime.split(':')[0]
+        var endMinutes = this.endTime.split(':')[1]
+        de.setHours(endHours)
+        de.setMinutes(endMinutes)
+      } else {
+        de.setMinutes(de.getMinutes() + 30)
+      }
+
+      var endDateStr = this.dateToString(de)
+
+      var dateTimeStr = startDateStr + '/' + endDateStr
 
       // return '20180320T204000/20180320T204000'
+      console.log(dateTimeStr)
       return dateTimeStr
     }
   },
@@ -72,6 +76,19 @@ export default {
     })
   },
   methods: {
+
+    dateToString (date) {
+      var year = date.getFullYear()
+      var month = String(date.getMonth() + 1)
+      month = month.length < 2 ? '0' + month : month
+      var day = String(date.getDate())
+      day = day.length < 2 ? '0' + day : day
+      var hour = String(date.getHours())
+      hour = hour.length < 2 ? '0' + hour : hour
+      var minutes = String(date.getMinutes())
+      minutes = minutes.length < 2 ? '0' + minutes : minutes
+      return year + '' + month + '' + day + 'T' + hour + minutes + '00'
+    },
 
     /** This method adds given space email address
     * to list of booked spaces. This list of booked
