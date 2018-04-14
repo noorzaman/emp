@@ -132,7 +132,8 @@ export default {
       results: '',
       startDate: null,
       startTime: null,
-      endTime: null
+      endTime: null,
+      hideUnavailable: false
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
