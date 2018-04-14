@@ -57,13 +57,10 @@ export default {
       } else {
         de.setMinutes(de.getMinutes() + 30)
       }
-
       var endDateStr = this.dateToString(de)
 
-      var dateTimeStr = startDateStr + '/' + endDateStr
-
       // return '20180320T204000/20180320T204000'
-      console.log(dateTimeStr)
+      var dateTimeStr = startDateStr + '/' + endDateStr
       return dateTimeStr
     }
   },
