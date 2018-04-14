@@ -26,6 +26,8 @@
                   <TimePicker v-on:change="endTimeChanged"/>
                 </div>
                 <div class="clearFix"></div>
+                <input type="checkbox" name="hideUnavailable" :id="hideUnavailable" :v-model="hideUnavailable"/>
+                <inline>Hide unavailable spaces</inline>
             </div>
         </div>
         <div class="rightSearch">
@@ -150,12 +152,14 @@ export default {
     */
     startTimeChanged (newValue) {
       this.startTime = newValue
+      // console.log(this.startTime)
     },
 
     /** This method is called when user selects meeting end time.
     */
     endTimeChanged (newValue) {
       this.endTime = newValue
+      // console.log(this.endTime)
     },
 
     /**
@@ -187,6 +191,36 @@ export default {
       }
       return spaceDelimitedAttributes
     },
+    getFormattedDate () {
+      if (this.startDate != null) {
+        var actualMonth = this.startDate.getMonth() + 1
+        return this.startDate.getFullYear() + '-' + actualMonth + '-' + this.startDate.getDate()
+      }
+    },
+    getFormattedStartTime () {
+      var timezoneHours = -1 * (this.startTime.getTimezoneOffset() / 60)
+      var timezoneString
+      if (timezoneHours > 0) {
+        timezoneString = '+'
+      }
+      timezoneString += timezoneHours
+      timezoneString += ':00'
+      if (this.startTime != null) {
+        return this.startTime.getHours() + ':' + this.startTime.getMinutes() + ':00' + timezoneString
+      }
+    },
+    getFormattedEndTime () {
+      var timezoneHours = -1 * (this.endTime.getTimezoneOffset() / 60)
+      var timezoneString
+      if (timezoneHours > 0) {
+        timezoneString = '+'
+      }
+      timezoneString += timezoneHours
+      timezoneString += ':00'
+      if (this.endTime != null) {
+        return this.endTime.getHours() + ':' + this.endTime.getMinutes() + ':00' + timezoneString
+      }
+    },
     search () {
       this.numCriteria = 0
       // console.log('DEBUG: search by themes and attributes')
@@ -203,8 +237,8 @@ export default {
       }
       // search for half the capacity, but report capacity is not a match if actualCapacity < desiredCapacity
       var searchCapacity = parseInt(desiredCapacity) / 2
-      console.log('DEBUG: ' + desiredCapacity)
-      console.log('DEBUG: ' + searchCapacity)
+      // console.log('DEBUG: ' + desiredCapacity)
+      // console.log('DEBUG: ' + searchCapacity)
 
       var search = ''
       var themes = []
@@ -223,7 +257,7 @@ export default {
           }
         }
         this.searchCriteria = {capacity: desiredCapacity}
-        console.log('SEARCH CRITERIA CAPACITY: ' + searchCapacity)
+        // console.log('SEARCH CRITERIA CAPACITY: ' + searchCapacity)
       } else {
         var multisearch = spaceDelimitedThemes + ' ' + spaceDelimitedAttributes
         themes = spaceDelimitedThemes.split(' ')
@@ -254,10 +288,10 @@ export default {
           }
         }
         this.searchCriteria = {capacity: desiredCapacity, themes: themes, attributes: attributes}
-        console.log('themes.length: ' + themes.length + ' attributes.length: ' + attributes.length)
+        // console.log('themes.length: ' + themes.length + ' attributes.length: ' + attributes.length)
         this.numCriteria += themes.length + attributes.length
-        console.log('NUM CRITERIA: ' + this.numCriteria)
-        console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
+        // console.log('NUM CRITERIA: ' + this.numCriteria)
+        // console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
         // console.log('DEBUG: ' + jsonStr)
       }
 
@@ -309,6 +343,32 @@ export default {
               this.results = 'long'
             }
           }
+          // search by availability if date / time is chosen
+          if (this.startDate != null && this.startTime != null && this.endTime != null) {
+            search = {
+              'calendars': [email],
+              'start_time': [this.getFormattedDate() + 'T' + this.getFormattedStartTime()],
+              'end_time': [this.getFormattedDate() + 'T' + this.getFormattedEndTime()]
+            }
+
+            var jsonStr = JSON.stringify(search)
+            var availabilityUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com/availability/'
+            console.log(jsonStr)
+            this.$http.put(availabilityUrl, jsonStr, {
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }).then(result => {
+              var isBusy = result.body[0].busy
+              console.log(isBusy)
+            }, error => {
+              console.error(error)
+            })
+          }
+
+          // TODO: Store availability in 'available' field of each match (see below)
+          // TODO: Display according to whether hide unavailable rooms is ticked
+
           // console.log('numMatches:' + numMatches)
           this.matches.push({
             name: entry.name,
@@ -322,7 +382,8 @@ export default {
             missAttributes: missingAttributes,
             //  Match percent: Make sure that match percent is never greater than 100%.
             //  This could happen when no criteria are selected and therefore numCriteria is zero.
-            matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
+            matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100)),
+            available: true
           })
         }
         // scroll to search results
