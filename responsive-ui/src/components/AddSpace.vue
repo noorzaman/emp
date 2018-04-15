@@ -140,10 +140,11 @@ export default {
       axios.put(url, jsonData, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
-        console.log(result)
         this.$router.push('/edit-space/' + this.email)
       }, error => {
         console.error(error)
+        this.uploading = false
+        alert('Uploading your image failed.')
       })
     },
     setImage (img) {

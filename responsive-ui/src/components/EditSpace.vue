@@ -154,6 +154,8 @@ export default {
         this.$router.push('/space/' + this.email)
       }, error => {
         console.error(error)
+        this.uploading = false
+        alert('Saving your edits failed.')
       })
     }
   }
