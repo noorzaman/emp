@@ -141,7 +141,7 @@ export default {
         }
       }
       var jsonData = JSON.stringify(data)
-      var url = 'https://txdydq8h71.execute-api.us-east-1.amazonaws.com/development/streams/tmp/record2'
+      var url = 'https://3p8vyivi98.execute-api.us-east-1.amazonaws.com/dev/place'
 
       this.$http.put(url, jsonData, {
         headers: {

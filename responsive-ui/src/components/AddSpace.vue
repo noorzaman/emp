@@ -135,7 +135,7 @@ export default {
         }
       }
       let jsonData = JSON.stringify(data)
-      let url = 'https://txdydq8h71.execute-api.us-east-1.amazonaws.com/development/streams/tmp/record2'
+      let url = 'https://3p8vyivi98.execute-api.us-east-1.amazonaws.com/dev/place'
 
       axios.put(url, jsonData, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
