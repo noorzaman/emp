@@ -68,6 +68,7 @@ export default {
       notFound: false,
       pageTitle: 'Edit Space',
       email: this.$route.params.spaceId,
+      calendarId: '',
       imageData: '',
       name: '',
       description: '',
@@ -106,6 +107,7 @@ export default {
         }
       }).then(result => {
         var space = result.body._source.space
+        this.calendarId = space.calendar_id
         this.imageData = space.image
         this.name = space.name
         this.description = space.description
@@ -134,6 +136,7 @@ export default {
         'placeId': this.email,
         'space': {
           'name': this.name,
+          'calendar_id': this.calendarId,
           'description': this.description,
           'capacity': parseInt(desiredCapacity),
           'themes': this.themes,
