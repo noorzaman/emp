@@ -7,7 +7,7 @@
       <div>
         <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
         <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
-        <typeahead v-model="newAttribute" target="#attributes" :data="attributes()" item-key="name" :open-on-empty="true"/>
+        <typeahead v-model="newAttribute" target="#attributes" :data="uniqueAttributesList" :open-on-empty="true"/>
         <p class="text-danger">{{newAttributeError}}</p>
       </div>
       <div>
@@ -36,6 +36,7 @@ export default {
         return []
       }
     },
+    // default allowing custom attributes to false
     allowCustom: {
       type: Boolean,
       default () {
@@ -43,16 +44,18 @@ export default {
       }
     }
   },
-
   data () {
     return {
       newAttribute: '',
-      newAttributeError: ''
+      newAttributeError: '',
+      uniqueAttributesList: []
     }
   },
-
+  mounted () {
+    this.getUniqueAttributes()
+  },
   methods: {
-    /**  This method removes attribute with given name from the list of selected attributes.
+    /**  Removes attribute with given name from the list of selected attributes.
     */
     removeAttribute (attributeName) {
       // remove from selectedAttributes array
@@ -63,7 +66,7 @@ export default {
         }
       }
     },
-    /** This method adds a valid attribute to the array of selectedAttributes,
+    /** Adds a valid attribute to the array of selectedAttributes and
     * shows an alert message for invalid attribute.
     * It also clears the typeahead input box.
     */
@@ -71,28 +74,40 @@ export default {
       // remove invalid entry alert from screen
       this.newAttributeError = ''
 
-      if (!this.newAttribute) {
-        //  If no attribute was selected in the typeahead then do nothing.
-        return
-      }
-      if (!this.allowCustom && this.newAttribute.name === undefined) {
-        // the attribute is not in the list
+      // If no attribute was selected in the typeahead then do nothing.
+      if (!this.newAttribute) { return }
+
+      var attrListIndex = this.arrayIndexOf(this.uniqueAttributesList, this.newAttribute)
+      if (!this.allowCustom && attrListIndex === -1) {
+        // If we don't allow custom attributes and the attribute is not in the dropdown list, report error
         this.newAttributeError = 'There are no spaces with attribute \'' + this.newAttribute + '\'.'
-      } else {
-        if (this.newAttribute.name !== undefined) {
-          this.newAttribute = this.newAttribute.name
-        }
-        if (!this.selectedAttributes.includes(this.newAttribute)) {
-          // If newAttribute has not been previously added to selectedAttributes,
-          // then add it to selectedAttributes array.
+      } else if (this.arrayIndexOf(this.selectedAttributes, this.newAttribute) === -1) {
+        // If the attribute has not previously been selected, add it the way it is in the database if it's in the database
+        if (attrListIndex === -1) {
           this.selectedAttributes.push(this.newAttribute)
+        } else {
+          this.selectedAttributes.push(this.uniqueAttributesList[attrListIndex])
         }
       }
-      //  Clear the typeahead input box.
+      // Clear the typeahead input box.
       this.newAttribute = ''
     },
-    attributes () {
-      var arrUniq = []
+    /** Case insensitive version of Array.indexOf()
+    */
+    arrayIndexOf (array, str) {
+      var query = str.toLowerCase()
+      var index = -1
+      array.some(function (element, i) {
+        if (query === element.toLowerCase()) {
+          index = i
+          return true
+        }
+      })
+      return index
+    },
+    /** Populate uniqueAttributesList with all unique attributes in the database
+    */
+    getUniqueAttributes () {
       var search = {
         'query': {
           'term': {
@@ -112,21 +127,14 @@ export default {
           var attribs = result.body.hits.hits[i]._source.space.attributes
           arr = arr.concat(attribs)
         }
-        // sort
-        arr = arr.sort()
-        // drop duplicates
-        var seen = {}
-        for (var j = 0; j < arr.length; j++) {
-          if (!(arr[j] in seen)) {
-            seen[arr[j]] = 1
-            var obj = {'name': arr[j]}
-            arrUniq.push(obj)
-          }
-        }
+        // drop duplicates and sort
+        var uniqueArray = arr.filter(function (item, pos) {
+          return arr.indexOf(item) === pos
+        })
+        this.uniqueAttributesList = uniqueArray.sort()
       }, error => {
         console.log(error)
       })
-      return arrUniq
     }
   }
 }

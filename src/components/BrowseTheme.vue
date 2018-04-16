@@ -3,7 +3,7 @@
   <div v-else class="main">
     <h1>{{pageTitle}}</h1>
     <div v-if="!this.searchFinished">
-      <p>Still searching...</p>
+      <p>Searching...</p>
     </div>
     <div v-else>
       <div v-if="!matches.length">
