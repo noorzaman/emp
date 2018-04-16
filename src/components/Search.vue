@@ -50,7 +50,7 @@
     <div id="searchResults"></div>
     <h2 v-if="matches.length == 1" id="searchResults1">Search Results: {{matches.length}} space found</h2>
     <h2 v-if="matches.length > 1" id="searchResults2">Search Results: {{matches.length}} spaces found</h2>
-    <div v-for="match in matches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <div v-for="match in sortedMatches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div class="matchTitle">
         <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
         <h2>{{match.name}}</h2>
@@ -108,6 +108,21 @@ export default {
     'DatePicker': DatePicker,
     'TypeAhead': TypeAhead,
     'TimePicker': TimePicker
+  },
+  computed: {
+    sortedMatches: function () {
+      function compare (a, b) {
+        if (a.matchPercent < b.matchPercent) {
+          return 1
+        }
+        if (a.matchPercent > b.matchPercent) {
+          return -1
+        }
+        return 0
+      }
+      var orderedMatches = this.matches
+      return orderedMatches.sort(compare)
+    }
   },
   data () {
     return {
