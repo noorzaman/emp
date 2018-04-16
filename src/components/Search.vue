@@ -87,7 +87,7 @@
       <div class="searchBtns">
         <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
         <a :href="'/schedule-space/' + match.email + '/' + startDate + '/' + startTime + '/' + endTime"
-        class="btn btn-primary btnMargin">Book</a>
+           class="btn btn-primary btnMargin">Book</a>
         <a :href="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</a>
       </div>
     </div>
@@ -99,6 +99,7 @@ import NumberSlider from './NumberSlider'
 import DatePicker from './DatePicker'
 import TypeAhead from './TypeAhead'
 import TimePicker from './TimePicker'
+import axios from 'axios'
 
 export default {
   name: 'Search',
@@ -169,20 +170,19 @@ export default {
   },
   methods: {
     /** This method is called when user selects/ deselects meeting start date.
-    */
+     */
     startDateChanged (newDate) {
       this.startDate = newDate
-      // console.log(this.startDate)
     },
 
     /** This method is called when user selects meeting start time.
-    */
+     */
     startTimeChanged (newValue) {
       this.startTime = newValue
     },
 
     /** This method is called when user selects meeting end time.
-    */
+     */
     endTimeChanged (newValue) {
       this.endTime = newValue
     },
@@ -215,6 +215,37 @@ export default {
         }
       }
       return spaceDelimitedAttributes
+    },
+    getFormattedStartTime () {
+      var timezoneHours = -1 * (this.startTime.getTimezoneOffset() / 60)
+      var timezoneString = '-0'
+      if (timezoneHours > 0) {
+        timezoneString = '+0'
+      }
+      timezoneString += Math.abs(timezoneHours)
+      timezoneString += ':00'
+      if (this.startTime != null) {
+        return this.pad(this.startTime.getHours(), 2) + ':' + this.pad(this.startTime.getMinutes(), 2) +
+          ':00' + timezoneString
+      }
+    },
+    getFormattedEndTime () {
+      var timezoneHours = -1 * (this.endTime.getTimezoneOffset() / 60)
+      var timezoneString = '-0'
+      if (timezoneHours > 0) {
+        timezoneString = '+0'
+      }
+      timezoneString += Math.abs(timezoneHours)
+      timezoneString += ':00'
+      if (this.endTime != null) {
+        return this.pad(this.endTime.getHours(), 2) + ':' +
+          this.pad(this.endTime.getMinutes(), 2) + ':00' + timezoneString
+      }
+    },
+    pad (n, width, z) {
+      z = z || '0'
+      n = n + ''
+      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
     },
     search () {
       this.numCriteria = 0
@@ -295,64 +326,97 @@ export default {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
         this.matches.length = 0
-        var searchResult = result.body.hits.hits
-        for (var n = 0; n < searchResult.length; n++) {
-          var email = searchResult[n]._id
-          var entry = searchResult[n]._source.space
-          // find matches
-          var numMatches = 0
-          if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
-            numMatches = 1
-          }
-          var searchThemes = this.searchCriteria.themes
-          var missingThemes = []
-          if (searchThemes !== null && searchThemes !== undefined) {
-            for (var i = 0; i < searchThemes.length; i++) {
-              if (entry.themes.includes(searchThemes[i])) {
-                numMatches++
-              } else {
-                missingThemes.push(searchThemes[i])
-              }
-            }
-          }
+        let searchResult = result.body.hits.hits
+        let lst = []
+        Object.assign(lst, ...Object.values(searchResult).map(k => lst.push(k._source.space.calendar_id)))
 
-          var searchAttributes = this.searchCriteria.attributes
-          var missingAttributes = []
-          if (searchAttributes !== null && searchAttributes !== undefined) {
-            for (var j = 0; j < searchAttributes.length; j++) {
-              if (entry.attributes.includes(searchAttributes[j])) {
-                numMatches++
-              } else {
-                missingAttributes.push(searchAttributes[j])
+        let emails = lst.filter(Boolean)
+        let freeBusyUrl = 'http://localhost:5000/availability/'
+        let availabilityData = {
+          'calendars': emails,
+          // TODO update me to read formated TS
+          // 'start_time': '2018-04-12T09:00:00-04:00',
+          // 'end_time': '2018-04-13T10:30:00-04:00'
+          'start_time': this.startDate + 'T' + this.getFormattedStartTime(),
+          'end_time': this.startDate + 'T' + this.getFormattedEndTime()
+        }
+
+        axios.put(freeBusyUrl, JSON.stringify(availabilityData), {
+          headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        }).then(result => {
+          var availableList = []
+          Object.values(result.data).map(el => {
+            if (Object.values(el)[0].busy.length === 0) {
+              availableList.push(Object.keys(el)[0])
+            }
+          })
+          console.log(availableList)
+          let filteredResults = searchResult.filter(function (el) {
+            return availableList.includes(el._source.space.calendar_id)
+          })
+
+          console.log(filteredResults)
+
+          for (var n = 0; n < filteredResults.length; n++) {
+            var email = filteredResults[n]._id
+            var entry = filteredResults[n]._source.space
+            // find matches
+            var numMatches = 0
+            if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
+              numMatches = 1
+            }
+            var searchThemes = this.searchCriteria.themes
+            var missingThemes = []
+            if (searchThemes !== null && searchThemes !== undefined) {
+              for (var i = 0; i < searchThemes.length; i++) {
+                if (entry.themes.includes(searchThemes[i])) {
+                  numMatches++
+                } else {
+                  missingThemes.push(searchThemes[i])
+                }
               }
             }
-          }
-          if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
-            this.results = 'medium'
-            if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
-              this.results = 'long'
+
+            var searchAttributes = this.searchCriteria.attributes
+            var missingAttributes = []
+            if (searchAttributes !== null && searchAttributes !== undefined) {
+              for (var j = 0; j < searchAttributes.length; j++) {
+                if (entry.attributes.includes(searchAttributes[j])) {
+                  numMatches++
+                } else {
+                  missingAttributes.push(searchAttributes[j])
+                }
+              }
             }
+            if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
+              this.results = 'medium'
+              if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
+                this.results = 'long'
+              }
+            }
+            // console.log('numMatches:' + numMatches)
+            this.matches.push({
+              name: entry.name,
+              description: entry.description,
+              image: entry.image,
+              theme: entry.themes,
+              attributes: entry.attributes,
+              email: email,
+              capacity: entry.capacity,
+              missThemes: missingThemes,
+              missAttributes: missingAttributes,
+              //  Match percent: Make sure that match percent is never greater than 100%.
+              //  This could happen when no criteria are selected and therefore numCriteria is zero.
+              matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
+            })
           }
-          // console.log('numMatches:' + numMatches)
-          this.matches.push({
-            name: entry.name,
-            description: entry.description,
-            image: entry.image,
-            theme: entry.themes,
-            attributes: entry.attributes,
-            email: email,
-            capacity: entry.capacity,
-            missThemes: missingThemes,
-            missAttributes: missingAttributes,
-            //  Match percent: Make sure that match percent is never greater than 100%.
-            //  This could happen when no criteria are selected and therefore numCriteria is zero.
-            matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
+          // scroll to search results
+          this.$nextTick(function () {
+            // new elements finished rendering to the DOM
+            document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
           })
-        }
-        // scroll to search results
-        this.$nextTick(function () {
-          // new elements finished rendering to the DOM
-          document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
+        }, error => {
+          console.error(error)
         })
         // store matches in localStorage
         localStorage.setItem('searchResults', JSON.stringify(this.matches))

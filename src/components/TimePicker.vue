@@ -16,7 +16,7 @@ export default {
     * expect HH:MM format. Example: 23:59
     */
     time: function (newValue) {
-      this.$emit('change', newValue.getHours() + ':' + newValue.getMinutes())
+      this.$emit('change', newValue)
     }
   }
 }
