@@ -26,6 +26,8 @@ export default {
   methods: {
     handleSearchNavClick () {
       localStorage.removeItem('searchResults')
+      localStorage.removeItem('searchCriteria')
+      localStorage.removeItem('results')
     }
   }
 }

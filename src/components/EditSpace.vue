@@ -35,7 +35,7 @@
         </div>
         <div class="form-group themes">
           <label>Themes</label><br>
-          <ul  class="checkbox-grid">
+          <ul class="checkbox-grid">
             <li v-for="theme in possibleThemes" :key="theme">
               <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="themes"/>
               <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
@@ -92,7 +92,6 @@ export default {
       ]
     }
   },
-  // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Edit Space'
     this.searchByEmail()

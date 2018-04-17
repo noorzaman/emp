@@ -7,7 +7,8 @@
         <br>
             <div class="form-group">
                 <label>Capacity</label>
-                <NumberSlider v-bind:allowAny="true"></NumberSlider>
+                <NumberSlider v-if="!prepopulate" v-bind:allowAny="true"></NumberSlider>
+                <NumberSlider v-if="prepopulate" v-bind:capacity="this.searchCriteria.capacity"></NumberSlider>
             </div>
             <div class="form-group">
                 <label>Meeting Day</label>
@@ -39,7 +40,7 @@
                 </ul>
             </div>
             <div class="form-group typeAhead">
-                <TypeAhead></TypeAhead>
+                <TypeAhead v-bind:selectedAttributes="selectedAttributes" v-bind:allowCustom="true"></TypeAhead>
             </div>
         </div>
         <button class="btn btn-primary submitButton" @click="search">Search Spaces</button>
@@ -129,6 +130,7 @@ export default {
       searchCriteria: {},
       numCriteria: 0,
       selectedThemes: [],
+      selectedAttributes: [],
       possibleThemes: [
         'casual',
         'celebratory',
@@ -144,6 +146,7 @@ export default {
         'zen'
       ],
       results: '',
+      prepopulate: false,
       startDate: 'u', //  undefined
       startTime: 'u',
       endTime: 'u'
@@ -152,8 +155,16 @@ export default {
   mounted () {
     document.title = 'Search Spaces'
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
+    var criteria = JSON.parse(localStorage.getItem('searchCriteria'))
     if (searchResults) {
       this.matches = searchResults
+    }
+    if (criteria) {
+      this.searchCriteria = criteria
+      this.prepopulate = true
+      this.selectedThemes = criteria.themes
+      this.selectedAttributes = criteria.attributes
+      this.results = JSON.parse(localStorage.getItem('results'))
     }
   },
   methods: {
@@ -272,10 +283,7 @@ export default {
           }
         }
         this.searchCriteria = {capacity: desiredCapacity, themes: themes, attributes: attributes}
-        console.log('themes.length: ' + themes.length + ' attributes.length: ' + attributes.length)
         this.numCriteria += themes.length + attributes.length
-        console.log('NUM CRITERIA: ' + this.numCriteria)
-        console.log('SEARCH CRITERIA CAPACITY: ' + this.searchCriteria.capacity)
         // console.log('DEBUG: ' + jsonStr)
       }
 
@@ -363,6 +371,8 @@ export default {
     */
     saveSearchCriteria () {
       console.log('save search criteria')
+      localStorage.setItem('searchCriteria', JSON.stringify(this.searchCriteria))
+      localStorage.setItem('results', JSON.stringify(this.results))
     }
   }
 }
