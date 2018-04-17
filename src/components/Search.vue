@@ -40,7 +40,7 @@
                 </ul>
             </div>
             <div class="form-group typeAhead">
-                <TypeAhead v-bind:selectedAttributes="selectedAttributes" v-bind:allowCustom="true"></TypeAhead>
+                <TypeAhead v-bind:selectedAttributes="selectedAttributes" v-bind:allowCustom="false"></TypeAhead>
             </div>
         </div>
         <button class="btn btn-primary submitButton" @click="search">Search Spaces</button>
