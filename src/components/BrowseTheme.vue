@@ -101,11 +101,6 @@ export default {
         for (var n = 0; n < searchResult.length; n++) {
           var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
-          var longAttrList = false
-          // check if will need to add scrollbar to any attributes list
-          if (entry.attributes.length >= 5) {
-            longAttrList = true
-          }
           if (entry.attributes.length >= 2) {
             this.results = 'medium'
             if (entry.attributes.length >= 4) {
@@ -119,7 +114,7 @@ export default {
             image: entry.image,
             capacity: entry.capacity ? entry.capacity : 0,
             attributes: entry.attributes,
-            spaceLongAttrList: longAttrList
+            spaceLongAttrList: entry.attributes.length >= 5
           })
         }
         this.searchFinished = true

@@ -62,11 +62,6 @@ export default {
       }).then(result => {
         var space = result.body._source.space
         // check if will need to add scrollbar to any attributes list
-        var longAttrList = false
-        // check if will need to add scrollbar to any attributes list
-        if (space.attributes.length >= 5) {
-          longAttrList = true
-        }
         if (space.attributes.length >= 2) {
           this.results = 'medium'
           if (space.attributes.lengt >= 4) {
@@ -80,7 +75,7 @@ export default {
           capacity: space.capacity,
           attributes: space.attributes,
           image: space.image,
-          spaceLongAttrList: longAttrList
+          spaceLongAttrList: space.attributes.length >= 5
         })
       }, error => {
         console.error(error)
