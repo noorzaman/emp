@@ -1,6 +1,6 @@
 <template>
   <div class="numberSlider">
-    <vue-slider ref="slider" v-model="value" id="capacity-slider" :min=0 :max=50
+    <vue-slider ref="slider" v-model="value" id="capacity-slider" :min="minValue" :max="maxValue"
     :formatter=getSliderTooltip />
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     capacity: {
       capacity: Number,
       default () {
-        return 0
+        return this.minValue
       }
     },
     allowAny: {
@@ -29,7 +29,9 @@ export default {
   },
   data () {
     return {
-      value: '0'
+      value: (this.allowAny ? 0 : 1),
+      minValue: (this.allowAny ? 0 : 1),
+      maxValue: 50
     }
   },
   watch: {
@@ -37,30 +39,20 @@ export default {
       this.value = value
     }
   },
-
   methods: {
-
     /** This method returns the slider tooltip for the given
     * slider value. It is invoked by vue-slider-component when
     * slider value changes.
     */
-    getSliderTooltip (newSliderValue) {
-      //  Workaround: There seems to be a bug in vue-slider-component
-      //  where during page load it invokes this method with value '0'
-      //  instead of 0. We workaround that bug in the if condition below.
-      if (this.allowAny && (newSliderValue === '0' || newSliderValue === 0)) {
-        //  If the new slider value is zero,
-        //  then set the toolttip to 'Any'
+    getSliderTooltip (value) {
+      if (value === 0) {
+        //  If the new slider value is zero, then set the toolttip to 'Any'
         return 'Any'
-      } else if (!this.allowAny && (newSliderValue === '0' || newSliderValue === 0)) {
-        // If allowAny has not been given, then minimum capacity should be 1
-        return 1
-      } else if (newSliderValue >= 50) {
-        //  If the new slider value is equal to 50,
-        //  then set the tooltip to 50+
+      } else if (value >= 50) {
+        //  If the new slider value is equal to 50, then set the tooltip to 50+
         return '50+'
       }
-      return newSliderValue
+      return value
     }
   }
 }
