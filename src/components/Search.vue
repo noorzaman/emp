@@ -49,9 +49,13 @@
     <br>
     <br>
     <div id="searchResults"></div>
-    <h2 v-if="matches.length == 1" id="searchResults1">Search Results: {{matches.length}} space found</h2>
-    <h2 v-if="matches.length > 1" id="searchResults2">Search Results: {{matches.length}} spaces found</h2>
-    <div v-for="match in sortedMatches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+    <h2 v-if="matches.length == 1" id="searchResults1">Search Results: {{availableOnlyFilter.length}} space found</h2>
+    <h2 v-if="matches.length > 1" id="searchResults2">Search Results: {{availableOnlyFilter.length}} spaces found</h2>
+    <div v-if="searched">
+      <button @click="userFilterKey = 'available'" :class="{ active: userFilterKey === 'available' }" class="btn btn-sm btn-secondary">Available</button>
+      <button @click="userFilterKey = 'all'" :class="{ active: userFilterKey === 'all' }" class="btn btn-sm btn-secondary">All</button>
+    </div>
+    <div v-for="match in availableOnlyFilter" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
       <div class="matchTitle">
         <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
         <h2>{{match.name}}</h2>
@@ -109,23 +113,10 @@ export default {
     'TypeAhead': TypeAhead,
     'TimePicker': TimePicker
   },
-  computed: {
-    sortedMatches: function () {
-      function compare (a, b) {
-        if (a.matchPercent < b.matchPercent) {
-          return 1
-        }
-        if (a.matchPercent > b.matchPercent) {
-          return -1
-        }
-        return 0
-      }
-      var orderedMatches = this.matches
-      return orderedMatches.sort(compare)
-    }
-  },
   data () {
     return {
+      userFilterKey: 'all',
+      searched: false,
       pageTitle: 'Search Meeting Spaces',
       matches: [],
       searchCriteria: {},
@@ -153,6 +144,33 @@ export default {
       endTime: 'u'
     }
   },
+  computed: {
+    availableOnlyFilter () {
+      return this[this.userFilterKey]
+    },
+    all () {
+      return this.matches
+    },
+    available () {
+      return this.matches.filter(function (el) {
+        return el.busy === true
+      })
+    },
+    sortedMatches: function () {
+      function compare (a, b) {
+        if (a.matchPercent < b.matchPercent) {
+          return 1
+        }
+        if (a.matchPercent > b.matchPercent) {
+          return -1
+        }
+        return 0
+      }
+      var orderedMatches = this.matches
+      return orderedMatches.sort(compare)
+    }
+  },
+  // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Search Spaces'
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
@@ -249,11 +267,8 @@ export default {
     },
     search () {
       this.numCriteria = 0
-      // console.log('DEBUG: search by themes and attributes')
       var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
-      //  console.log('DEBUG: ' + spaceDelimitedThemes)
       var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
-      //  console.log('DEBUG: spaceDelimitedAttributes are: ' + spaceDelimitedAttributes)
 
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
       if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
@@ -331,12 +346,9 @@ export default {
         Object.assign(lst, ...Object.values(searchResult).map(k => lst.push(k._source.space.calendar_id)))
 
         let emails = lst.filter(Boolean)
-        let freeBusyUrl = 'http://localhost:5000/availability/'
+        let freeBusyUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com//availability/'
         let availabilityData = {
           'calendars': emails,
-          // TODO update me to read formated TS
-          // 'start_time': '2018-04-12T09:00:00-04:00',
-          // 'end_time': '2018-04-13T10:30:00-04:00'
           'start_time': this.startDate + 'T' + this.getFormattedStartTime(),
           'end_time': this.startDate + 'T' + this.getFormattedEndTime()
         }
@@ -344,22 +356,16 @@ export default {
         axios.put(freeBusyUrl, JSON.stringify(availabilityData), {
           headers: {'Content-Type': 'application/json;charset=UTF-8'}
         }).then(result => {
-          var availableList = []
-          Object.values(result.data).map(el => {
-            if (Object.values(el)[0].busy.length === 0) {
-              availableList.push(Object.keys(el)[0])
-            }
-          })
-          console.log(availableList)
-          let filteredResults = searchResult.filter(function (el) {
-            return availableList.includes(el._source.space.calendar_id)
+          let availableList = Object.values(result.data).map(el => {
+            let filteredKeys = Object.keys(el).filter(key => {
+              return el[key].busy && el[key].busy.length === 0
+            })
+            return filteredKeys[0]
           })
 
-          console.log(filteredResults)
-
-          for (var n = 0; n < filteredResults.length; n++) {
-            var email = filteredResults[n]._id
-            var entry = filteredResults[n]._source.space
+          for (var n = 0; n < searchResult.length; n++) {
+            var placeId = searchResult[n]._id
+            var entry = searchResult[n]._source.space
             // find matches
             var numMatches = 0
             if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
@@ -394,14 +400,16 @@ export default {
                 this.results = 'long'
               }
             }
-            // console.log('numMatches:' + numMatches)
+            let isBusy = entry.calendar_id && availableList.includes(entry.calendar_id)
+            console.log('room is ' + (isBusy ? ' busy' : ' available'))
             this.matches.push({
               name: entry.name,
               description: entry.description,
               image: entry.image,
               theme: entry.themes,
               attributes: entry.attributes,
-              email: email,
+              email: placeId,
+              busy: isBusy,
               capacity: entry.capacity,
               missThemes: missingThemes,
               missAttributes: missingAttributes,
@@ -410,6 +418,7 @@ export default {
               matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
             })
           }
+          this.searched = true
           // scroll to search results
           this.$nextTick(function () {
             // new elements finished rendering to the DOM
