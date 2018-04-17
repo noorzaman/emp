@@ -6,10 +6,7 @@
 </template>
 
 <script>
-// Used only in vue2.x version
 import vueSlider from 'vue-slider-component'
-// or
-// import vueSlider from 'vue-slider-component/src/vue2-slider.vue'
 
 export default {
   name: 'NumberSlider',
@@ -55,6 +52,9 @@ export default {
         //  If the new slider value is zero,
         //  then set the toolttip to 'Any'
         return 'Any'
+      } else if (!this.allowAny && (newSliderValue === '0' || newSliderValue === 0)) {
+        // If allowAny has not been given, then minimum capacity should be 1
+        return 1
       } else if (newSliderValue >= 50) {
         //  If the new slider value is equal to 50,
         //  then set the tooltip to 50+
@@ -67,6 +67,4 @@ export default {
 </script>
 
 <style scoped>
-    .numberSlider {
-    }
 </style>
