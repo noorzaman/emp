@@ -100,7 +100,7 @@ export default {
     searchByEmail () {
       var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
       var searchUrl = empUrl + '/' + this.email
-      this.$http.get(searchUrl, this.email, {
+      this.$http.get(searchUrl, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         }

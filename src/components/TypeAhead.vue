@@ -108,26 +108,23 @@ export default {
     /** Populate uniqueAttributesList with all unique attributes in the database
     */
     getUniqueAttributes () {
-      var search = {
-        'query': {
-          'term': {
-            'space.themes': 'casual'
-          }
-        }
-      }
-      var jsonStr = JSON.stringify(search)
-      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?pretty&_source=space.attributes'
-      this.$http.get(searchUrl, jsonStr, {
+      // size 10,000 is the max_result_window for Elasticsearch
+      // this would break if we somehow had more than 10,000 rooms in the database
+      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?_source=space.attributes&size=10000'
+      this.$http.get(searchUrl, {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         }
       }).then(result => {
         var arr = []
-        for (var i = 0; i < result.body.hits.hits.length; i++) {
-          var attribs = result.body.hits.hits[i]._source.space.attributes
-          arr = arr.concat(attribs)
+        var searchResult = result.body.hits.hits
+        // concatenating all attributes together
+        for (var i = 0; i < searchResult.length; i++) {
+          if (searchResult[i]._source.hasOwnProperty('space')) {
+            arr = arr.concat(searchResult[i]._source.space.attributes)
+          }
         }
-        // drop duplicates and sort
+        // dropping duplicates and sorting
         var uniqueArray = arr.filter(function (item, pos) {
           return arr.indexOf(item) === pos
         })
