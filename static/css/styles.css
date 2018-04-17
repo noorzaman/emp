@@ -720,7 +720,7 @@ ul {
 
 @media only screen and (max-width: 590px) {
     body {
-        /*background-color: lightgreen;*/
+        background-color: lightgreen;
     }
 
     .browseAllTitle h1 {
@@ -746,7 +746,7 @@ ul {
 
 @media only screen and (max-width: 550px) {
     body {
-        /*background-color: red;*/
+        background-color: red;
     }
 
     .browseAllTitle h1 {
@@ -756,7 +756,7 @@ ul {
 
 @media only screen and (max-width: 510px) {
     body {
-        /*background-color: pink;*/
+        background-color: pink;
     }
 
     .browseThemes img {
@@ -769,7 +769,7 @@ ul {
 
 @media only screen and (max-width: 475px) {
     body {
-        /*background-color: lightyellow;*/
+        background-color: lightyellow;
     }
 
     .browseAllTitle h1 {
@@ -795,7 +795,7 @@ ul {
 @media only screen and (max-width: 430px) {
 
     body {
-        /*background-color: lightblue;*/
+        background-color: lightblue;
     }
 
     .browseThemes {
@@ -844,7 +844,7 @@ ul {
 
 @media only screen and (max-width: 400px) {
     body {
-        /*background-color: pink;*/
+        background-color: pink;
     }
 
     .mobile-header h2 {
@@ -876,7 +876,7 @@ ul {
 @media only screen and (max-width: 360px) {
 
     body {
-        /*background-color: lightblue;*/
+        background-color: lightblue;
     }
 
     .browseThemes img {
@@ -909,7 +909,7 @@ ul {
 
 @media only screen and (max-width: 350px) {
     body {
-        /*background-color: pink;*/
+        background-color: pink;
     }
 
     .mobile-header p {
@@ -931,7 +931,7 @@ ul {
 
 @media only screen and (max-width: 340px) {
     body {
-        /*background-color: lightyellow;*/
+        background-color: lightyellow;
     }
 
     .mobile-header h2 {
@@ -961,8 +961,12 @@ ul {
 
 @media only screen and (max-width: 320px) {
     body {
-        /*background-color: purple;*/
-    }    
+        background-color: purple;
+    }  
+    
+    .editBtn {
+        margin-left: 0.7em;    
+    }  
     
     .searchBtns .btn {
         font-size: 0.9em;

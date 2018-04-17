@@ -85,10 +85,8 @@
       <div class="clearFix"></div>
       <div class="searchBtns">
         <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
-
         <a :href="'/schedule-space/' + match.email + '/' + startDate + '/' + startTime + '/' + endTime"
         class="btn btn-primary btnMargin">Book</a>
-
         <a :href="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</a>
       </div>
     </div>

@@ -17,11 +17,16 @@
           <p>No attributes have been added for this space yet.</p>
         </div>
         <div v-else>
-          <ul v-bind:class="{ 'browseAttributesList' : longAttrList }">
+          <ul v-bind:class="{ 'browseAttributesList' : space.spaceLongAttrList }" class="attrList">
             <li v-for="attribute in space.attributes" :key="attribute">{{attribute}}</li>
           </ul>
         </div>
-        <a :href="'/space/' + space.email" class="btn btn-primary">Space Details</a>
+        <div class="searchBtns">
+            <a :href="'/space/' + space.email" class="btn btn-primary">Space Details</a>
+            <a :href="'/schedule-space/' + space.email + '/' + startDate + '/' + startTime + '/' + endTime"
+            class="btn btn-primary btnMargin">Book</a>
+            <a :href="'/edit-space/' + space.email" class="btn btn-primary btnMargin">Edit</a>
+          </div>
       </div>
     </div>
   </div>
@@ -34,7 +39,6 @@ export default {
     return {
       bookedEmails: [],
       prevBookedSpaces: [],
-      longAttrList: false,
       results: ''
     }
   },
@@ -58,8 +62,10 @@ export default {
       }).then(result => {
         var space = result.body._source.space
         // check if will need to add scrollbar to any attributes list
+        var longAttrList = false
+        // check if will need to add scrollbar to any attributes list
         if (space.attributes.length >= 5) {
-          this.longAttrList = true
+          longAttrList = true
         }
         if (space.attributes.length >= 2) {
           this.results = 'medium'
@@ -73,7 +79,8 @@ export default {
           description: space.description,
           capacity: space.capacity,
           attributes: space.attributes,
-          image: space.image
+          image: space.image,
+          spaceLongAttrList: longAttrList
         })
       }, error => {
         console.error(error)

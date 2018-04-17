@@ -26,7 +26,11 @@
               <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>
-          <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
+          <div class="searchBtns">
+            <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
+            <a :href="'/schedule-space/' + match.email + '/' + startDate + '/' + startTime + '/' + endTime" class="btn btn-primary btnMargin">Book</a>
+            <a :href="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</a>
+          </div>
         </div>
       </div>
     </div>
