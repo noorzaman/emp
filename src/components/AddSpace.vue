@@ -102,17 +102,15 @@ export default {
           'aggs': {
             'uniq_attrs': {
               'terms': {
-                'size': 1000, // TODO compare with all hits and bring more?
+                'size': 10000, // TODO compare with all hits and bring more?
                 'field': '_id'
               }
             }
           }
         }
-
         let jsonData = JSON.stringify(data)
-        let url = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search'
 
-        const response = await axios.post(url, jsonData, {
+        const response = await axios.post(this.$searchUrl + '/_search', jsonData, {
           headers: {'Content-Type': 'application/json;charset=UTF-8'}
         })
         let keys = response.data.aggregations.uniq_attrs.buckets
@@ -135,9 +133,8 @@ export default {
         }
       }
       let jsonData = JSON.stringify(data)
-      let url = 'https://3p8vyivi98.execute-api.us-east-1.amazonaws.com/dev/place'
 
-      axios.put(url, jsonData, {
+      axios.put(this.$editUrl, jsonData, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
         this.$router.push('/edit-space/' + this.email)

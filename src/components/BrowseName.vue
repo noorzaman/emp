@@ -61,12 +61,10 @@ export default {
       }
       var jsonStr = JSON.stringify(search)
       var searchSize = '10'
-      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?from=0&size=' + searchSize
+      var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
 
       this.$http.post(searchUrl, jsonStr, {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
         var searchResult = result.body.hits.hits
 

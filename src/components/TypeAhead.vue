@@ -110,11 +110,9 @@ export default {
     getUniqueAttributes () {
       // size 10,000 is the max_result_window for Elasticsearch
       // this would break if we somehow had more than 10,000 rooms in the database
-      var searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms/_search?_source=space.attributes&size=10000'
+      var searchUrl = this.$searchUrl + '/_search?_source=space.attributes&size=10000'
       this.$http.get(searchUrl, {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
         var arr = []
         var searchResult = result.body.hits.hits

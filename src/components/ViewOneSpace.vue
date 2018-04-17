@@ -64,12 +64,9 @@ export default {
   },
   methods: {
     searchByEmail () {
-      var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
-      var searchUrl = empUrl + '/' + this.email
-      this.$http.get(searchUrl, this.email, {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
+      var searchUrl = this.$searchUrl + '/' + this.email
+      this.$http.get(searchUrl, {
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
         var space = result.body._source.space
         this.imageData = space.image
@@ -77,7 +74,7 @@ export default {
         this.description = space.description
         this.attributes = space.attributes ? space.attributes : []
         this.themes = space.themes ? space.themes : []
-        this.capacity = space.capacity ? space.capacity : 0
+        this.capacity = space.capacity ? space.capacity : 1
         if (this.capacity === 50) {
           this.capacity += '+'
         }

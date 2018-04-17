@@ -53,12 +53,9 @@ export default {
   },
   methods: {
     searchByEmail (email) {
-      var empUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
-      var searchUrl = empUrl + '/' + email
+      var searchUrl = this.$searchUrl + '/' + email
       this.$http.get(searchUrl, email, {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
       }).then(result => {
         var space = result.body._source.space
         // check if will need to add scrollbar to any attributes list

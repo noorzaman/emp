@@ -55,23 +55,12 @@ export default {
         {image: 'zen', caption: 'Zen'}
       ],
       pageTitle: 'Explore Meeting Spaces',
-      pageWidth: document.documentElement.clientWidth,
       search: []
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Browse Spaces'
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleResize)
-  },
-  methods: {
-    // whenever the document is resized, re-set the 'pageWidth' variable
-    handleResize (event) {
-      this.pageWidth = document.documentElement.clientWidth
-    }
   }
 }
 </script>

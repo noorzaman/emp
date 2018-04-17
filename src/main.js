@@ -10,8 +10,9 @@ Vue.use(uiv)
 Vue.http.options.emulateJSON = true
 const http = Vue.http
 export default http
-
 Vue.config.productionTip = false
+Vue.prototype.$searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
+Vue.prototype.$editUrl = 'https://3p8vyivi98.execute-api.us-east-1.amazonaws.com/dev/place'
 
 /* eslint-disable no-new */
 new Vue({
