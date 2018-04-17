@@ -9,7 +9,7 @@
         <div id="navbar">
           <ul class="nav navbar-nav navbar-right">
             <li><router-link to="/">Browse Spaces</router-link></li>
-            <li><router-link to="/search-spaces">Search Space</router-link></li>
+            <li id="searchNavLink"><router-link to="/search-spaces">Search Space</router-link></li>
             <li><router-link to="/booked-spaces">My Booked Spaces</router-link></li>
             <li><router-link to="/add-space">Add Space</router-link></li>
           </ul>
@@ -17,3 +17,16 @@
       </div>
     </nav>
 </template>
+
+<script>
+export default {
+  mounted: function () {
+    document.getElementById('searchNavLink').addEventListener('click', this.handleSearchNavClick)
+  },
+  methods: {
+    handleSearchNavClick () {
+      localStorage.removeItem('searchResults')
+    }
+  }
+}
+</script>

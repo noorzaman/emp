@@ -13,7 +13,7 @@ import NotFound from '@/components/NotFound'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -68,3 +68,5 @@ export default new Router({
   ],
   mode: 'history'
 })
+
+export default router

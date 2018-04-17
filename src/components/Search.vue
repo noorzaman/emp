@@ -149,12 +149,14 @@ export default {
       endTime: 'u'
     }
   },
-  // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Search Spaces'
+    var searchResults = JSON.parse(localStorage.getItem('searchResults'))
+    if (searchResults) {
+      this.matches = searchResults
+    }
   },
   methods: {
-
     /** This method is called when user selects/ deselects meeting start date.
     */
     startDateChanged (newDate) {
@@ -346,9 +348,21 @@ export default {
           // new elements finished rendering to the DOM
           document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
         })
+        // store matches in localStorage
+        localStorage.setItem('searchResults', JSON.stringify(this.matches))
+        // store search criteria in localStorage
+        this.saveSearchCriteria()
       }, error => {
         console.error(error)
       })
+    },
+    /**
+    * Stores the search criteria in localStorage, so that it is
+    * available if a user clicks on a space and then navigates
+    * back to the search page.
+    */
+    saveSearchCriteria () {
+      console.log('save search criteria')
     }
   }
 }

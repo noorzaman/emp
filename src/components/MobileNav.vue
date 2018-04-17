@@ -6,7 +6,7 @@
             </a>
         </router-link>
         <router-link to="/search-spaces">
-            <a href="#" class="item">
+            <a href="#" class="item" id="searchNavLink">
                 <img src="/static/images/search.png" alt="alt text">
             </a>
         </router-link>
@@ -22,3 +22,16 @@
         </router-link>
     </div>
 </template>
+
+<script>
+export default {
+  mounted: function () {
+    document.getElementById('searchNavLink').addEventListener('click', this.handleSearchNavClick)
+  },
+  methods: {
+    handleSearchNavClick () {
+      localStorage.removeItem('searchResults')
+    }
+  }
+}
+</script>
