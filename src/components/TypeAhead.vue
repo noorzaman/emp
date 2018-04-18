@@ -2,10 +2,9 @@
   <section>
     <label for="attributes">Attributes</label>
     <p>Ex: food, WiFi, projector, etc.</p>
-
-    <div id="attributeContainer">
-      <div>
-        <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
+    <div style="display: flex;">
+      <div style="flex-basis: 250px">
+        <input id="attributes" class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
         <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
         <typeahead v-model="newAttribute" target="#attributes" :data="uniqueAttributesList" :open-on-empty="true"/>
         <p class="text-danger">{{newAttributeError}}</p>
@@ -14,7 +13,6 @@
         <button id="addAttrButton" class="btn btn-primary" @click="addAttribute">Add</button>
       </div>
     </div>
-
     <div id="selectedItemsArea">
         <!-- Beginning of attribute list -->
         <div v-for="item in selectedAttributes" :key="item" class="tag is-info" style="margin-right: 2px">
@@ -109,7 +107,7 @@ export default {
     */
     getUniqueAttributes () {
       // size 10,000 is the max_result_window for Elasticsearch
-      // this would break if we somehow had more than 10,000 rooms in the database
+      // this would cause an incomplete list if we somehow had more than 10,000 rooms in the database
       var searchUrl = this.$searchUrl + '/_search?_source=space.attributes&size=10000'
       this.$http.get(searchUrl, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
@@ -136,7 +134,4 @@ export default {
 </script>
 
 <style scoped>
-  #attributeContainer {
-    display: flex;
-  }
 </style>
