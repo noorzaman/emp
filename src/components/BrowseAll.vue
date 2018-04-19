@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <h1>{{pageTitle}}</h1>
     <div v-if="pageWidth > 846">
         <!-- commenting out Intro.vue based on Nico's feedback.
         We can try out BrowseAll without the Intro for few days and
@@ -7,15 +8,15 @@
         <Intro></Intro>
         -->
     </div>
-    <div v-else>
+    <!-- <div v-else>
         <div class="browseAllTitle">
         <h1>{{pageTitle}}</h1>
         </div>
-    </div>
+    </div> -->
     <div class="search-wrapper">
-      <h4>Know what you're after?</h4>
+      <!-- <h4>Know what you're after?</h4> -->
       <form>
-        <input type="text" v-model="search" placeholder="Search by name..."/>
+        <input size="22" type="text" v-model="search" placeholder="Search by name..."/>
         <router-link :to="'/browsename/' + this.search" tag="button" class="btn btn-primary">Search</router-link>
       </form>
     </div>
