@@ -32,7 +32,7 @@
         <div class="rightSearch">
             <div class="form-group themes">
                 <label>Theme</label><br>
-                <ul  class="checkbox-grid">
+                <ul class="checkbox-grid">
                   <li v-for="theme in possibleThemes" :key="theme">
                     <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="selectedThemes"/>
                     <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
@@ -171,18 +171,23 @@ export default {
     }
   },
   mounted () {
+    console.log('prepopulate in mounted: ' + this.prepopulate)
     document.title = 'Search Spaces'
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
     var criteria = JSON.parse(localStorage.getItem('searchCriteria'))
+    console.log('searchResults: ' + searchResults)
     if (searchResults) {
+      console.log('got searchResults')
       this.matches = searchResults
     }
     if (criteria) {
       this.searchCriteria = criteria
       this.prepopulate = true
+      console.log('prepopulate if criteria true: ' + this.prepopulate)
       this.selectedThemes = criteria.themes
       this.selectedAttributes = criteria.attributes
       this.results = JSON.parse(localStorage.getItem('results'))
+      this.searched = true
     }
   },
   methods: {
@@ -265,6 +270,7 @@ export default {
       return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
     },
     search () {
+      console.log('prepopulate when searching: ' + this.prepopulate)
       this.numCriteria = 0
       var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
       var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
@@ -329,7 +335,6 @@ export default {
         }
         this.searchCriteria = {capacity: desiredCapacity, themes: themes, attributes: attributes}
         this.numCriteria += themes.length + attributes.length
-        // console.log('DEBUG: ' + jsonStr)
       }
 
       var jsonStr = JSON.stringify(search)
@@ -423,13 +428,10 @@ export default {
             // new elements finished rendering to the DOM
             document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
           })
+          this.saveSearchCriteria()
         }, error => {
           console.error(error)
         })
-        // store matches in localStorage
-        localStorage.setItem('searchResults', JSON.stringify(this.matches))
-        // store search criteria in localStorage
-        this.saveSearchCriteria()
       }, error => {
         console.error(error)
       })
@@ -443,6 +445,7 @@ export default {
       console.log('save search criteria')
       localStorage.setItem('searchCriteria', JSON.stringify(this.searchCriteria))
       localStorage.setItem('results', JSON.stringify(this.results))
+      localStorage.setItem('searchResults', JSON.stringify(this.matches))
     }
   }
 }
