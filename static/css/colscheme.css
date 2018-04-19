@@ -1,0 +1,35 @@
+h1 {
+	margin: 0em 0 0.5em 0;
+	font-weight: bold;
+    color:	#0064d3;
+	position: relative;
+	font-size: 20px;
+}
+h2 {
+	margin: 0em 0 0.5em 0;
+	font-weight: normal;
+	position: relative;
+	text-shadow: 0 -1px rgba(0,0,0,0.6);
+	font-size: 16px;
+	line-height: 16px;
+	background: #355681;
+	background: rgba(53,86,129, 0.8);
+	border: 1px solid #fff;
+	padding: 5px 15px;
+	color: white;
+	border-radius: 0 10px 0 10px;
+	box-shadow: inset 0 0 5px rgba(53,86,129, 0.5);
+	font-family: 'Muli', sans-serif;
+}
+.empheading{
+color:	#e53238;
+font-weight: normal;
+}
+.empsubheading{
+color:	#88b719;
+font-family: arial, sans-serif;
+font-size: 12px;
+font-weight: bold;
+margin-top: -10px;
+margin-bottom: 1px;
+}

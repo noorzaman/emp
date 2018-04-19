@@ -52,4 +52,5 @@ export default {
  @import 'https://getbootstrap.com/docs/3.3/dist/css/bootstrap.min.css';
  @import '../static/css/styles.css';
  @import '../static/css/truncation.css';
+ @import '../static/css/colscheme.css';
 </style>

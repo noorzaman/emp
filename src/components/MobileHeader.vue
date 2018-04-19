@@ -1,7 +1,7 @@
 <template>
     <div class="mobile-header">
         <router-link to="/"><img class="logo" src="/static/images/meeting-logo.png" alt="Meet Anywhere Logo. "></router-link>
-        <h2 class="empheading">Meet Anywhere</h2>
+        <h3 class="empheading">Meet Anywhere</h3>
         <p class="empsubheading">The right meeting space for any situation</p>
     </div>
 </template>
