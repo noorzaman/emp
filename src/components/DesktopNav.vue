@@ -2,7 +2,7 @@
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-            <router-link to="/"><img class="logo" src="/static/images/meeting-logo.png" alt=""></router-link>
+            <router-link to="/"><img class="logo" src="/static/images/meeting-logo-big.png" alt=""></router-link>
             <h3 class="empheading">Meet Anywhere</h3>
             <p class="empsubheading">The right meeting space for any situation</p>
         </div>
