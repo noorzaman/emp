@@ -9,9 +9,10 @@ import DatePicker from 'vue2-datepicker'
 
 export default {
   components: { DatePicker },
+  props: ['date'],
   data () {
     return {
-      startDate: null,
+      startDate: new Date(),
       shortcuts: [
         {
           text: 'Today',
@@ -23,22 +24,21 @@ export default {
     }
   },
   watch: {
-
-    /** The following code triggers when user selects/ removes
+    date (newDate) {
+      this.startDate = newDate
+    },
+    /** The following code triggers when user selects/removes
     * a date in the date-picker. This code then notifies the parent
-    * component of the date change via 'change' event. Parent should
-    * expect an ISO date. Example: 2018-12-25
+    * component of the date change via 'change' event.
     */
-    startDate: function (newDate) {
+    startDate (newDate) {
       //  Check whether given value is a proper date
       //  See: https://stackoverflow.com/questions/643782/how-to-check-whether-an-object-is-a-date
       if (typeof newDate.getMonth !== 'function') {
         //  if user has not selected a date, then default to today
         newDate = new Date()
       }
-      var month = newDate.getMonth() + 1
-      var isoDate = newDate.getFullYear() + '-' + month + '-' + newDate.getDate()
-      this.$emit('change', isoDate)
+      this.$emit('change', newDate)
     }
   }
 }

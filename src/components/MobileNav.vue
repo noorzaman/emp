@@ -32,7 +32,7 @@ export default {
     handleSearchNavClick () {
       localStorage.removeItem('searchResults')
       localStorage.removeItem('searchCriteria')
-      localStorage.removeItem('results')
+      localStorage.removeItem('resultsLength')
     }
   }
 }

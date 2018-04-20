@@ -145,9 +145,17 @@ export default {
       })
     },
     setImage (img) {
-      this.imageError = ''
-      this.hasImage = true
-      this.imageData = img
+      var imgType = img.split(';')[0].split('/')[1]
+      // png and bmp images are labeled as png, jpg and jpeg are labeled as jpeg
+      if (imgType !== 'jpeg' && imgType !== 'png') {
+        this.imageError = 'Only jpeg, png, and bmp images are supported'
+        this.hasImage = false
+        this.imageData = ''
+      } else {
+        this.imageError = ''
+        this.hasImage = true
+        this.imageData = img
+      }
     }
   }
 }
