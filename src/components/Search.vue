@@ -49,9 +49,10 @@
     <br>
     <br>
     <div id="searchResults"></div>
-    <h2 v-if="matches.length == 1" id="searchResults1">Search Results: {{availableOnlyFilter.length}} space found</h2>
+    <h2 v-if="matches.length === 0 && recordsFound" id="searchResults0">No space was found. Change search criteria or add new space</h2>
+    <h2 v-if="matches.length === 1" id="searchResults1">Search Results: {{availableOnlyFilter.length}} space found</h2>
     <h2 v-if="matches.length > 1" id="searchResults2">Search Results: {{availableOnlyFilter.length}} spaces found</h2>
-    <div v-if="searched">
+    <div v-if="recordsFound">
       <button @click="userFilterKey = 'available'" :class="{ active: userFilterKey === 'available' }" class="btn btn-sm btn-secondary">Available</button>
       <button @click="userFilterKey = 'all'" :class="{ active: userFilterKey === 'all' }" class="btn btn-sm btn-secondary">All</button>
     </div>
@@ -105,6 +106,17 @@ import TypeAhead from './TypeAhead'
 import TimePicker from './TimePicker'
 import axios from 'axios'
 
+function sortByPercentage (a, b) {
+  console.log('a' + a + ' b: ' + b)
+  if (a.matchPercent < b.matchPercent) {
+    return 1
+  }
+  if (a.matchPercent > b.matchPercent) {
+    return -1
+  }
+  return 0
+}
+
 export default {
   name: 'Search',
   components: {
@@ -114,35 +126,25 @@ export default {
     'TimePicker': TimePicker
   },
   computed: {
-    sortedMatches: function () {
-      function compare (a, b) {
-        if (a.matchPercent < b.matchPercent) {
-          return 1
-        }
-        if (a.matchPercent > b.matchPercent) {
-          return -1
-        }
-        return 0
-      }
-      var orderedMatches = this.matches
-      return orderedMatches.sort(compare)
-    },
     availableOnlyFilter () {
       return this[this.userFilterKey]
     },
     all () {
+      if (this.matches.length > 0) {
+        return this.matches.slice().sort(sortByPercentage)
+      }
       return this.matches
     },
     available () {
       return this.matches.filter(function (el) {
         return el.busy === true
-      })
+      }).sort(sortByPercentage)
     }
   },
   data () {
     return {
       userFilterKey: 'all',
-      searched: false,
+      recordsFound: undefined,
       pageTitle: 'Search Meeting Spaces',
       matches: [],
       searchCriteria: {},
@@ -187,7 +189,7 @@ export default {
       this.selectedThemes = criteria.themes
       this.selectedAttributes = criteria.attributes
       this.results = JSON.parse(localStorage.getItem('results'))
-      this.searched = true
+      this.recordsFound = true
     }
   },
   methods: {
@@ -268,6 +270,63 @@ export default {
       z = z || '0'
       n = n + ''
       return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+    },
+    process: function (searchResult, availableList) {
+      for (var n = 0; n < searchResult.length; n++) {
+        var placeId = searchResult[n]._id
+        var entry = searchResult[n]._source.space
+        // find matches
+        var numMatches = 0
+        if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
+          numMatches = 1
+        }
+        var searchThemes = this.searchCriteria.themes
+        var missingThemes = []
+        if (searchThemes !== null && searchThemes !== undefined) {
+          for (var i = 0; i < searchThemes.length; i++) {
+            if (entry.themes.includes(searchThemes[i])) {
+              numMatches++
+            } else {
+              missingThemes.push(searchThemes[i])
+            }
+          }
+        }
+
+        var searchAttributes = this.searchCriteria.attributes
+        var missingAttributes = []
+        if (searchAttributes !== null && searchAttributes !== undefined) {
+          for (var j = 0; j < searchAttributes.length; j++) {
+            if (entry.attributes.includes(searchAttributes[j])) {
+              numMatches++
+            } else {
+              missingAttributes.push(searchAttributes[j])
+            }
+          }
+        }
+        if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
+          this.results = 'medium'
+          if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
+            this.results = 'long'
+          }
+        }
+        let isBusy = entry.calendar_id && availableList.includes(entry.calendar_id)
+        console.log('room is ' + (isBusy ? ' busy' : ' available'))
+        this.matches.push({
+          name: entry.name,
+          description: entry.description,
+          image: entry.image,
+          theme: entry.themes,
+          attributes: entry.attributes,
+          email: placeId,
+          busy: isBusy,
+          capacity: entry.capacity,
+          missThemes: missingThemes,
+          missAttributes: missingAttributes,
+          //  Match percent: Make sure that match percent is never greater than 100%.
+          //  This could happen when no criteria are selected and therefore numCriteria is zero.
+          matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
+        })
+      }
     },
     search () {
       console.log('prepopulate when searching: ' + this.prepopulate)
@@ -350,88 +409,38 @@ export default {
         Object.assign(lst, ...Object.values(searchResult).map(k => lst.push(k._source.space.calendar_id)))
 
         let emails = lst.filter(Boolean)
-        let freeBusyUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com//availability/'
-        let availabilityData = {
-          'calendars': emails,
-          'start_time': this.startDate + 'T' + this.getFormattedStartTime(),
-          'end_time': this.startDate + 'T' + this.getFormattedEndTime()
-        }
-
-        axios.put(freeBusyUrl, JSON.stringify(availabilityData), {
-          headers: {'Content-Type': 'application/json;charset=UTF-8'}
-        }).then(result => {
-          let availableList = Object.values(result.data).map(el => {
-            let filteredKeys = Object.keys(el).filter(key => {
-              return el[key].busy && el[key].busy.length === 0
-            })
-            return filteredKeys[0]
-          })
-
-          for (var n = 0; n < searchResult.length; n++) {
-            var placeId = searchResult[n]._id
-            var entry = searchResult[n]._source.space
-            // find matches
-            var numMatches = 0
-            if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
-              numMatches = 1
-            }
-            var searchThemes = this.searchCriteria.themes
-            var missingThemes = []
-            if (searchThemes !== null && searchThemes !== undefined) {
-              for (var i = 0; i < searchThemes.length; i++) {
-                if (entry.themes.includes(searchThemes[i])) {
-                  numMatches++
-                } else {
-                  missingThemes.push(searchThemes[i])
-                }
-              }
-            }
-
-            var searchAttributes = this.searchCriteria.attributes
-            var missingAttributes = []
-            if (searchAttributes !== null && searchAttributes !== undefined) {
-              for (var j = 0; j < searchAttributes.length; j++) {
-                if (entry.attributes.includes(searchAttributes[j])) {
-                  numMatches++
-                } else {
-                  missingAttributes.push(searchAttributes[j])
-                }
-              }
-            }
-            if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
-              this.results = 'medium'
-              if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
-                this.results = 'long'
-              }
-            }
-            let isBusy = entry.calendar_id && availableList.includes(entry.calendar_id)
-            console.log('room is ' + (isBusy ? ' busy' : ' available'))
-            this.matches.push({
-              name: entry.name,
-              description: entry.description,
-              image: entry.image,
-              theme: entry.themes,
-              attributes: entry.attributes,
-              email: placeId,
-              busy: isBusy,
-              capacity: entry.capacity,
-              missThemes: missingThemes,
-              missAttributes: missingAttributes,
-              //  Match percent: Make sure that match percent is never greater than 100%.
-              //  This could happen when no criteria are selected and therefore numCriteria is zero.
-              matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
-            })
+        if (emails.length > 0) {
+          let freeBusyUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com//availability/'
+          let availabilityData = {
+            'calendars': emails,
+            'start_time': this.startDate + 'T' + this.getFormattedStartTime(),
+            'end_time': this.startDate + 'T' + this.getFormattedEndTime()
           }
-          this.searched = true
-          // scroll to search results
-          this.$nextTick(function () {
-            // new elements finished rendering to the DOM
-            document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
+
+          axios.put(freeBusyUrl, JSON.stringify(availabilityData), {
+            headers: {'Content-Type': 'application/json;charset=UTF-8'}
+          }).then(result => {
+            let availableList = Object.values(result.data).map(el => {
+              let filteredKeys = Object.keys(el).filter(key => {
+                return el[key].busy && el[key].busy.length === 0
+              })
+              return filteredKeys[0]
+            })
+            this.process(searchResult, availableList)
+            this.recordsFound = true
+            // scroll to search results
+            this.$nextTick(function () {
+              // new elements finished rendering to the DOM
+              document.getElementById('searchResults').scrollIntoView({behavior: 'smooth'})
+            })
+            this.saveSearchCriteria()
+          }, error => {
+            console.error(error)
           })
-          this.saveSearchCriteria()
-        }, error => {
-          console.error(error)
-        })
+        } else {
+          this.matches = []
+          this.recordsFound = false
+        }
       }, error => {
         console.error(error)
       })
