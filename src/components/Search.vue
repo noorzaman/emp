@@ -333,8 +333,6 @@ export default {
         this.numCriteria += themes.length + attributes.length
       }
       this.searchCriteria.startDate = this.startDate
-      console.log(this.startTime)
-      console.log(this.endTime)
       this.searchCriteria.startTime = this.startTime
       this.searchCriteria.endTime = this.endTime
 
