@@ -30,10 +30,8 @@ export default {
     * component of the date change via 'change' event.
     */
     date (date) {
-      //  Check whether given value is a proper date
-      //  See: https://stackoverflow.com/questions/643782/how-to-check-whether-an-object-is-a-date
-      if (typeof date.getMonth !== 'function') {
-        //  if user has not selected a date, then default to today
+      //  if user has de-selected the date, then default to today
+      if (!date) {
         date = new Date()
       }
       this.$emit('change', date)

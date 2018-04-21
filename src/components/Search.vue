@@ -156,8 +156,8 @@ export default {
       ],
       resultsLength: '',
       startDate: new Date(), // default to today
-      startTime: 'u', // undefined
-      endTime: 'u',
+      startTime: new Date(''), // empty date object
+      endTime: new Date(''),
       timeOmitted: false
     }
   },
@@ -271,7 +271,7 @@ export default {
     },
     search () {
       this.searchCompleted = false
-      this.timeOmitted = (this.startTime === 'u' || this.endTime === 'u')
+      this.timeOmitted = isNaN(this.startTime.getTime()) || isNaN(this.endTime.getTime())
       this.numCriteria = 0
       var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
       var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
@@ -353,7 +353,7 @@ export default {
         if (emails.length > 0) {
           // if no time was provided, process the results without an availableList
           if (this.timeOmitted) {
-            this.process(searchResults, false)
+            this.process(searchResults, false, false)
             return
           }
           let availabilityData = {
@@ -371,7 +371,13 @@ export default {
               })
               return filteredKeys[0]
             })
-            this.process(searchResults, availableList)
+            let privateCalendarList = Object.values(result.data).map(el => {
+              let filteredKeys = Object.keys(el).filter(key => {
+                return el[key].errors && el[key].errors.length > 0
+              })
+              return filteredKeys[0]
+            })
+            this.process(searchResults, availableList, privateCalendarList)
           }, error => {
             console.error(error)
             alert('Looking up space availability failed.')
@@ -385,7 +391,7 @@ export default {
         alert('Search failed.')
       })
     },
-    process (searchResults, availableList) {
+    process (searchResults, availableList, privateCalendarList) {
       for (var n = 0; n < searchResults.length; n++) {
         var spaceId = searchResults[n]._id
         var entry = searchResults[n]._source.space
@@ -424,7 +430,8 @@ export default {
           }
         }
         // if there is no availableList, default to not busy
-        let isBusy = availableList ? spaceId && availableList.includes(spaceId) : false
+        let isPrivate = privateCalendarList ? privateCalendarList.includes(spaceId) : false
+        let isBusy = availableList ? !availableList.includes(spaceId) : false
         console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
         this.matches.push({
           name: entry.name,

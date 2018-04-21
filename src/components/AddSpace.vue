@@ -127,7 +127,7 @@ export default {
         let lst = []
         Object.assign(lst, ...Object.values(keys).map(k => lst.push(k.key)))
         if (lst.indexOf(this.email) > -1) {
-          this.emailError = 'Room with the email already exists'
+          this.emailError = 'Room with this email already exists'
           return
         }
       }
@@ -148,7 +148,8 @@ export default {
       axios.put(this.$editUrl, jsonData, {
         headers: this.$defaultHeaders
       }).then(result => {
-        this.$router.push('/edit-space/' + this.email)
+        console.log(result)
+        this.$router.push('/edit-space/' + result.data.spaceId)
       }, error => {
         console.error(error)
         this.uploading = false
