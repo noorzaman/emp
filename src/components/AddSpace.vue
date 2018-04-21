@@ -13,7 +13,7 @@
         <p class="text-danger">{{nameError}}</p>
       </div>
       <div class="form-group">
-        <label class="empLabel" >Space e-mail</label>
+        <label class="empLabel">Space e-mail</label>
         <br>
         <input class="empText" type="email" v-model="email"><br>
         <p class="text-danger">{{emailError}}</p>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <br><br>
-      <button class="btn btn-primary" @click="send">Upload photo</button>
+      <button class="btn btn-primary" @click="uploadPhoto">Upload photo</button>
     </div>
   </div>
 </template>
@@ -75,7 +75,7 @@ export default {
     document.title = 'Add Space'
   },
   methods: {
-    validateInput () {
+    hasInputErrors () {
       let hasErrors = false
       if (!this.name.length) {
         this.nameError = 'The name field is required'
@@ -83,7 +83,7 @@ export default {
       } else {
         this.nameError = ''
       }
-      if (!this.email.length) {
+      if (this.email && !this.validateEmail(this.email)) {
         this.emailError = 'Please enter a valid email address'
         hasErrors = true
       } else {
@@ -95,8 +95,19 @@ export default {
       }
       return hasErrors
     },
-    async send () {
-      if (!this.validateInput()) {
+    validateEmail (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(String(email).toLowerCase())
+    },
+    async uploadPhoto () {
+      // verify proper input
+      if (this.hasInputErrors()) {
+        return
+      }
+      this.uploading = true
+
+      // check email uniqueness
+      if (this.email) {
         let data = {
           'size': 0,
           'aggs': {
@@ -120,17 +131,17 @@ export default {
           this.emailError = 'Room with the email already exists'
           return
         }
-        this.uploadPhoto()
       }
-    },
-    uploadPhoto () {
-      this.uploading = true
+
+      // upload the image
       let data = {
-        'placeId': this.email,
         'data': this.imageData,
         'space': {
           'name': this.name
         }
+      }
+      if (this.email) {
+        data['spaceId'] = this.email
       }
       let jsonData = JSON.stringify(data)
 

@@ -165,6 +165,7 @@ export default {
     document.title = 'Search Spaces'
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
     var searchCriteria = JSON.parse(localStorage.getItem('searchCriteria'))
+
     if (searchResults) {
       this.matches = searchResults
     }
@@ -346,7 +347,7 @@ export default {
         this.matches = []
         let searchResults = result.body.hits.hits
         let lst = []
-        Object.assign(lst, ...Object.values(searchResults).map(k => lst.push(k._source.space.calendar_id)))
+        Object.assign(lst, ...Object.values(searchResults).map(k => lst.push(k._id)))
         let emails = lst.filter(Boolean)
 
         if (emails.length > 0) {
@@ -386,7 +387,7 @@ export default {
     },
     process (searchResults, availableList) {
       for (var n = 0; n < searchResults.length; n++) {
-        var placeId = searchResults[n]._id
+        var spaceId = searchResults[n]._id
         var entry = searchResults[n]._source.space
         // find matches
         var numMatches = 0
@@ -423,7 +424,7 @@ export default {
           }
         }
         // if there is no availableList, default to not busy
-        let isBusy = availableList ? entry.calendar_id && availableList.includes(entry.calendar_id) : false
+        let isBusy = availableList ? spaceId && availableList.includes(spaceId) : false
         console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
         this.matches.push({
           name: entry.name,
@@ -431,7 +432,7 @@ export default {
           image: entry.image,
           theme: entry.themes,
           attributes: entry.attributes,
-          email: placeId,
+          email: spaceId,
           busy: isBusy,
           capacity: entry.capacity,
           missThemes: missingThemes,
