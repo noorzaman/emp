@@ -66,7 +66,7 @@ export default {
     searchByEmail () {
       var searchUrl = this.$searchUrl + '/' + this.email
       this.$http.get(searchUrl, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: this.$defaultHeaders
       }).then(result => {
         var space = result.body._source.space
         this.imageData = space.image

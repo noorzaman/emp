@@ -102,7 +102,7 @@ export default {
           'aggs': {
             'uniq_attrs': {
               'terms': {
-                'size': 10000, // TODO compare with all hits and bring more?
+                'size': 1000,
                 'field': '_id'
               }
             }
@@ -111,7 +111,7 @@ export default {
         let jsonData = JSON.stringify(data)
 
         const response = await axios.post(this.$searchUrl + '/_search', jsonData, {
-          headers: {'Content-Type': 'application/json;charset=UTF-8'}
+          headers: this.$defaultHeaders
         })
         let keys = response.data.aggregations.uniq_attrs.buckets
         let lst = []
@@ -135,7 +135,7 @@ export default {
       let jsonData = JSON.stringify(data)
 
       axios.put(this.$editUrl, jsonData, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: this.$defaultHeaders
       }).then(result => {
         this.$router.push('/edit-space/' + this.email)
       }, error => {

@@ -55,7 +55,7 @@ export default {
     searchByEmail (email) {
       var searchUrl = this.$searchUrl + '/' + email
       this.$http.get(searchUrl, email, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: this.$defaultHeaders
       }).then(result => {
         var space = result.body._source.space
         // check if will need to add scrollbar to any attributes list

@@ -110,7 +110,7 @@ export default {
       // this would cause an incomplete list if we somehow had more than 10,000 rooms in the database
       var searchUrl = this.$searchUrl + '/_search?_source=space.attributes&size=10000'
       this.$http.get(searchUrl, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: this.$defaultHeaders
       }).then(result => {
         var arr = []
         var searchResult = result.body.hits.hits

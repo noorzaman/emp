@@ -92,7 +92,7 @@ export default {
       var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
 
       this.$http.post(searchUrl, jsonStr, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: this.$defaultHeaders
       }).then(result => {
         var searchResult = result.body.hits.hits
 

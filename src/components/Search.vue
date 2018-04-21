@@ -165,13 +165,13 @@ export default {
     document.title = 'Search Spaces'
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
     var searchCriteria = JSON.parse(localStorage.getItem('searchCriteria'))
-    searchCriteria.startDate = new Date(searchCriteria.startDate)
-    searchCriteria.startTime = new Date(searchCriteria.startTime)
-    searchCriteria.endTime = new Date(searchCriteria.endTime)
     if (searchResults) {
       this.matches = searchResults
     }
     if (searchCriteria) {
+      searchCriteria.startDate = new Date(searchCriteria.startDate)
+      searchCriteria.startTime = new Date(searchCriteria.startTime)
+      searchCriteria.endTime = new Date(searchCriteria.endTime)
       this.searchCriteria = searchCriteria
       this.selectedThemes = searchCriteria.themes ? searchCriteria.themes : []
       this.selectedAttributes = searchCriteria.attributes
@@ -341,7 +341,7 @@ export default {
       var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
 
       this.$http.post(searchUrl, jsonStr, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+        headers: this.$defaultHeaders
       }).then(result => {
         this.matches = []
         let searchResults = result.body.hits.hits
@@ -355,15 +355,14 @@ export default {
             this.process(searchResults, false)
             return
           }
-          let freeBusyUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com//availability/'
           let availabilityData = {
             'calendars': emails,
             'start_time': this.getFormattedDate() + 'T' + this.getFormattedStartTime(),
             'end_time': this.getFormattedDate() + 'T' + this.getFormattedEndTime()
           }
 
-          axios.put(freeBusyUrl, JSON.stringify(availabilityData), {
-            headers: {'Content-Type': 'application/json;charset=UTF-8'}
+          axios.put(this.$availabilityUrl, JSON.stringify(availabilityData), {
+            headers: this.$defaultHeaders
           }).then(result => {
             let availableList = Object.values(result.data).map(el => {
               let filteredKeys = Object.keys(el).filter(key => {
