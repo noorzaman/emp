@@ -11,19 +11,19 @@
         </div>
         <div class="form-group">
           <label>Meeting Day</label>
-          <DatePicker v-on:change="startDateChanged" v-bind:date="searchCriteria.startDate"></DatePicker>
+          <DatePicker v-on:change="startDateChanged" v-bind:date_prop="searchCriteria.startDate"></DatePicker>
         </div>
         <div class="form-group">
           <label>Meeting Time</label>
           <br>
           <div class="timePicker">
-            <TimePicker v-on:change="startTimeChanged"></TimePicker>
+            <TimePicker v-on:change="startTimeChanged" v-bind:time_prop="searchCriteria.startTime"></TimePicker>
           </div>
           <div class="to">
             <p>to</p>
           </div>
           <div class="timePicker">
-            <TimePicker v-on:change="endTimeChanged"></TimePicker>
+            <TimePicker v-on:change="endTimeChanged" v-bind:time_prop="searchCriteria.endTime"></TimePicker>
           </div>
           <div class="clearFix"></div>
         </div>
@@ -165,6 +165,9 @@ export default {
     document.title = 'Search Spaces'
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
     var searchCriteria = JSON.parse(localStorage.getItem('searchCriteria'))
+    searchCriteria.startDate = new Date(searchCriteria.startDate)
+    searchCriteria.startTime = new Date(searchCriteria.startTime)
+    searchCriteria.endTime = new Date(searchCriteria.endTime)
     if (searchResults) {
       this.matches = searchResults
     }
@@ -330,6 +333,10 @@ export default {
         this.numCriteria += themes.length + attributes.length
       }
       this.searchCriteria.startDate = this.startDate
+      console.log(this.startTime)
+      console.log(this.endTime)
+      this.searchCriteria.startTime = this.startTime
+      this.searchCriteria.endTime = this.endTime
 
       var jsonStr = JSON.stringify(search)
       var searchSize = '20'
