@@ -55,7 +55,9 @@ export default {
         'query': {
           'simple_query_string': {
             'fields': ['space.name'],
-            'query': name
+            //  ~N after a word signifies edit distance (fuzziness)
+            //  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
+            'query': name + '~5'
           }
         }
       }
