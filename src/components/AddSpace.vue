@@ -14,7 +14,7 @@
       </div>
       <div class="form-group">
         <label class="empLabel">Space e-mail</label>
-        <br>
+        <p>Only if your space already has a gmail calendar associated with it</p>
         <input class="empText" type="email" v-model="email"><br>
         <p class="text-danger">{{emailError}}</p>
       </div>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <br><br>
-      <button class="btn btn-primary" @click="uploadPhoto">Upload photo</button>
+      <button class="btn btn-primary" @click="uploadImage">Upload Image</button>
     </div>
   </div>
 </template>
@@ -99,12 +99,11 @@ export default {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       return re.test(String(email).toLowerCase())
     },
-    async uploadPhoto () {
+    async uploadImage () {
       // verify proper input
       if (this.hasInputErrors()) {
         return
       }
-      this.uploading = true
 
       // check email uniqueness
       if (this.email) {
@@ -134,6 +133,7 @@ export default {
       }
 
       // upload the image
+      this.uploading = true
       let data = {
         'data': this.imageData,
         'space': {
