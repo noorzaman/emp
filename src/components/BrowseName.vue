@@ -51,13 +51,27 @@ export default {
   },
   methods: {
     searchByName (name) {
+      //  Edit distance signifies fuzziness. (If you're not sure what 'edit distance' means, look it up on the internet).
+      //  While "magical", edit distance should be used with care. 
+      //  When user's search term consists of two or less letters
+      //  then the edit distance of two will match any record in the dataset.
+      //  Empirically, a "good" practice is to use edit distance of two for search terms of length 
+      //  five or more. It is also "reasonable" to use edit distance of one for search terms 
+      //  of length three or four. Edit distance should be 0 for search terms of length two or less.
+      var editDistance = 0
+      if (name.length >= 5) {
+        editDistance = 2
+      } else if (name.length >= 3) {
+        editDistance = 1
+      }
+
       var search = {
         'query': {
           'simple_query_string': {
             'fields': ['space.name'],
             //  ~N after a word signifies edit distance (fuzziness)
             //  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
-            'query': name + '~5'
+            'query': name + '~' + editDistance
           }
         }
       }
