@@ -19,7 +19,7 @@
         <p class="text-danger">{{emailError}}</p>
       </div>
       <image-uploader
-        hidden=true
+        hidden
         :debug="1"
         :maxSize="1"
         :maxWidth="512"
@@ -148,7 +148,6 @@ export default {
       axios.put(this.$editUrl, jsonData, {
         headers: this.$defaultHeaders
       }).then(result => {
-        console.log(result)
         this.$router.push('/edit-space/' + result.data.spaceId)
       }, error => {
         console.error(error)

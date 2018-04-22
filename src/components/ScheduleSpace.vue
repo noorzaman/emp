@@ -1,17 +1,9 @@
 <template>
-  <div class='main'>
-    <!-- <h1><center>Redirecting to Google Calendar...</center></h1> -->
-    <form name='googleCalInput' method='GET' action='https://calendar.google.com/calendar/r/eventedit'>
-      <div class='form-group'>
-        <!-- <input hidden type='text' name='add' value='noor@ebay.com'/> -->
-        <!-- <input hidden type='text' name='add' :value="getSpaceEmail" /> -->
-        <input hidden type='text' name='add' :value="spaceEmail" />
-        <input type='hidden' name='trp' value='true'/>
-        <input :value='time' type='hidden' name='dates'/>
-      </div>
-      <input hidden type='submit' value='Open Calendar'/>
-    </form>
-  </div>
+  <form hidden name="googleCalInput" method="GET" action="https://calendar.google.com/calendar/r/eventedit">
+    <input name="add" :value="email"/>
+    <input name='location' :value="name"/>
+    <input v-if="date" name="dates" :value="time"/>
+  </form>
 </template>
 
 <script>
@@ -19,74 +11,43 @@ export default {
   name: 'Test',
   data () {
     return {
-      spaceEmail: this.$route.params.spaceId,
-      startDate: this.$route.params.startDate,
-      startTime: this.$route.params.startTime,
-      endTime: this.$route.params.endTime
+      email: this.$route.params.spaceId,
+      name: this.$route.params.spaceName,
+      date: this.$store.state.date,
+      startTime: this.$store.state.startTime,
+      endTime: this.$store.state.endTime
     }
   },
   computed: {
-
-    time: function () {
-      var ds = new Date()
-
-      if (this.startDate && this.startDate !== 'u') {
-        ds = new Date(this.startDate)
+    time () {
+      // return time string of the format '20180320T204000/20180320T204000'
+      if (this.date) {
+        var month = this.addPadding((this.date.getMonth() + 1))
+        var day = this.addPadding(this.date.getDate())
+        var date = this.date.getFullYear() + month + day
+        var startTime = this.addPadding(this.startTime.getHours()) +
+          this.addPadding(this.startTime.getMinutes()) + '00'
+        var endTime = this.addPadding(this.endTime.getHours()) +
+          this.addPadding(this.endTime.getMinutes()) + '00'
+        return date + 'T' + startTime + '/' + date + 'T' + endTime
       }
-
-      if (this.startTime && this.startTime !== 'u') {
-        var startHours = this.startTime.split(':')[0]
-        var startMinutes = this.startTime.split(':')[1]
-        ds.setHours(startHours)
-        ds.setMinutes(startMinutes)
-      } else {
-        // date time start to the nearest half hour
-        ds.setMinutes(ds.getMinutes() + 59)
-        ds.setMinutes(0)
-      }
-      var startDateStr = this.dateToString(ds)
-
-      // date time end
-      var de = ds
-
-      if (this.endTime && this.endTime !== 'u') {
-        var endHours = this.endTime.split(':')[0]
-        var endMinutes = this.endTime.split(':')[1]
-        de.setHours(endHours)
-        de.setMinutes(endMinutes)
-      } else {
-        de.setMinutes(de.getMinutes() + 30)
-      }
-      var endDateStr = this.dateToString(de)
-
-      // return '20180320T204000/20180320T204000'
-      var dateTimeStr = startDateStr + '/' + endDateStr
-      return dateTimeStr
+      return false
     }
   },
-  mounted: function () {
-    //  Let's add this space to list of booked spaces.
+  mounted () {
+    // Let's add this space to list of booked spaces.
     this.updateListOfBookedSpaces(this.spaceEmail)
-    //  And redirect to Google Calendar for creating the meeting.
+    // And redirect to Google Calendar for creating the meeting.
     this.$nextTick(function () {
       document.googleCalInput.submit()
     })
   },
   methods: {
-
-    dateToString (date) {
-      var year = date.getFullYear()
-      var month = String(date.getMonth() + 1)
-      month = month.length < 2 ? '0' + month : month
-      var day = String(date.getDate())
-      day = day.length < 2 ? '0' + day : day
-      var hour = String(date.getHours())
-      hour = hour.length < 2 ? '0' + hour : hour
-      var minutes = String(date.getMinutes())
-      minutes = minutes.length < 2 ? '0' + minutes : minutes
-      return year + '' + month + '' + day + 'T' + hour + minutes + '00'
+    addPadding (number) {
+      var string = number.toString()
+      var pad = '00'
+      return pad.substring(0, pad.length - string.length) + string
     },
-
     /** This method adds given space email address
     * to list of booked spaces. This list of booked
     * spaces is persisted on local storage.

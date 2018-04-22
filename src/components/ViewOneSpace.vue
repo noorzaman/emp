@@ -6,8 +6,8 @@
       <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
-      <a :href="'/schedule-space/' + email" class="btn btn-primary viewOneLink">Set up meeting</a>
-      <a :href="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</a>
+      <router-link :to="'/schedule-space/' + email + '/' + name" class="btn btn-primary viewOneLink">Set up meeting</router-link>
+      <router-link :to="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</router-link>
 
       <p v-if="description"><strong>Description: </strong>{{description}}</p>
       <p><strong>Capacity: </strong>{{capacity}}</p>

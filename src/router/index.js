@@ -56,7 +56,7 @@ const router = new Router({
       component: ViewOneSpace
     },
     {
-      path: '/schedule-space/:spaceId/:startDate?/:startTime?/:endTime?',
+      path: '/schedule-space/:spaceId/:spaceName',
       name: 'ScheduleSpace',
       component: ScheduleSpace
     },

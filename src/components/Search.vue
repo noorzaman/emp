@@ -53,7 +53,7 @@
 
     <br>
     <div v-if="searchCompleted">
-      <h2 v-if="matches.length === 1">Search Results: {{availableOnlyFilter.length}} space found</h2>
+      <h2 v-if="availableOnlyFilter.length === 1">Search Results: 1 space found</h2>
       <h2 v-else>Search Results: {{availableOnlyFilter.length}} spaces found</h2>
       <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': resultsLength == 'long' }, { 'searchLocationMedMissing': resultsLength == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="matchTitle">
@@ -62,9 +62,9 @@
         </div>
         <div class="clearFix"></div>
         <p class="block-with-text">{{match.description}}</p>
-        <a :href="'/space/' + match.email" target="_blank">
+        <router-link :to="'/space/' + match.email">
           <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-        </a>
+        </router-link>
         <div v-if="match.matchPercent !== 100">
           <div v-if="searchCriteria.capacity !== 0 && parseInt(searchCriteria.capacity) > parseInt(match.capacity)" class="missingCapacity">
             <ul>
@@ -89,10 +89,9 @@
         </div>
         <div class="clearFix"></div>
         <div class="searchBtns">
-          <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
-          <a :href="'/schedule-space/' + match.email + '/' + startDate + '/' + startTime + '/' + endTime"
-          class="btn btn-primary btnMargin">Book</a>
-          <a :href="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</a>
+          <router-link :to="'/space/' + match.email" class="btn btn-primary btnMargin">Space Details</router-link>
+          <router-link :to="'/schedule-space/' + match.email + '/' + match.name" class="btn btn-primary btnMargin">Book</router-link>
+          <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Space Details</router-link>
         </div>
       </div>
     </div>
@@ -272,10 +271,17 @@ export default {
     search () {
       this.searchCompleted = false
       this.timeOmitted = isNaN(this.startTime.getTime()) || isNaN(this.endTime.getTime())
+      if (!this.timeOmitted) {
+        this.$store.setDate(this.startDate)
+        this.$store.setStartTime(this.startTime)
+        this.$store.setEndTime(this.endTime)
+      } else {
+        this.$store.resetDates()
+      }
+
       this.numCriteria = 0
       var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
       var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
-
       var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
       if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
         desiredCapacity = 0
@@ -367,17 +373,12 @@ export default {
           }).then(result => {
             let availableList = Object.values(result.data).map(el => {
               let filteredKeys = Object.keys(el).filter(key => {
-                return el[key].busy && el[key].busy.length === 0
+                // only return available if it's not busy and there are no errors (indicating a private or non-existing email)
+                return el[key].busy && el[key].busy.length === 0 && !(el[key].errors && el[key].errors.length > 0)
               })
               return filteredKeys[0]
             })
-            let privateCalendarList = Object.values(result.data).map(el => {
-              let filteredKeys = Object.keys(el).filter(key => {
-                return el[key].errors && el[key].errors.length > 0
-              })
-              return filteredKeys[0]
-            })
-            this.process(searchResults, availableList, privateCalendarList)
+            this.process(searchResults, availableList)
           }, error => {
             console.error(error)
             alert('Looking up space availability failed.')
@@ -391,10 +392,11 @@ export default {
         alert('Search failed.')
       })
     },
-    process (searchResults, availableList, privateCalendarList) {
+    process (searchResults, availableList) {
       for (var n = 0; n < searchResults.length; n++) {
         var spaceId = searchResults[n]._id
         var entry = searchResults[n]._source.space
+
         // find matches
         var numMatches = 0
         if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
@@ -423,14 +425,13 @@ export default {
             }
           }
         }
-        if (missingThemes.length >= 2 || missingAttributes.length >= 2) {
+        if (!this.resultsLength === 'long' && (missingThemes.length >= 2 || missingAttributes.length >= 2)) {
           this.resultsLength = 'medium'
           if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
             this.resultsLength = 'long'
           }
         }
         // if there is no availableList, default to not busy
-        let isPrivate = privateCalendarList ? privateCalendarList.includes(spaceId) : false
         let isBusy = availableList ? !availableList.includes(spaceId) : false
         console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
         this.matches.push({

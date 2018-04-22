@@ -6,7 +6,7 @@
             <h3 class="empheading">M e e t&nbsp;&nbsp;A n y w h e r e</h3>
             <p class="empsubheading">The right meeting space for any situation</p>
         </div>
-        <div id="navbar">
+        <div>
           <ul class="nav navbar-nav navbar-right">
             <li><router-link to="/">Browse Spaces</router-link></li>
             <li id="searchNavLink"><router-link to="/search-spaces">Search Space</router-link></li>

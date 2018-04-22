@@ -1,24 +1,20 @@
 <template>
     <div class="footer">
-        <router-link to="/">
-            <a href="#" class="item">
-                <img src="/static/images/browse.png" alt="alt text">
-            </a>
+        <router-link to="/" class="item">
+          <img src="/static/images/browse.png" alt="Browse">
+          <p>Browse</p>
         </router-link>
-        <router-link to="/search-spaces">
-            <a href="#" class="item" id="searchNavLink">
-                <img src="/static/images/search.png" alt="alt text">
-            </a>
+        <router-link to="/search-spaces" class="item" id="searchNavLink">
+          <img src="/static/images/search.png" alt="Search">
+          <p>Search</p>
         </router-link>
-        <router-link to="/booked-spaces">
-            <a href="#" class="item">
-                <img src="/static/images/booked.png" alt="alt text">
-            </a>
+        <router-link to="/booked-spaces" class="item">
+          <img src="/static/images/booked.png" alt="Booked Spaces">
+          <p>Booked Spaces</p>
         </router-link>
-        <router-link to="/add-space">
-            <a href="/add-space" class="item">
-                <img src="/static/images/new.png" alt="alt text">
-            </a>
+        <router-link to="/add-space" class="item">
+          <img src="/static/images/new.png" alt="Add Space">
+          <p>Add Space</p>
         </router-link>
     </div>
 </template>

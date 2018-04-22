@@ -13,9 +13,9 @@
         <div v-for="match in matches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
           <p class="block-with-text">{{match.description}}</p>
-          <a :href="'/space/' + match.email">
+          <router-link :to="'/space/' + match.email">
             <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-          </a>
+          </router-link>
           <p><strong>Capacity:</strong> {{match.capacity}}</p>
           <p><strong>Attributes</strong></p>
           <div v-if="!match.attributes.length">
@@ -27,9 +27,9 @@
             </ul>
           </div>
           <div class="searchBtns">
-            <a :href="'/space/' + match.email" class="btn btn-primary">Space Details</a>
-            <a :href="'/schedule-space/' + match.email + '/' + startDate + '/' + startTime + '/' + endTime" class="btn btn-primary btnMargin">Book</a>
-            <a :href="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</a>
+            <router-link :to="'/space/' + match.email" class="btn btn-primary">Space Details</router-link>
+            <router-link :to="'/schedule-space/' + match.email + '/' + match.name" class="btn btn-primary btnMargin">Book</router-link>
+            <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
           </div>
         </div>
       </div>
@@ -72,6 +72,7 @@ export default {
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
+    this.$store.resetDates()
     this.searchByTheme(this.$route.params.theme)
   },
   methods: {

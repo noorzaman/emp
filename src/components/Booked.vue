@@ -8,9 +8,9 @@
       <div v-for="space in prevBookedSpaces" :key="space.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <h2>{{space.name}}</h2>
         <p class="block-with-text">{{space.description}}</p>
-        <a :href="'/space/' + space.email">
+        <router-link :to="'/space/' + space.email">
           <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
-        </a>
+        </router-link>
         <p><strong>Capacity:</strong> {{space.capacity}}</p>
         <p><strong>Attributes</strong></p>
         <div v-if="!space.attributes.length">
@@ -22,11 +22,10 @@
           </ul>
         </div>
         <div class="searchBtns">
-            <a :href="'/space/' + space.email" class="btn btn-primary">Space Details</a>
-            <a :href="'/schedule-space/' + space.email + '/' + startDate + '/' + startTime + '/' + endTime"
-            class="btn btn-primary btnMargin">Book</a>
-            <a :href="'/edit-space/' + space.email" class="btn btn-primary btnMargin">Edit</a>
-          </div>
+          <router-link :to="'/space/' + space.email" class="btn btn-primary">Space Details</router-link>
+          <router-link :to="'/schedule-space/' + space.email + '/' + space.name" class="btn btn-primary btnMargin">Book</router-link>
+          <router-link :to="'/edit-space/' + space.email" class="btn btn-primary btnMargin">Edit</router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -44,6 +43,7 @@ export default {
   },
   mounted: function () {
     document.title = 'My Previously Booked Spaces'
+    this.$store.resetDates()
     this.bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
     if (this.bookedEmails) {
       for (var i = 0; i < this.bookedEmails.length; i++) {
