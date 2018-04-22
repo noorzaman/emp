@@ -1,9 +1,9 @@
 <template>
   <div class="search">
     <h1>Meeting Space Criteria</h1>
+    <p>Leave a criteria blank to indicate no preference.</p>
     <div>
       <div class="leftSearch">
-      <p>Leave a criteria blank to indicate no preference.</p>
       <br>
         <div class="form-group">
           <label>Capacity</label>
@@ -28,8 +28,8 @@
           <div class="clearFix"></div>
         </div>
         <div class="form-group">
-          <button @click="userFilterKey = 'available'" :class="{ active: userFilterKey === 'available' }" class="btn btn-sm btn-secondary">Available</button>
-          <button @click="userFilterKey = 'all'" :class="{ active: userFilterKey === 'all' }" class="btn btn-sm btn-secondary">All</button>
+          <!-- This toggle button doesn't look very good. I typed in random numbers for the colors, so this should be changed -->
+          <toggle-button @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Show only available rooms', unchecked: 'Show all rooms'}"/>
         </div>
       </div>
       <div class="rightSearch">
@@ -467,6 +467,13 @@ export default {
         // new elements finished rendering to the DOM
         document.getElementById('submitButton').scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth'})
       })
+    },
+    changeUserFilterKey (data) {
+      if (this.userFilterKey === 'all') {
+        this.userFilterKey = 'available'
+      } else {
+        this.userFilterKey = 'all'
+      }
     }
   }
 }

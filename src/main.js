@@ -6,6 +6,8 @@ import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
 import Vuex from 'vuex'
+import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
 Vue.use(VueResource)
 Vue.use(uiv)
 Vue.use(Vuex)
