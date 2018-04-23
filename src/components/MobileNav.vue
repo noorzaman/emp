@@ -23,7 +23,6 @@
 export default {
   mounted: function () {
     document.getElementById('searchNavLink').addEventListener('click', this.handleSearchNavClick)
-    console.log(this.pageLocation)
   },
   props: ['pageLocation'],
   methods: {

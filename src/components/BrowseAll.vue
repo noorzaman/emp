@@ -24,7 +24,7 @@
     <div class="row">
       <div v-for="theme in themes" :key="theme.image" class="browseThemes">
         <router-link :to="'/browse/' + theme.image">
-          <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption">
+          <img :src="'/static/images/' + theme.image + '.png'"  :alt="theme.caption" class="img-responsive">
           <p>{{theme.caption}}</p>
         </router-link>
       </div>
