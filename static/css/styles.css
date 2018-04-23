@@ -483,7 +483,7 @@ ul {
 }
 
 .footerSpace {
-    height: 75px;
+    height: 110px;
 }
 
 @media only screen and (max-width: 1300px) {
@@ -676,10 +676,6 @@ ul {
     .roomInfo {
         width: 100%;
     }
-
-    .footerSpace {
-        height: 110px;
-    }
 }
 
 @media only screen and (max-width: 760px) {
@@ -719,6 +715,10 @@ ul {
     body {
         /*background-color: lightblue;*/
     }
+    
+    .browseThemes {
+        margin-bottom: 2em;
+    }
 
     .browseAllTitle h1 {
         font-size: 2.5em;
@@ -755,12 +755,6 @@ ul {
     }
 }
 
-@media only screen and (max-width: 510px) {
-    body {
-        /*background-color: pink;*/
-    }
-}
-
 @media only screen and (max-width: 475px) {
     body {
         /*background-color: lightyellow;*/
@@ -768,6 +762,10 @@ ul {
 
     .browseAllTitle h1 {
         font-size: 1.5em;
+    }
+    
+    .footerSpace {
+        height: 80px;
     }
 
     .footer img {
@@ -783,6 +781,10 @@ ul {
 
     body {
         /*background-color: lightblue;*/
+    }
+    
+    .browseThemes {
+        margin-bottom: 1em;
     }
 
     .browseThemes {
