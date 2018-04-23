@@ -106,6 +106,38 @@ export default {
     /** Populate uniqueAttributesList with all unique attributes in the database
     */
     getUniqueAttributes () {
+      let data = {
+        'size': 0,
+        'aggs': {
+          'attributes': {
+            'terms': {
+              'field': 'space.attributes.keyword',
+              'size': 10000
+            }
+          }
+        }
+      }
+      let jsonData = JSON.stringify(data)
+      var searchUrl = this.$searchUrl + '/_search'
+      this.$http.post(searchUrl, jsonData, {
+        headers: this.$defaultHeaders
+      }).then(result => {
+        var arr = []
+        var searchResult = result.body.aggregations.attributes.buckets
+        // concatenating all attributes together
+        for (var i = 0; i < searchResult.length; i++) {
+          arr = arr.concat(searchResult[i].key)
+        }
+        // dropping duplicates and sorting
+        var uniqueArray = arr.filter(function (item, pos) {
+          return arr.indexOf(item) === pos
+        })
+        this.uniqueAttributesList = uniqueArray.sort()
+      }, error => {
+        console.log(error)
+      })
+    },
+    old_getUniqueAttributes () {
       // size 10,000 is the max_result_window for Elasticsearch
       // this would cause an incomplete list if we somehow had more than 10,000 rooms in the database
       var searchUrl = this.$searchUrl + '/_search?_source=space.attributes&size=10000'
