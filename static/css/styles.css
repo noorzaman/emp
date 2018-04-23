@@ -435,7 +435,7 @@ ul {
     border-top-style: solid;
     border-top-color: #e5dddd;
     padding-top: 8px;
-    padding-bottom: 8px;
+    padding-bottom: 16px;
     background: white;
     position: fixed;
     left: 0;
