@@ -463,6 +463,18 @@ ul {
     color: black;
 }
 
+.footer a p {
+    color: #333;
+}
+
+.footer a p:hover {
+    color: #777;
+}
+
+.footer .mobileNavActive p {
+    color: #f68e4f;
+}
+
 .footer a:hover {
     text-decoration: none;
 }
@@ -538,6 +550,10 @@ ul {
     .bookedImg, .searchImg {
         height: 200px;
     }
+    
+    .footer .item {
+        width: 24%;
+    }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -564,10 +580,6 @@ ul {
     .sliderContainer {
         width: 30%;
         margin-left: 0px;
-    }
-
-    .footer .item {
-        width: 24%;
     }
 
     .attributesList, .themesList {

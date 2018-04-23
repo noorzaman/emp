@@ -11,7 +11,7 @@
     <div v-if="pageWidth <= 1000">
         <div class="clearFix"></div>
         <div class="footerSpace"></div>
-        <MobileNav></MobileNav>
+        <MobileNav v-bind:pageLocation="pageLocation"></MobileNav>
     </div>
   </div>
 </template>
