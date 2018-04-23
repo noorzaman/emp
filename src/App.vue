@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div v-if="pageWidth > 1000">
-        <DesktopNav></DesktopNav>
+        <DesktopNav v-bind:pageLocation="pageLocation"></DesktopNav>
         <div class="space"></div>
     </div>
     <div v-else>
@@ -29,20 +29,35 @@ export default {
   },
   data () {
     return {
-      pageWidth: document.documentElement.clientWidth
+      pageWidth: document.documentElement.clientWidth,
+      pageLocation: ''
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted: function () {
     window.addEventListener('resize', this.handleResize)
+    this.setCurrentNav()
   },
   beforeDestroy: function () {
     window.removeEventListener('resize', this.handleResize)
+  },
+  updated: function () {
+    this.$nextTick(function () {
+      this.setCurrentNav()
+    })
   },
   methods: {
     // whenever the document is resized, re-set the 'pageWidth' variable
     handleResize (event) {
       this.pageWidth = document.documentElement.clientWidth
+    },
+    setCurrentNav () {
+      let routeName = this.$route.name.toLowerCase()
+      if (routeName.includes('browse')) {
+        this.pageLocation = 'browse'
+      } else {
+        this.pageLocation = routeName
+      }
     }
   }
 }

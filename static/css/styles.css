@@ -36,6 +36,10 @@
     width: 100%;
 }
 
+.navbar-default .navbar-nav > li > .desktopNavActive {
+    color: #f68e4f;
+}
+
 /* Mobile Header Styles */
 
 .mobile-header {

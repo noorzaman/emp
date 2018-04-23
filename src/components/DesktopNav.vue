@@ -8,10 +8,10 @@
         </div>
         <div>
           <ul class="nav navbar-nav navbar-right">
-            <li><router-link to="/">Browse Spaces</router-link></li>
-            <li id="searchNavLink"><router-link to="/search-spaces">Search Space</router-link></li>
-            <li><router-link to="/booked-spaces">My Booked Spaces</router-link></li>
-            <li><router-link to="/add-space">Add Space</router-link></li>
+            <li><router-link to="/" v-bind:class="{ 'desktopNavActive': pageLocation === 'browse' }">Browse Spaces</router-link></li>
+            <li id="searchNavLink"><router-link to="/search-spaces" v-bind:class="{ 'desktopNavActive': pageLocation === 'search' }" >Search Space</router-link></li>
+            <li><router-link to="/booked-spaces" v-bind:class="{ 'desktopNavActive': pageLocation === 'booked' }">My Booked Spaces</router-link></li>
+            <li><router-link to="/add-space" v-bind:class="{ 'desktopNavActive': pageLocation === 'addspace' }">Add Space</router-link></li>
           </ul>
         </div>
       </div>
@@ -23,6 +23,7 @@ export default {
   mounted: function () {
     document.getElementById('searchNavLink').addEventListener('click', this.handleSearchNavClick)
   },
+  props: ['pageLocation'],
   methods: {
     handleSearchNavClick () {
       localStorage.removeItem('searchResults')
