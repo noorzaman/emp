@@ -18,7 +18,9 @@ Vue.config.productionTip = false
 Vue.prototype.$searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
 Vue.prototype.$editUrl = 'https://3p8vyivi98.execute-api.us-east-1.amazonaws.com/dev/place'
 Vue.prototype.$availabilityUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com/availability/'
+Vue.prototype.$googleCalendarUrl = 'http://localhost:5000/'
 Vue.prototype.$defaultHeaders = {'Content-Type': 'application/json;charset=UTF-8'}
+Vue.prototype.$emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 var store = {
   state: {

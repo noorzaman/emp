@@ -83,8 +83,7 @@ export default {
       } else {
         this.nameError = ''
       }
-      if (this.email && !this.validateEmail(this.email)) {
-        this.emailError = 'Please enter a valid email address'
+      if (this.email && !this.validEmail(this.email)) {
         hasErrors = true
       } else {
         this.emailError = ''
@@ -95,9 +94,28 @@ export default {
       }
       return hasErrors
     },
-    validateEmail (email) {
-      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return re.test(String(email).toLowerCase())
+    async validEmail (email) {
+      var self = this
+      if (!this.$emailRegExp.test(String(email).toLowerCase())) {
+        self.emailError = 'Please enter a valid email address'
+        return false
+      }
+      try {
+        const response = await axios.get(this.$googleCalendarUrl + email, {
+          headers: this.$defaultHeaders
+        })
+        return response && response.status === 200
+      } catch (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+          self.emailError = 'Given email is set as private. Please, enter a valid email'
+          return false
+        }
+      }
     },
     async uploadImage () {
       // verify proper input
