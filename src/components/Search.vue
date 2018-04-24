@@ -27,10 +27,6 @@
           </div>
           <div class="clearFix"></div>
         </div>
-        <div class="form-group">
-          <!-- This toggle button doesn't look very good. I typed in random numbers for the colors, so this should be changed -->
-          <toggle-button @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Show only available rooms', unchecked: 'Show all rooms'}"/>
-        </div>
       </div>
       <div class="rightSearch">
         <div class="form-group themes">
@@ -55,6 +51,10 @@
     <div v-if="searchCompleted">
       <h2 v-if="availableOnlyFilter.length === 1">Search Results: 1 space found</h2>
       <h2 v-else>Search Results: {{availableOnlyFilter.length}} spaces found</h2>
+      <div class="form-group">
+        <!-- This toggle button doesn't look very good. I typed in random numbers for the colors, so this should be changed -->
+        <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
+      </div>
       <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': resultsLength == 'long' }, { 'searchLocationMedMissing': resultsLength == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="matchTitle">
           <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
@@ -131,7 +131,7 @@ export default {
   },
   data () {
     return {
-      userFilterKey: 'all',
+      userFilterKey: 'available',
       searchCompleted: false,
       pageTitle: 'Search Meeting Spaces',
       matches: [],
