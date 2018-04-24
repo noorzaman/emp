@@ -40,7 +40,7 @@
         <div class="form-group themes">
           <label>Theme</label><br>
           <ul class="checkbox-grid">
-            <li v-for="theme in possibleThemes" :key="theme">
+            <li v-for="theme in $possibleThemes" :key="theme">
               <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="selectedThemes"/>
               <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
             </li>
@@ -148,20 +148,6 @@ export default {
       numCriteria: 0,
       selectedThemes: [],
       selectedAttributes: [],
-      possibleThemes: [
-        'casual',
-        'celebratory',
-        'cozy',
-        'fancy',
-        'fun',
-        'lively',
-        'modern',
-        'professional',
-        'quiet',
-        'rustic',
-        'studious',
-        'zen'
-      ],
       resultsLength: '',
       startDate: new Date(), // default to today
       startTime: new Date(''), // empty date object
@@ -179,6 +165,8 @@ export default {
 
     if (searchResults) {
       this.matches = searchResults
+      this.resultsLength = JSON.parse(localStorage.getItem('resultsLength'))
+      this.searchCompleted = true
     }
     if (searchCriteria) {
       searchCriteria.startDate = new Date(searchCriteria.startDate)
@@ -187,8 +175,6 @@ export default {
       this.searchCriteria = searchCriteria
       this.selectedThemes = searchCriteria.themes ? searchCriteria.themes : []
       this.selectedAttributes = searchCriteria.attributes
-      this.resultsLength = JSON.parse(localStorage.getItem('resultsLength'))
-      this.searchCompleted = true
     }
   },
   methods: {
@@ -287,6 +273,8 @@ export default {
       this.searchingByName = true
       this.searchCompleted = false
       this.timeOmitted = true
+      this.$store.resetDates()
+      this.$store.removeSearchCriteria()
 
       //  Edit distance signifies fuzziness. (If you're not sure what 'edit distance' means, look it up on the internet).
       //  While "magical", edit distance should be used with care.
@@ -320,6 +308,7 @@ export default {
     fullSearch () {
       this.searchingByName = false
       this.searchCompleted = false
+      this.userFilterKey = 'available'
       this.timeOmitted = isNaN(this.startTime.getTime()) || isNaN(this.endTime.getTime())
       if (!this.timeOmitted) {
         this.$store.setDate(this.startDate)
@@ -540,11 +529,13 @@ export default {
     /**
     * Switch filter key between 'all' and 'available'
     */
-    changeUserFilterKey () {
-      if (this.userFilterKey === 'all') {
-        this.userFilterKey = 'available'
-      } else {
+    changeUserFilterKey (sliderState) {
+      if (sliderState.value) {
+        console.log('showing all')
         this.userFilterKey = 'all'
+      } else {
+        console.log('showing available')
+        this.userFilterKey = 'available'
       }
     },
     /**

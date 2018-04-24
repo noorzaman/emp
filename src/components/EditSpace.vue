@@ -36,7 +36,7 @@
         <div class="form-group themes">
           <label>Themes</label><br>
           <ul class="checkbox-grid">
-            <li v-for="theme in possibleThemes" :key="theme">
+            <li v-for="theme in $possibleThemes" :key="theme">
               <input type="checkbox" name="themeCheckbox" :value="theme" :id="theme" v-model="themes"/>
               <label :for="theme" class="checkboxLabel">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</label>
             </li>
@@ -75,25 +75,13 @@ export default {
       tags: [],
       themes: [],
       capacity: 0,
-      uploading: false,
-      possibleThemes: [
-        'casual',
-        'celebratory',
-        'cozy',
-        'fancy',
-        'fun',
-        'lively',
-        'modern',
-        'professional',
-        'quiet',
-        'rustic',
-        'studious',
-        'zen'
-      ]
+      uploading: false
     }
   },
   mounted () {
     document.title = 'Edit Space'
+    // remove search criteria storage
+    this.$store.removeSearchCriteria()
     this.searchByEmail()
   },
   methods: {

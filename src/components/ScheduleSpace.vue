@@ -35,6 +35,8 @@ export default {
     }
   },
   mounted () {
+    // remove search criteria storage
+    this.$store.removeSearchCriteria()
     // Let's add this space to list of booked spaces.
     this.updateListOfBookedSpaces(this.spaceEmail)
     // And redirect to Google Calendar for creating the meeting.

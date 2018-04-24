@@ -43,7 +43,9 @@ export default {
   },
   mounted: function () {
     document.title = 'My Previously Booked Spaces'
+    // remove search criteria storage
     this.$store.resetDates()
+    this.$store.removeSearchCriteria()
     this.bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
     if (this.bookedEmails) {
       for (var i = 0; i < this.bookedEmails.length; i++) {

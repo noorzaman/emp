@@ -21,14 +21,13 @@
 <script>
 export default {
   mounted: function () {
-    document.getElementById('searchNavLink').addEventListener('click', this.handleSearchNavClick)
+    document.getElementById('searchNavLink').addEventListener('click', this.removeSearchCriteria)
   },
   props: ['pageLocation'],
   methods: {
-    handleSearchNavClick () {
-      localStorage.removeItem('searchResults')
-      localStorage.removeItem('searchCriteria')
-      localStorage.removeItem('resultsLength')
+    removeSearchCriteria () {
+      this.$store.resetDates()
+      this.$store.removeSearchCriteria()
     }
   }
 }

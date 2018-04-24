@@ -55,6 +55,9 @@ export default {
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Browse Spaces'
+    // remove search criteria storage
+    this.$store.resetDates()
+    this.$store.removeSearchCriteria()
   }
 }
 </script>

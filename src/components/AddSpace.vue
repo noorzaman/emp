@@ -73,6 +73,9 @@ export default {
   },
   mounted () {
     document.title = 'Add Space'
+    // remove search criteria storage
+    this.$store.resetDates()
+    this.$store.removeSearchCriteria()
   },
   methods: {
     hasInputErrors () {

@@ -52,32 +52,20 @@ export default {
       empUrl: '',
       matches: [],
       searchFinished: false,
-      possibleThemes: [
-        'casual',
-        'celebratory',
-        'cozy',
-        'fancy',
-        'fun',
-        'lively',
-        'modern',
-        'professional',
-        'quiet',
-        'rustic',
-        'studious',
-        'zen'
-      ],
       results: ''
     }
   },
   // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
+    // remove search criteria storage
     this.$store.resetDates()
+    this.$store.removeSearchCriteria()
     this.searchByTheme(this.$route.params.theme)
   },
   methods: {
     searchByTheme (theme) {
-      if (!this.possibleThemes.includes(theme)) {
+      if (!this.$possibleThemes.includes(theme)) {
         this.notFound = true
         return
       }

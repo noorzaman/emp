@@ -16,6 +16,14 @@
 </template>
 
 <script>
+export default {
+  mounted () {
+    document.title = '404 Not Found'
+    // remove search criteria storage
+    this.$store.resetDates()
+    this.$store.removeSearchCriteria()
+  }
+}
 </script>
 
 <style scoped>

@@ -22,6 +22,7 @@ Vue.prototype.$availabilityUrl = 'http://development.6awinxwfj9.us-east-1.elasti
 Vue.prototype.$googleCalendarUrl = 'http://localhost:5000/'
 Vue.prototype.$defaultHeaders = {'Content-Type': 'application/json;charset=UTF-8'}
 Vue.prototype.$emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+Vue.prototype.$possibleThemes = ['casual', 'celebratory', 'cozy', 'fancy', 'fun', 'lively', 'modern', 'professional', 'quiet', 'rustic', 'studious', 'zen']
 
 var store = {
   state: {
@@ -42,6 +43,11 @@ var store = {
     this.state.date = false
     this.state.startTime = false
     this.state.endTime = false
+  },
+  removeSearchCriteria () {
+    localStorage.removeItem('searchResults')
+    localStorage.removeItem('searchCriteria')
+    localStorage.removeItem('resultsLength')
   }
 }
 
