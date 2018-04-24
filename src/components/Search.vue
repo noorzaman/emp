@@ -2,28 +2,36 @@
   <div class="search">
     <h1>Meeting Space Criteria</h1>
     <p>Leave a criteria blank to indicate no preference.</p>
-    <div>
+    <div class="form-group">
+      <!-- This toggle button doesn't look very good. I typed in random numbers for the colors, so this should be changed -->
+      <toggle-button @change="changeSearchType" :value="false" :width=150 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Quick Search by Name', unchecked: 'Full Search'}"/>
+    </div>
+    <div v-if="!showFullSearch" class="search-wrapper">
+      <label>Space Name</label><br>
+      <input size="22" type="text" v-model="name" placeholder="Enter name..." @keyup.enter="searchByName"/><br><br>
+      <button id="submitButton" class="btn btn-primary submitButton" @click="searchByName">Search Spaces</button>
+    </div>
+    <div v-else>
       <div class="leftSearch">
-      <br>
         <div class="form-group">
           <label>Capacity</label>
-          <NumberSlider v-bind:allowAny="true" v-bind:capacity="searchCriteria.capacity"></NumberSlider>
+          <NumberSlider :allowAny="true" :capacity="searchCriteria.capacity"></NumberSlider>
         </div>
         <div class="form-group">
           <label>Meeting Day</label>
-          <DatePicker v-on:change="startDateChanged" v-bind:date_prop="searchCriteria.startDate"></DatePicker>
+          <DatePicker v-on:change="startDateChanged" :date_prop="searchCriteria.startDate"></DatePicker>
         </div>
         <div class="form-group">
           <label>Meeting Time</label>
           <br>
           <div class="timePicker">
-            <TimePicker v-on:change="startTimeChanged" v-bind:time_prop="searchCriteria.startTime"></TimePicker>
+            <TimePicker v-on:change="startTimeChanged" :time_prop="searchCriteria.startTime"></TimePicker>
           </div>
           <div class="to">
             <p>to</p>
           </div>
           <div class="timePicker">
-            <TimePicker v-on:change="endTimeChanged" v-bind:time_prop="searchCriteria.endTime"></TimePicker>
+            <TimePicker v-on:change="endTimeChanged" :time_prop="searchCriteria.endTime"></TimePicker>
           </div>
           <div class="clearFix"></div>
         </div>
@@ -39,10 +47,10 @@
           </ul>
         </div>
         <div class="form-group typeAhead">
-          <TypeAhead v-bind:selectedAttributes="selectedAttributes" v-bind:allowCustom="false"></TypeAhead>
+          <TypeAhead :selectedAttributes="selectedAttributes" :allowCustom="false"></TypeAhead>
         </div>
       </div>
-      <button id="submitButton" class="btn btn-primary submitButton" @click="search">Search Spaces</button>
+      <button id="submitButton" class="btn btn-primary submitButton" @click="fullSearch">Search Spaces</button>
     </div>
     <div class="clearFix"></div>
     <br>
@@ -56,8 +64,8 @@
         <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
       </div>
       <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': resultsLength == 'long' }, { 'searchLocationMedMissing': resultsLength == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
-        <div class="matchTitle">
-          <p class="matchPercent" v-bind:class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
+        <div :class="{'matchTitle': match.matchPercent}">
+          <p v-if="match.matchPercent" class="matchPercent" :class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
           <h2>{{match.name}}</h2>
         </div>
         <div class="clearFix"></div>
@@ -65,7 +73,7 @@
         <router-link :to="'/space/' + match.email">
           <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
         </router-link>
-        <div v-if="match.matchPercent !== 100">
+        <div v-if="!searchingByName && match.matchPercent !== 100">
           <div v-if="searchCriteria.capacity !== 0 && parseInt(searchCriteria.capacity) > parseInt(match.capacity)" class="missingCapacity">
             <ul>
               <li class="missingCapacity"><strong>Capacity NOT a match:</strong> has a capacity of {{match.capacity}}</li>
@@ -76,13 +84,13 @@
           </div>
           <div v-if="match.missThemes.length" class="missingThemes">
             <p><strong>Missing Themes</strong></p>
-            <ul v-bind:class="{ 'missingItems': match.missThemes.length > 5 }">
+            <ul :class="{ 'missingItems': match.missThemes.length > 5 }">
               <li v-for="theme in match.missThemes" :key="theme">{{theme}}</li>
             </ul>
           </div>
           <div v-if="match.missAttributes.length" class="missingAttributes">
             <p><strong>Missing attributes</strong></p>
-            <ul v-bind:class="{ 'missingItems': match.missAttributes.length > 5 }">
+            <ul :class="{ 'missingItems': match.missAttributes.length > 5 }">
               <li v-for="attribute in match.missAttributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>
@@ -123,6 +131,7 @@ export default {
       }
       return this.matches
     },
+    // filter out rooms that are labeled as busy
     available () {
       return this.matches.filter(function (el) {
         return !el.busy
@@ -157,7 +166,10 @@ export default {
       startDate: new Date(), // default to today
       startTime: new Date(''), // empty date object
       endTime: new Date(''),
-      timeOmitted: false
+      timeOmitted: false,
+      showFullSearch: true,
+      name: '', // name used for search by name
+      searchingByName: false
     }
   },
   mounted () {
@@ -268,7 +280,45 @@ export default {
       n = n + ''
       return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
     },
-    search () {
+    /**
+    * Search by space name only
+    */
+    searchByName () {
+      this.searchingByName = true
+      this.searchCompleted = false
+      this.timeOmitted = true
+
+      //  Edit distance signifies fuzziness. (If you're not sure what 'edit distance' means, look it up on the internet).
+      //  While "magical", edit distance should be used with care.
+      //  When user's search term consists of two or less letters
+      //  then the edit distance of two will match any record in the dataset.
+      //  Empirically, a "good" practice is to use edit distance of two for search terms of length
+      //  five or more. It is also "reasonable" to use edit distance of one for search terms
+      //  of length three or four. Edit distance should be 0 for search terms of length two or less.
+      var editDistance = 0
+      if (this.name.length >= 5) {
+        editDistance = 2
+      } else if (this.name.length >= 3) {
+        editDistance = 1
+      }
+
+      var search = {
+        'query': {
+          'simple_query_string': {
+            'fields': ['space.name'],
+            //  ~N after a word signifies edit distance (fuzziness)
+            //  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
+            'query': this.name + '~' + editDistance
+          }
+        }
+      }
+      this.runSearch(search)
+    },
+    /**
+    * Run a full search
+    */
+    fullSearch () {
+      this.searchingByName = false
       this.searchCompleted = false
       this.timeOmitted = isNaN(this.startTime.getTime()) || isNaN(this.endTime.getTime())
       if (!this.timeOmitted) {
@@ -343,6 +393,12 @@ export default {
       this.searchCriteria.startTime = this.startTime
       this.searchCriteria.endTime = this.endTime
 
+      this.runSearch(search)
+    },
+    /**
+    * Run the search query
+    */
+    runSearch (search) {
       var jsonStr = JSON.stringify(search)
       var searchSize = '20'
       var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
@@ -359,7 +415,7 @@ export default {
         if (emails.length > 0) {
           // if no time was provided, process the results without an availableList
           if (this.timeOmitted) {
-            this.process(searchResults, false, false)
+            this.process(searchResults, false)
             return
           }
           let availabilityData = {
@@ -392,63 +448,76 @@ export default {
         alert('Search failed.')
       })
     },
+    /**
+    * Process the search results and push results to this.matches
+    */
     process (searchResults, availableList) {
       for (var n = 0; n < searchResults.length; n++) {
         var spaceId = searchResults[n]._id
         var entry = searchResults[n]._source.space
 
-        // find matches
-        var numMatches = 0
-        if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
-          numMatches = 1
-        }
-        var searchThemes = this.searchCriteria.themes
-        var missingThemes = []
-        if (searchThemes !== null && searchThemes !== undefined) {
-          for (var i = 0; i < searchThemes.length; i++) {
-            if (entry.themes.includes(searchThemes[i])) {
-              numMatches++
-            } else {
-              missingThemes.push(searchThemes[i])
+        if (!this.searchingByName) {
+          // find matches
+          var numMatches = 0
+          if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
+            numMatches = 1
+          }
+          var searchThemes = this.searchCriteria.themes
+          var missingThemes = []
+          if (searchThemes !== null && searchThemes !== undefined) {
+            for (var i = 0; i < searchThemes.length; i++) {
+              if (entry.themes.includes(searchThemes[i])) {
+                numMatches++
+              } else {
+                missingThemes.push(searchThemes[i])
+              }
             }
           }
-        }
 
-        var searchAttributes = this.searchCriteria.attributes
-        var missingAttributes = []
-        if (searchAttributes !== null && searchAttributes !== undefined) {
-          for (var j = 0; j < searchAttributes.length; j++) {
-            if (entry.attributes.includes(searchAttributes[j])) {
-              numMatches++
-            } else {
-              missingAttributes.push(searchAttributes[j])
+          var searchAttributes = this.searchCriteria.attributes
+          var missingAttributes = []
+          if (searchAttributes !== null && searchAttributes !== undefined) {
+            for (var j = 0; j < searchAttributes.length; j++) {
+              if (entry.attributes.includes(searchAttributes[j])) {
+                numMatches++
+              } else {
+                missingAttributes.push(searchAttributes[j])
+              }
             }
           }
-        }
-        if (!this.resultsLength === 'long' && (missingThemes.length >= 2 || missingAttributes.length >= 2)) {
-          this.resultsLength = 'medium'
-          if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
-            this.resultsLength = 'long'
+          if (!this.resultsLength === 'long' && (missingThemes.length >= 2 || missingAttributes.length >= 2)) {
+            this.resultsLength = 'medium'
+            if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
+              this.resultsLength = 'long'
+            }
           }
+          // if there is no availableList, default to not busy
+          let isBusy = availableList ? !availableList.includes(spaceId) : false
+          console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
+          this.matches.push({
+            name: entry.name,
+            description: entry.description,
+            image: entry.image,
+            theme: entry.themes,
+            attributes: entry.attributes,
+            email: spaceId,
+            busy: isBusy,
+            capacity: entry.capacity,
+            missThemes: missingThemes,
+            missAttributes: missingAttributes,
+            //  Match percent: Make sure that match percent is never greater than 100%.
+            //  This could happen when no criteria are selected and therefore numCriteria is zero.
+            matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
+          })
+        } else {
+          // if this was a search by name, only this information is needed
+          this.matches.push({
+            name: entry.name,
+            description: entry.description,
+            image: entry.image,
+            email: spaceId
+          })
         }
-        // if there is no availableList, default to not busy
-        let isBusy = availableList ? !availableList.includes(spaceId) : false
-        console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
-        this.matches.push({
-          name: entry.name,
-          description: entry.description,
-          image: entry.image,
-          theme: entry.themes,
-          attributes: entry.attributes,
-          email: spaceId,
-          busy: isBusy,
-          capacity: entry.capacity,
-          missThemes: missingThemes,
-          missAttributes: missingAttributes,
-          //  Match percent: Make sure that match percent is never greater than 100%.
-          //  This could happen when no criteria are selected and therefore numCriteria is zero.
-          matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
-        })
       }
       this.finishedSearch()
     },
@@ -468,12 +537,22 @@ export default {
         document.getElementById('submitButton').scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth'})
       })
     },
-    changeUserFilterKey (data) {
+    /**
+    * Switch filter key between 'all' and 'available'
+    */
+    changeUserFilterKey () {
       if (this.userFilterKey === 'all') {
         this.userFilterKey = 'available'
       } else {
         this.userFilterKey = 'all'
       }
+    },
+    /**
+    * Hide any previous search results and switch search type
+    */
+    changeSearchType () {
+      this.searchCompleted = false
+      this.showFullSearch = !this.showFullSearch
     }
   }
 }

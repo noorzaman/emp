@@ -26,11 +26,6 @@ const router = new Router({
       component: BrowseTheme
     },
     {
-      path: '/browsename/:name',
-      name: 'BrowseName',
-      component: BrowseName
-    },
-    {
       path: '/add-space',
       name: 'AddSpace',
       component: AddSpace
