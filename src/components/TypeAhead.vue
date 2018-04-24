@@ -118,7 +118,7 @@ export default {
         }
       }
       let jsonData = JSON.stringify(data)
-      var searchUrl = this.$searchUrl + '/_search'
+      var searchUrl  = this.$commonTagsUrl + '/_search'
       this.$http.post(searchUrl, jsonData, {
         headers: this.$defaultHeaders
       }).then(result => {
