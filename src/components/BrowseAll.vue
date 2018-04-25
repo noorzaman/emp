@@ -36,15 +36,15 @@ export default {
     return {
       themes: [
         {image: 'casual', caption: 'Casual'},
-        {image: 'celebratory', caption: 'Celebratory'},
         {image: 'cozy', caption: 'Cozy'},
         {image: 'fancy', caption: 'Fancy'},
         {image: 'fun', caption: 'Fun'},
+        {image: 'grand', caption: 'Grand'},
+        {image: 'modern', caption: 'Modern'},
         {image: 'professional', caption: 'Professional'},
         {image: 'quiet', caption: 'Quiet'},
-        {image: 'studious', caption: 'Studious'},
-        {image: 'zen', caption: 'Zen'},
-        {image: 'quiet', caption: 'Quiet'},
+        {image: 'rustic', caption: 'Rustic'},
+        {image: 'social', caption: 'Social'},
         {image: 'studious', caption: 'Studious'},
         {image: 'zen', caption: 'Zen'}
       ],
