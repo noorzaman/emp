@@ -485,6 +485,19 @@ ul {
 .footerSpace {
     height: 110px;
 }
+.btn-light{color:#212529;background-color:#e8e9ea;border-color:#e8e9ea}
+.btn-light:hover{color:#212529;background-color:#d2d6da;border-color:#d2d6da}
+.btn-light.focus,.btn-light:focus{box-shadow:0 0 0 .2rem rgba(248,249,250,.5)}
+.btn-light.disabled,.btn-light:disabled{color:#212529;background-color:#f8f9fa;border-color:#f8f9fa}
+.btn-light:not(:disabled):not(.disabled).active,.btn-light:not(:disabled):not(.disabled):active,.show>.btn-light.dropdown-toggle{color:#212529;background-color:#dae0e5;border-color:#d3d9df}
+.btn-light:not(:disabled):not(.disabled).active:focus,.btn-light:not(:disabled):not(.disabled):active:focus,.show>.btn-light.dropdown-toggle:focus{box-shadow:0 0 0 .2rem rgba(248,249,250,.5)}
+.btn-dark{color:#fff;background-color:#343a40;border-color:#343a40}
+.btn-dark:hover{color:#fff;background-color:#23272b;border-color:#1d2124}
+.btn-dark:not(:hover){color:#fff}
+.btn-dark.focus,.btn-dark:focus{box-shadow:0 0 0 .2rem rgba(52,58,64,.5)}
+.btn-dark.disabled,.btn-dark:disabled{color:#fff;background-color:#343a40;border-color:#343a40}
+.btn-dark:not(:disabled):not(.disabled).active,.btn-dark:not(:disabled):not(.disabled):active,.show>.btn-dark.dropdown-toggle{color:#fff;background-color:#1d2124;border-color:#171a1d}
+.btn-dark:not(:disabled):not(.disabled).active:focus,.btn-dark:not(:disabled):not(.disabled):active:focus,.show>.btn-dark.dropdown-toggle:focus{box-shadow:0 0 0 .2rem rgba(52,58,64,.5)}
 
 @media only screen and (max-width: 1300px) {
     body {
@@ -522,15 +535,15 @@ ul {
     body {
         /*background-color: green;*/
     }
-    
+
     .searchLocation {
         height: 32em;
     }
-    
+
     .searchLocationMedMissing {
         height: 34em;
     }
-    
+
     .searchLocationManyMissing {
         height: 40em;
     }
@@ -548,7 +561,7 @@ ul {
     .bookedImg, .searchImg {
         height: 200px;
     }
-    
+
     .footer .item {
         width: 24%;
     }
@@ -558,15 +571,15 @@ ul {
     body {
         /*background-color: purple;*/
     }
-    
+
     .searchLocation {
         height: 31em;
     }
-    
+
     .searchLocationMedMissing {
         height: 36em;
     }
-    
+
     .searchLocationManyMissing {
         height: 38em;
     }
@@ -589,15 +602,15 @@ ul {
     body {
         /*background-color: pink;*/
     }
-    
+
     .searchLocation {
         height: 31em;
     }
-    
+
     .searchLocationMedMissing {
         height: 36em;
     }
-    
+
     .searchLocationManyMissing {
         height: 39em;
     }
@@ -618,7 +631,7 @@ ul {
     body {
         /*background-color: pink;*/
     }
-    
+
     .searchLocationManyMissing {
         height: 35em;
     }
@@ -651,7 +664,7 @@ ul {
     body {
         /*background-color: red;*/
     }
-    
+
     .searchLocationMedMissing {
         height: 32em;
     }
@@ -682,26 +695,26 @@ ul {
     body {
         /*background-color: lightgreen;*/
     }
-    
+
     .browseThemes {
         width: 33%;
         float: left;
     }
-    
+
     .browseThemes img {
         margin-left: 20%;
         margin-right: 20%;
         width: 60%;
     }
-    
+
     .searchLocationMedMissing {
         height: auto;
     }
-    
+
     .searchLocationManyMissing {
         height: auto;
     }
-    
+
     .searchLocation {
         height: auto;
     }
@@ -715,7 +728,7 @@ ul {
     body {
         /*background-color: lightblue;*/
     }
-    
+
     .browseThemes {
         margin-bottom: 2em;
     }
@@ -743,7 +756,7 @@ ul {
     body {
         /*background-color: red;*/
     }
-    
+
     .browseThemes img {
         margin-left: 15%;
         margin-right: 15%;
@@ -763,7 +776,7 @@ ul {
     .browseAllTitle h1 {
         font-size: 1.5em;
     }
-    
+
     .footerSpace {
         height: 80px;
     }
@@ -782,7 +795,7 @@ ul {
     body {
         /*background-color: lightblue;*/
     }
-    
+
     .browseThemes {
         margin-bottom: 1em;
     }
@@ -930,12 +943,12 @@ ul {
 @media only screen and (max-width: 320px) {
     body {
         /*background-color: purple;*/
-    }  
-    
+    }
+
     .editBtn {
-        margin-left: 0.7em;    
-    }  
-    
+        margin-left: 0.7em;
+    }
+
     .searchBtns .btn {
         font-size: 0.9em;
     }

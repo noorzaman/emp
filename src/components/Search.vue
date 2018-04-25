@@ -1,10 +1,8 @@
 <template>
   <div class="search">
-    <h1>Meeting Space Criteria</h1>
-    <p>Leave a criteria blank to indicate no preference.</p>
-    <div class="form-group">
-      <!-- This toggle button doesn't look very good. I typed in random numbers for the colors, so this should be changed -->
-      <toggle-button @change="changeSearchType" :value="false" :width=150 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Quick Search by Name', unchecked: 'Full Search'}"/>
+    <div class="form-group"><br>
+      <button style="width:180px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
+      <button style="width:180px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Quick Search By Name</button>
     </div>
     <div v-if="!showFullSearch" class="search-wrapper">
       <label>Space Name</label><br>
@@ -12,6 +10,10 @@
       <button id="submitButton" class="btn btn-primary submitButton" @click="searchByName">Search Spaces</button>
     </div>
     <div v-else>
+      <div>
+        <h1>Meeting Space Criteria</h1>
+        <p>Leave a criteria blank to indicate no preference.</p>
+      </div>
       <div class="leftSearch">
         <div class="form-group">
           <label>Capacity</label>
@@ -60,8 +62,7 @@
       <h2 v-if="availableOnlyFilter.length === 1">Search Results: 1 space found</h2>
       <h2 v-else>Search Results: {{availableOnlyFilter.length}} spaces found</h2>
       <div class="form-group">
-        <!-- This toggle button doesn't look very good. I typed in random numbers for the colors, so this should be changed -->
-        <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#472932', unchecked: '#749163'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
+        <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#000', unchecked: '#444'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
       </div>
       <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': resultsLength == 'long' }, { 'searchLocationMedMissing': resultsLength == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div :class="{'matchTitle': match.matchPercent}">
@@ -539,11 +540,18 @@ export default {
       }
     },
     /**
-    * Hide any previous search results and switch search type
+    * Hide any previous search results and switch search type to full search
     */
-    changeSearchType () {
+    changeSearchToFull () {
       this.searchCompleted = false
-      this.showFullSearch = !this.showFullSearch
+      this.showFullSearch = true
+    },
+    /**
+    * Hide any previous search results and switch search type to search by name
+    */
+    changeSearchToByName () {
+      this.searchCompleted = false
+      this.showFullSearch = false
     }
   }
 }
