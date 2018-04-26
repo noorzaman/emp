@@ -30,7 +30,7 @@ Vue.prototype.$googleCalendarUrl = process.env.GOOGLE_CALENDAR_ADDR + '/'
 
 Vue.prototype.$defaultHeaders = {'Content-Type': 'application/json;charset=UTF-8'}
 Vue.prototype.$emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-Vue.prototype.$possibleThemes = ['casual', 'celebratory', 'cozy', 'fancy', 'fun', 'lively', 'modern', 'professional', 'quiet', 'rustic', 'studious', 'zen']
+Vue.prototype.$possibleThemes = ['casual', 'cozy', 'fancy', 'fun', 'grand', 'modern', 'professional', 'quiet', 'rustic', 'social', 'studious', 'zen']
 
 var store = {
   state: {
