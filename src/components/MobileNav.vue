@@ -1,20 +1,40 @@
 <template>
     <div class="footer">
         <router-link to="/" class="item" v-bind:class="{ 'mobileNavActive': pageLocation === 'browse' }">
-          <img src="/static/images/browse.png" alt="Browse">
+          <div v-if="pageLocation === 'browse'">
+            <img src="/static/images/home-selected.png" alt="Browse">
+          </div>
+          <div v-else>
+            <img src="/static/images/home.png" alt="Browse">
+          </div>
           <p>Browse</p>
         </router-link>
         <router-link to="/search-spaces" class="item" id="searchNavLink" v-bind:class="{ 'mobileNavActive': pageLocation === 'search' }">
-          <img src="/static/images/search.png" alt="Search">
+          <div v-if="pageLocation === 'search'">
+            <img src="/static/images/search-selected.png" alt="Search">
+          </div>
+          <div v-else>
+            <img src="/static/images/search.png" alt="Search">
+          </div>
           <p>Search</p>
         </router-link>
         <router-link to="/booked-spaces" class="item" v-bind:class="{ 'mobileNavActive': pageLocation === 'booked' }">
-          <img src="/static/images/booked.png" alt="Booked Spaces">
-          <p>Booked Spaces</p>
+          <div v-if="pageLocation === 'booked'">
+            <img src="/static/images/booked-selected.png" alt="Booked Spaces">
+          </div>
+          <div v-else>
+            <img src="/static/images/booked.png" alt="Booked Spaces">
+          </div>
+          <p>Booked</p>
         </router-link>
         <router-link to="/add-space" class="item" v-bind:class="{ 'mobileNavActive': pageLocation === 'addspace' }">
-          <img src="/static/images/new.png" alt="Add Space">
-          <p>Add Space</p>
+          <div v-if="pageLocation === 'addspace'">
+            <img src="/static/images/add-selected.png" alt="Add Space">
+          </div>
+          <div v-else>
+            <img src="/static/images/add.png" alt="Add Space">
+          </div>
+          <p>Add</p>
         </router-link>
     </div>
 </template>

@@ -22,7 +22,7 @@
           </ul>
         </div>
         <div class="searchBtns">
-          <router-link :to="'/space/' + space.email" class="btn btn-primary">Space Details</router-link>
+          <router-link :to="'/space/' + space.email" class="btn btn-primary">Details</router-link>
           <router-link :to="'/schedule-space/' + space.email + '/' + space.name" class="btn btn-primary btnMargin">Book</router-link>
           <router-link :to="'/edit-space/' + space.email" class="btn btn-primary btnMargin">Edit</router-link>
         </div>

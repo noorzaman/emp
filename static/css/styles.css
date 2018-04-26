@@ -1,3 +1,48 @@
+/* General Styles */
+a {
+   outline: 0;
+}
+
+p, li, button, input, label {
+    font-family: 'Assistant', sans-serif;
+}
+
+/* Meet Anywhere */
+.empheading {
+	margin-top: 10px;
+	font-family: 'Anton', sans-serif;
+	color: #333;
+	font-size: 2em;
+	letter-spacing: 0.1rem;
+}
+
+/* The right space for any situation */
+.empsubheading {
+	margin-top: -15px;
+	color: #333;
+	font-family: 'Abel', sans-serif;
+	font-size: 1.1em;
+}
+
+/* room headings in search */
+h2 {
+    color: #333;
+	font-size: 2em;
+	font-family: 'Abel', sans-serif;
+}
+
+
+/* Page subheadings such as Add Room  */
+h1 {
+	color: #333;
+	font-size: 2.5em;
+	font-family: 'Abel', sans-serif;
+	margin-top: 0.2em;
+	margin-left: 0px;
+	padding-left: 0px;
+	
+}
+
 /* Navigation/Header Styles */
 
  .space {
@@ -6,6 +51,7 @@
 
 .logo {
     float: left;
+    margin-right: 1em;
 }
 
 .navbar-header {
@@ -16,13 +62,18 @@
 
 .navbar-default {
     background-color: white;
-    border-bottom-width: 1px;
+    border-bottom-width: 0px;
 }
 
-.navbar-nav > li > a {
-    padding-top: 32px;
+.navbar-default .navbar-nav > li > a {
+    padding-top: 28px;
     padding-bottom: 15px;
     text-transform: uppercase;
+    color: white;
+    background-color: transparent;
+    font-family: 'Abel', sans-serif;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
 .navbar-header h2 {
@@ -34,17 +85,42 @@
 
 .container {
     width: 100%;
+    background-color: #f68d4f;
+    border-bottom: 2px solid #404a56;
 }
 
 .navbar-default .navbar-nav > li > .desktopNavActive {
-    color: #f68e4f;
+    color: #333;
 }
 
 /* Mobile Header Styles */
 
-.mobile-header {
-    margin-left: 2em;
-    margin-bottom: 3.5em;
+.mobile-header-full {
+    background-color: #f68d4f;
+    padding-top: 10px;
+    border-bottom: 2px solid #404a56;
+}
+
+.mobile-header-full h3 {
+    margin-top: 0px;
+}
+
+.mobile-header .logo {
+    margin-right: 0px;
+}
+
+.empheading-mobile {
+	font-family: 'Anton', sans-serif;
+	color: #333;
+	font-size: 2em;
+	letter-spacing: 0.1rem;
+}
+
+.empsubheading-mobile {
+	margin-top: -15px;
+	color: #333;
+	font-family: 'Abel', sans-serif;
+	font-size: 1.1em;
 }
 
 .browseAllTitle h1 {
@@ -60,12 +136,6 @@
 
 .intro {
     margin-top: 0em;
-}
-
-h1 {
-    font-weight: bold;
-    margin-top: 0.5em;
-    font-size: 20px;
 }
 
 hr {
@@ -87,7 +157,10 @@ hr {
 }
 
 .browseThemes p {
+    font-weight: bold;
+    color: #333;
     text-align: center;
+    font-family: 'Abel', sans-serif;
 }
 
 .browseThemes a {
@@ -95,9 +168,9 @@ hr {
     color: black;
 }
 
-.browseThemes a:hover {
+.browseThemes p:hover {
     text-decoration: none;
-    color: #777;
+    color: #f68e4f;
 }
 
 .clearFix {
@@ -354,6 +427,7 @@ ul {
     padding: 15px;
     color: white;
     font-weight: bold;
+    margin-right: 1em;
 }
 
 .highMatch {
@@ -370,6 +444,25 @@ ul {
 
 .btnMargin {
     margin-left: 0.5em;
+}
+
+.btn-dark.focus, .btn-dark:focus {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.col-lg-4, .col-md-4, .col-sm-6, .col-xs-12 {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+/* room headings in search */
+.matchTitle h2 {
+    padding-top: 0.3em;
+}
+
+.matchTitle p {
+    font-size: 1.2em;
 }
 
 /* Booked Spaces Styles */
@@ -431,12 +524,10 @@ ul {
 /* Footer Styles */
 
 .footer {
-    border-top-width: 1px;
-    border-top-style: solid;
-    border-top-color: #e5dddd;
+    border-top: 2px solid #424c58;
     padding-top: 8px;
     padding-bottom: 16px;
-    background: white;
+    background-color: #f68d4f;
     position: fixed;
     left: 0;
     right: 0;
@@ -464,14 +555,17 @@ ul {
 
 .footer a p {
     color: #333;
+    font-weight: bold;
+    font-family: 'Abel', sans-serif;
+    text-transform: uppercase;
 }
 
 .footer a p:hover {
-    color: #777;
+    color: white;
 }
 
 .footer .mobileNavActive p {
-    color: #f68e4f;
+    color: white;
 }
 
 .footer a:hover {
@@ -564,12 +658,19 @@ ul {
 
     .footer .item {
         width: 24%;
+        height: 60px;
     }
 }
 
 @media only screen and (max-width: 1000px) {
     body {
         /*background-color: purple;*/
+    }
+    
+    h1 {
+        font-size: 1.7em;
+        margin-top: 10px;
+        margin-bottom: 0;
     }
 
     .searchLocation {
@@ -795,6 +896,10 @@ ul {
     body {
         /*background-color: lightblue;*/
     }
+    
+    .empheading-mobile {
+        font-size: 1.5em;
+    }
 
     .browseThemes {
         margin-bottom: 1em;
@@ -846,10 +951,6 @@ ul {
         font-size: 2em;
     }
 
-    .mobile-header p {
-        font-size: 0.9em;
-    }
-
     .footer img {
         height: 33px;
     }
@@ -894,7 +995,7 @@ ul {
     }
 
     .mobile-header p {
-        font-size: 0.8em;
+        font-size: 0.9em;
     }
 
     .browseAllTitle h1 {
@@ -919,16 +1020,12 @@ ul {
         font-size: 1.5em;
     }
 
-    .mobile-header {
-        margin-bottom: 2em;
-    }
-
     .logo {
         width: 50px;
     }
 
     .footer .item {
-        width: 22%;
+        width: 23.5%;
     }
 
     .footer img {

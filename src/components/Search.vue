@@ -98,7 +98,7 @@
         </div>
         <div class="clearFix"></div>
         <div class="searchBtns">
-          <router-link :to="'/space/' + match.email" class="btn btn-primary btnMargin">Space Details</router-link>
+          <router-link :to="'/space/' + match.email" class="btn btn-primary btnMargin">Details</router-link>
           <router-link :to="'/schedule-space/' + match.email + '/' + match.name" class="btn btn-primary btnMargin">Book</router-link>
           <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
         </div>

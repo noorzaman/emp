@@ -1,15 +1,16 @@
 <template>
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
-    <h1>{{pageTitle}}</h1>
     <div v-if="!this.searchFinished">
       <p>Searching...</p>
     </div>
     <div v-else>
       <div v-if="!matches.length">
+        <h1>{{pageTitle}}</h1>
         <p>No matches were found for this theme.</p>
       </div>
       <div v-else class="row">
+        <h1>{{pageTitle}}</h1>
         <div v-for="match in matches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
           <p class="block-with-text">{{match.description}}</p>
@@ -27,7 +28,7 @@
             </ul>
           </div>
           <div class="searchBtns">
-            <router-link :to="'/space/' + match.email" class="btn btn-primary">Space Details</router-link>
+            <router-link :to="'/space/' + match.email" class="btn btn-primary">Details</router-link>
             <router-link :to="'/schedule-space/' + match.email + '/' + match.name" class="btn btn-primary btnMargin">Book</router-link>
             <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
           </div>
