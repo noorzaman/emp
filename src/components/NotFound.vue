@@ -20,7 +20,7 @@ export default {
   mounted () {
     document.title = '404 Not Found'
     // remove search criteria storage
-    this.$store.resetDates()
+    this.$store.clearDates()
     this.$store.removeSearchCriteria()
   }
 }

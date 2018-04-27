@@ -1,3 +1,5 @@
+<!-- https://www.npmjs.com/package/vue2-datepicker -->
+
 <template>
   <date-picker v-model="date" lang="en" :not-before="new Date()"></date-picker>
 </template>
@@ -11,14 +13,6 @@ export default {
   data () {
     return {
       date: new Date()
-      // shortcuts: [
-      //   {
-      //     text: 'Today',
-      //     start: new Date(),
-      //     end: new Date(),
-      //     lang: 'en'
-      //   }
-      // ]
     }
   },
   watch: {
@@ -39,3 +33,6 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+</style>

@@ -1,12 +1,15 @@
+<!-- https://uiv.wxsm.space/time-picker/#example -->
+
 <template>
   <time-picker v-model="time"/>
 </template>
+
 <script>
 export default {
   props: ['time_prop'],
   data () {
     return {
-      time: new Date('')
+      time: new Date('') // empty fields
     }
   },
   watch: {
@@ -23,4 +26,6 @@ export default {
   }
 }
 </script>
-<!-- time-picker-example.vue -->
+
+<style scoped>
+</style>

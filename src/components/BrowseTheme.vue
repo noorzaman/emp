@@ -1,4 +1,4 @@
-<template>
+ <template>
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
     <div v-if="!this.searchFinished">
@@ -11,7 +11,7 @@
       </div>
       <div v-else class="row">
         <h1>{{pageTitle}}</h1>
-        <div v-for="match in matches" :key="match.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div v-for="match in matches" :key="match.email" :class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
           <p class="block-with-text">{{match.description}}</p>
           <router-link :to="'/space/' + match.email">
@@ -23,7 +23,7 @@
             <p>No attributes have been added for this space yet.</p>
           </div>
           <div v-else>
-            <ul v-bind:class="{ 'browseAttributesList' : match.spaceLongAttrList }" class="attrList">
+            <ul :class="{ 'browseAttributesList' : match.spaceLongAttrList }" class="attrList">
               <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>
@@ -60,7 +60,7 @@ export default {
   mounted () {
     document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
     // remove search criteria storage
-    this.$store.resetDates()
+    this.$store.clearDates()
     this.$store.removeSearchCriteria()
     this.searchByTheme(this.$route.params.theme)
   },
@@ -100,8 +100,8 @@ export default {
             name: entry.name,
             description: entry.description,
             image: entry.image,
-            capacity: entry.capacity ? entry.capacity : 0,
-            attributes: entry.attributes,
+            capacity: entry.capacity,
+            attributes: entry.attributes ? entry.attributes : [],
             spaceLongAttrList: entry.attributes.length >= 5
           })
         }

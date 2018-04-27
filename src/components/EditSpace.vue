@@ -18,7 +18,7 @@
         </div>
         <div class="row">
           <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">
-            <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
+            <img :src="image" :alt="name + ' image'" class="img-fluid img-thumbnail">
           </div>
         </div>
         <br>
@@ -31,7 +31,7 @@
       <div class="rightSearch">
         <div class="form-group">
           <Label>Capacity</label>
-          <NumberSlider v-bind:capacity="capacity"></NumberSlider>
+          <NumberSlider v-on:change="capacityChanged" :allowAny="false" :capacity_prop="capacity"></NumberSlider>
         </div>
         <div class="form-group themes">
           <label>Themes</label><br>
@@ -43,7 +43,7 @@
           </ul>
         </div>
         <div class="form-group typeAhead">
-          <TypeAhead v-bind:selectedAttributes="tags" v-bind:allowCustom="true"></TypeAhead>
+          <TypeAhead :selectedAttributes="attributes" :allowCustom="true"></TypeAhead>
         </div>
       </div>
       <button class="btn btn-primary submitButton" v-on:click="editSpace">Save</button>
@@ -68,13 +68,12 @@ export default {
       notFound: false,
       pageTitle: 'Edit Space',
       email: this.$route.params.spaceId,
-      calendarId: '',
-      imageData: '',
+      image: '',
       name: '',
       description: '',
-      tags: [],
+      capacity: 1,
       themes: [],
-      capacity: 0,
+      attributes: [],
       uploading: false
     }
   },
@@ -85,18 +84,23 @@ export default {
     this.searchByEmail()
   },
   methods: {
+    /** Is called when capacity slider changes
+    */
+    capacityChanged (capacity) {
+      this.capacity = capacity
+    },
     searchByEmail () {
       var searchUrl = this.$searchUrl + '/' + this.email
       this.$http.get(searchUrl, {
         headers: this.$defaultHeaders
       }).then(result => {
         var space = result.body._source.space
-        this.imageData = space.image
+        this.image = space.image
         this.name = space.name
         this.description = space.description
-        this.tags = space.attributes
-        this.themes = space.themes ? space.themes : []
         this.capacity = space.capacity
+        this.attributes = space.attributes ? space.attributes : []
+        this.themes = space.themes ? space.themes : []
       }, error => {
         console.error(error)
         this.notFound = true
@@ -104,25 +108,15 @@ export default {
     },
     editSpace () {
       this.uploading = true
-      var attributes = []
-      var options = document.getElementsByClassName('attr')
-      for (var i = 0; i < options.length; i++) {
-        attributes.push(options[i].innerText)
-      }
-
-      var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
-      if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
-        desiredCapacity = 0
-      }
 
       var data = {
         'spaceId': this.email,
         'space': {
           'name': this.name,
           'description': this.description,
-          'capacity': parseInt(desiredCapacity),
+          'capacity': this.capacity,
           'themes': this.themes,
-          'attributes': attributes
+          'attributes': this.attributes
         }
       }
       var jsonData = JSON.stringify(data)

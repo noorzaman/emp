@@ -4,12 +4,12 @@
       <button style="width:180px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
       <button style="width:180px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Quick Search By Name</button>
     </div>
-    <div v-if="!showFullSearch" class="search-wrapper">
+    <div v-show="!showFullSearch">
       <label>Space Name</label><br>
       <input size="22" type="text" v-model="name" placeholder="Enter name..." @keyup.enter="searchByName"/><br><br>
-      <button id="submitButton" class="btn btn-primary submitButton" @click="searchByName">Search Spaces</button>
+      <button :id="[showFullSearch ? '' : 'submitButton']" class="btn btn-primary submitButton" @click="searchByName">Search Spaces</button>
     </div>
-    <div v-else>
+    <div v-show="showFullSearch">
       <div>
         <h1>Meeting Space Criteria</h1>
         <p>Leave a criteria blank to indicate no preference.</p>
@@ -17,25 +17,26 @@
       <div class="leftSearch">
         <div class="form-group">
           <label>Capacity</label>
-          <NumberSlider :allowAny="true" :capacity="searchCriteria.capacity"></NumberSlider>
+          <NumberSlider v-on:change="capacityChanged" :allowAny="true" :capacity_prop="capacity"></NumberSlider>
         </div>
         <div class="form-group">
           <label>Meeting Day</label>
-          <DatePicker v-on:change="startDateChanged" :date_prop="searchCriteria.startDate"></DatePicker>
+          <DatePicker v-on:change="startDateChanged" :date_prop="startDate"></DatePicker>
         </div>
         <div class="form-group">
           <label>Meeting Time</label>
           <br>
           <div class="timePicker">
-            <TimePicker v-on:change="startTimeChanged" :time_prop="searchCriteria.startTime"></TimePicker>
+            <TimePicker v-on:change="startTimeChanged" :time_prop="startTime"></TimePicker>
           </div>
           <div class="to">
             <p>to</p>
           </div>
           <div class="timePicker">
-            <TimePicker v-on:change="endTimeChanged" :time_prop="searchCriteria.endTime"></TimePicker>
+            <TimePicker v-on:change="endTimeChanged" :time_prop="endTime"></TimePicker>
           </div>
           <div class="clearFix"></div>
+          <div class="text-danger">{{timeError}}</div>
         </div>
       </div>
       <div class="rightSearch">
@@ -153,29 +154,38 @@ export default {
       startDate: new Date(), // default to today
       startTime: new Date(''), // empty date object
       endTime: new Date(''),
+      capacity: 0,
       timeOmitted: false,
       showFullSearch: true,
       name: '', // name used for search by name
-      searchingByName: false
+      searchingByName: false,
+      timeError: ''
     }
   },
   mounted () {
     document.title = 'Search Spaces'
-    var searchResults = JSON.parse(localStorage.getItem('searchResults'))
-    var searchCriteria = JSON.parse(localStorage.getItem('searchCriteria'))
 
+    var searchResults = JSON.parse(localStorage.getItem('searchResults'))
     if (searchResults) {
       this.matches = searchResults
       this.resultsLength = JSON.parse(localStorage.getItem('resultsLength'))
       this.searchCompleted = true
     }
+
+    var searchCriteria = JSON.parse(localStorage.getItem('searchCriteria'))
     if (searchCriteria) {
-      searchCriteria.startDate = new Date(searchCriteria.startDate)
-      searchCriteria.startTime = new Date(searchCriteria.startTime)
-      searchCriteria.endTime = new Date(searchCriteria.endTime)
-      this.searchCriteria = searchCriteria
+      if (searchCriteria.startDate) {
+        this.startDate = new Date(searchCriteria.startDate)
+      }
+      if (searchCriteria.startTime) {
+        this.startTime = new Date(searchCriteria.startTime)
+      }
+      if (searchCriteria.endTime) {
+        this.endTime = new Date(searchCriteria.endTime)
+      }
+      this.capacity = searchCriteria.capacity
       this.selectedThemes = searchCriteria.themes ? searchCriteria.themes : []
-      this.selectedAttributes = searchCriteria.attributes
+      this.selectedAttributes = searchCriteria.attributes ? searchCriteria.attributes : []
     }
   },
   methods: {
@@ -188,78 +198,60 @@ export default {
       }
       return 0
     },
-    /** This method is called when user selects/ deselects meeting start date.
+    /** Is called when meeting day changes
     */
-    startDateChanged (newDate) {
-      this.startDate = newDate
+    startDateChanged (date) {
+      this.startDate = date
     },
-    /** This method is called when user selects meeting start time.
+    /** Is called when start time changes
     */
-    startTimeChanged (newTime) {
-      this.startTime = newTime
+    startTimeChanged (time) {
+      this.startTime = time
     },
-    /** This method is called when user selects meeting end time.
+    /** Is called when end time changes
     */
-    endTimeChanged (newTime) {
-      this.endTime = newTime
+    endTimeChanged (time) {
+      this.endTime = time
+    },
+    /** Is called when capacity slider changes
+    */
+    capacityChanged (capacity) {
+      this.capacity = capacity
     },
     /**
-    * This function returns a string of space delimited
-    * themes. It returns empty string when no theme is selected.
+    * Returns a string of space delimited items from the given list of strings.
+    * Returns empty string if list is empty.
     */
-    getSpaceDelimitedThemes () {
-      var spaceDelimitedThemes = ''
-      for (var j = 0; j < this.selectedThemes.length; j++) {
-        spaceDelimitedThemes += this.selectedThemes[j]
-        if (j < this.selectedThemes.length - 1) {
-          spaceDelimitedThemes += ' '
+    getSpaceDelimitedItems (items) {
+      var spaceDelimited = ''
+      for (var j = 0; j < items.length; j++) {
+        spaceDelimited += items[j]
+        if (j < items.length - 1) {
+          spaceDelimited += ' '
         }
       }
-      return spaceDelimitedThemes
+      return spaceDelimited
     },
     /**
-    * This function returns a string of space delimited
-    * attributes. It returns empty string when no attribute is selected.
+    * Returns a string representation of the given date in the form YYYY-MM-DD
     */
-    getSpaceDelimitedAttributes () {
-      var selectedAttributes = document.getElementsByClassName('attr')
-      var spaceDelimitedAttributes = ''
-      for (var k = 0; k < selectedAttributes.length; k++) {
-        spaceDelimitedAttributes += selectedAttributes[k].innerText
-        if (k < selectedAttributes.length - 1) {
-          spaceDelimitedAttributes += ' '
-        }
-      }
-      return spaceDelimitedAttributes
+    getFormattedDate (date) {
+      var month = date.getMonth() + 1
+      return date.getFullYear() + '-' + month + '-' + date.getDate()
     },
-    getFormattedDate () {
-      var month = this.startDate.getMonth() + 1
-      return this.startDate.getFullYear() + '-' + month + '-' + this.startDate.getDate()
-    },
-    getFormattedStartTime () {
-      var timezoneHours = -1 * (this.startTime.getTimezoneOffset() / 60)
+    /**
+    * Returns a specifically formatted string representation of the give time
+    */
+    getFormattedTime (time) {
+      var timezoneHours = -1 * (time.getTimezoneOffset() / 60)
       var timezoneString = '-0'
       if (timezoneHours > 0) {
         timezoneString = '+0'
       }
       timezoneString += Math.abs(timezoneHours)
       timezoneString += ':00'
-      if (this.startTime != null) {
-        return this.pad(this.startTime.getHours(), 2) + ':' + this.pad(this.startTime.getMinutes(), 2) +
-          ':00' + timezoneString
-      }
-    },
-    getFormattedEndTime () {
-      var timezoneHours = -1 * (this.endTime.getTimezoneOffset() / 60)
-      var timezoneString = '-0'
-      if (timezoneHours > 0) {
-        timezoneString = '+0'
-      }
-      timezoneString += Math.abs(timezoneHours)
-      timezoneString += ':00'
-      if (this.endTime != null) {
-        return this.pad(this.endTime.getHours(), 2) + ':' +
-          this.pad(this.endTime.getMinutes(), 2) + ':00' + timezoneString
+      if (time != null) {
+        return this.pad(time.getHours(), 2) + ':' + this.pad(time.getMinutes(), 2) + ':00' + timezoneString
       }
     },
     pad (n, width, z) {
@@ -271,10 +263,11 @@ export default {
     * Search by space name only
     */
     searchByName () {
-      this.searchingByName = true
       this.searchCompleted = false
+      this.timeError = ''
+      this.searchingByName = true
       this.timeOmitted = true
-      this.$store.resetDates()
+      this.$store.clearDates()
       this.$store.removeSearchCriteria()
 
       //  Edit distance signifies fuzziness. (If you're not sure what 'edit distance' means, look it up on the internet).
@@ -307,37 +300,36 @@ export default {
     * Run a full search
     */
     fullSearch () {
-      this.searchingByName = false
-      this.searchCompleted = false
-      this.userFilterKey = 'available'
       this.timeOmitted = isNaN(this.startTime.getTime()) || isNaN(this.endTime.getTime())
       if (!this.timeOmitted) {
-        this.$store.setDate(this.startDate)
-        this.$store.setStartTime(this.startTime)
-        this.$store.setEndTime(this.endTime)
+        if (this.startTime >= this.endTime) {
+          this.searchCompleted = false
+          this.timeError = 'The start time must come before the end time'
+          return
+        } else {
+          this.$store.setDates(this.startDate, this.startTime, this.endTime)
+        }
       } else {
-        this.$store.resetDates()
+        this.startTime = new Date('')
+        this.endTime = new Date('')
+        this.$store.clearDates()
       }
 
+      this.searchCompleted = false
+      this.timeError = ''
+      this.searchingByName = false
+      this.userFilterKey = 'available'
       this.numCriteria = 0
-      var spaceDelimitedThemes = this.getSpaceDelimitedThemes()
-      var spaceDelimitedAttributes = this.getSpaceDelimitedAttributes()
-      var desiredCapacity = document.getElementsByClassName('vue-slider-tooltip')[0].innerText
-      if (desiredCapacity === null || desiredCapacity === undefined || desiredCapacity === 'Any') {
-        desiredCapacity = 0
-      } else if (desiredCapacity !== '0') {
-        this.numCriteria = 1
+      if (this.capacity !== 0) {
+        this.numCriteria++
       }
-      // search for half the capacity, but report capacity is not a match if actualCapacity < desiredCapacity
-      var searchCapacity = parseInt(desiredCapacity) / 2
-      var search = ''
-      var themes = []
-      var attributes = []
+      // search for half the capacity, but report capacity is not a match if actual capacity < desired capacity
+      var searchCapacity = this.capacity / 2
+      var searchObject = {}
 
       //  If neither theme nor any attributes is selected, then just search by capacity.
-      if ((spaceDelimitedThemes === null || spaceDelimitedThemes === undefined || spaceDelimitedThemes.trim() === '') &&
-        (spaceDelimitedAttributes === null || spaceDelimitedAttributes === undefined || spaceDelimitedAttributes.trim() === '')) {
-        search = {
+      if (this.selectedThemes.length === 0 && this.selectedAttributes.length === 0) {
+        searchObject = {
           'query': {
             'range': {
               'space.capacity': {
@@ -346,18 +338,10 @@ export default {
             }
           }
         }
-        this.searchCriteria = {capacity: desiredCapacity}
+        this.searchCriteria = {capacity: this.capacity}
       } else {
-        var multisearch = spaceDelimitedThemes + ' ' + spaceDelimitedAttributes
-        themes = spaceDelimitedThemes.split(' ')
-        attributes = spaceDelimitedAttributes.split(' ')
-        if (themes[0] === '') {
-          themes = []
-        }
-        if (attributes[0] === '') {
-          attributes = []
-        }
-        search = {
+        var multisearch = this.getSpaceDelimitedItems(this.selectedThemes) + ' ' + this.getSpaceDelimitedItems(this.selectedAttributes)
+        searchObject = {
           'query': {
             'bool': {
               'must': {
@@ -376,20 +360,23 @@ export default {
             }
           }
         }
-        this.searchCriteria = {capacity: desiredCapacity, themes: themes, attributes: attributes}
-        this.numCriteria += themes.length + attributes.length
+        this.searchCriteria = {capacity: this.capacity, themes: this.selectedThemes, attributes: this.selectedAttributes}
+        this.numCriteria += this.selectedThemes.length + this.selectedAttributes.length
       }
-      this.searchCriteria.startDate = this.startDate
-      this.searchCriteria.startTime = this.startTime
-      this.searchCriteria.endTime = this.endTime
 
-      this.runSearch(search)
+      if (!this.timeOmitted) {
+        this.searchCriteria.startDate = this.startDate
+        this.searchCriteria.startTime = this.startTime
+        this.searchCriteria.endTime = this.endTime
+      }
+
+      this.runSearch(searchObject)
     },
     /**
     * Run the search query
     */
-    runSearch (search) {
-      var jsonStr = JSON.stringify(search)
+    runSearch (searchObject) {
+      var jsonStr = JSON.stringify(searchObject)
       var searchSize = '20'
       var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
 
@@ -410,8 +397,8 @@ export default {
           }
           let availabilityData = {
             'calendars': emails,
-            'start_time': this.getFormattedDate() + 'T' + this.getFormattedStartTime(),
-            'end_time': this.getFormattedDate() + 'T' + this.getFormattedEndTime()
+            'start_time': this.getFormattedDate(this.startDate) + 'T' + this.getFormattedTime(this.startTime),
+            'end_time': this.getFormattedDate(this.startDate) + 'T' + this.getFormattedTime(this.endTime)
           }
 
           axios.put(this.$availabilityUrl, JSON.stringify(availabilityData), {
@@ -483,7 +470,7 @@ export default {
           }
           // if there is no availableList, default to not busy
           let isBusy = availableList ? !availableList.includes(spaceId) : false
-          console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
+          // console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
           this.matches.push({
             name: entry.name,
             description: entry.description,
@@ -523,7 +510,7 @@ export default {
       localStorage.setItem('searchResults', JSON.stringify(this.matches))
       // scroll to search results
       this.$nextTick(function () {
-        // new elements finished rendering to the DOM
+        // scroll down to the results
         document.getElementById('submitButton').scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth'})
       })
     },
@@ -532,10 +519,8 @@ export default {
     */
     changeUserFilterKey (sliderState) {
       if (sliderState.value) {
-        console.log('showing all')
         this.userFilterKey = 'all'
       } else {
-        console.log('showing available')
         this.userFilterKey = 'available'
       }
     },

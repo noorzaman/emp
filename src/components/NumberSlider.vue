@@ -1,6 +1,8 @@
+<!-- https://www.npmjs.com/package/vue-slider-component -->
+
 <template>
   <div class="numberSlider">
-    <vue-slider ref="slider" v-model="value" id="capacity-slider" :min="minValue" :max="maxValue"
+    <vue-slider ref="slider" v-model="capacity" id="capacity-slider" :min="minValue" :max="maxValue"
     :formatter=getSliderTooltip />
   </div>
 </template>
@@ -14,7 +16,7 @@ export default {
     vueSlider
   },
   props: {
-    capacity: {
+    capacity_prop: {
       capacity: Number,
       default () {
         return this.minValue
@@ -29,14 +31,28 @@ export default {
   },
   data () {
     return {
-      value: (this.allowAny ? 0 : 1),
+      capacity: (this.allowAny ? 0 : 1),
       minValue: (this.allowAny ? 0 : 1),
       maxValue: 50
     }
   },
+  computed: {
+    // a computed getter
+    reversedMessage: function () {
+      // `this` points to the vm instance
+      return this.message.split('').reverse().join('')
+    }
+  },
   watch: {
-    capacity (value) {
-      this.value = value
+    capacity_prop (capacity) {
+      this.capacity = capacity
+    },
+    /** The following code triggers when user selects/ changes
+    * time in the time-picker. This code then notifies the parent
+    * component of the change via 'change' event.
+    */
+    capacity (capacity) {
+      this.$emit('change', capacity)
     }
   },
   methods: {
@@ -44,15 +60,15 @@ export default {
     * slider value. It is invoked by vue-slider-component when
     * slider value changes.
     */
-    getSliderTooltip (value) {
-      if (value === 0) {
+    getSliderTooltip (capacity) {
+      if (capacity === 0) {
         //  If the new slider value is zero, then set the toolttip to 'Any'
         return 'Any'
-      } else if (value >= 50) {
+      } else if (capacity >= 50) {
         //  If the new slider value is equal to 50, then set the tooltip to 50+
         return '50+'
       }
-      return value
+      return capacity
     }
   }
 }

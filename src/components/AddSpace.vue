@@ -10,13 +10,13 @@
         <label class="empLabel">*Space name</label>
         <br>
         <input class="empText" type="text" v-model="name">
-        <p class="text-danger">{{nameError}}</p>
+        <div class="text-danger">{{nameError}}</div>
       </div>
       <div class="form-group">
         <label class="empLabel">Space e-mail</label>
         <p>Only if your space already has a gmail calendar associated with it</p>
         <input class="empText" type="email" v-model="email"><br>
-        <p class="text-danger">{{emailError}}</p>
+        <div class="text-danger">{{emailError}}</div>
       </div>
       <image-uploader
         hidden
@@ -37,7 +37,7 @@
         </figure>
         <span>{{ hasImage ? 'Replace Image' : 'Capture Image' }}</span>
       </label>
-      <p class="text-danger">{{imageError}}</p>
+      <div class="text-danger">{{imageError}}</div>
       <div class="row">
         <div class = "col-lg-5 col-md-6 col-sm-7 col-xs-8" v-if="hasImage">
           <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
@@ -74,7 +74,7 @@ export default {
   mounted () {
     document.title = 'Add Space'
     // remove search criteria storage
-    this.$store.resetDates()
+    this.$store.clearDates()
     this.$store.removeSearchCriteria()
   },
   methods: {
@@ -158,7 +158,8 @@ export default {
       let data = {
         'data': this.imageData,
         'space': {
-          'name': this.name
+          'name': this.name,
+          'capacity': 1
         }
       }
       if (this.email) {

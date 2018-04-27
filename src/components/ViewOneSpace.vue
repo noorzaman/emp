@@ -72,9 +72,9 @@ export default {
         this.imageData = space.image
         this.name = space.name
         this.description = space.description
+        this.capacity = space.capacity
         this.attributes = space.attributes ? space.attributes : []
         this.themes = space.themes ? space.themes : []
-        this.capacity = space.capacity ? space.capacity : 1
         if (this.capacity === 50) {
           this.capacity += '+'
         }

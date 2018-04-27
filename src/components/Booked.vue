@@ -5,7 +5,7 @@
       <p>You have not booked any spaces yet.</p>
     </div>
     <div v-else class="row">
-      <div v-for="space in prevBookedSpaces" :key="space.email" v-bind:class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+      <div v-for="space in prevBookedSpaces" :key="space.email" :class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <h2>{{space.name}}</h2>
         <p class="block-with-text">{{space.description}}</p>
         <router-link :to="'/space/' + space.email">
@@ -17,7 +17,7 @@
           <p>No attributes have been added for this space yet.</p>
         </div>
         <div v-else>
-          <ul v-bind:class="{ 'browseAttributesList' : space.spaceLongAttrList }" class="attrList">
+          <ul :class="{ 'browseAttributesList' : space.spaceLongAttrList }" class="attrList">
             <li v-for="attribute in space.attributes" :key="attribute">{{attribute}}</li>
           </ul>
         </div>
@@ -44,7 +44,7 @@ export default {
   mounted: function () {
     document.title = 'My Previously Booked Spaces'
     // remove search criteria storage
-    this.$store.resetDates()
+    this.$store.clearDates()
     this.$store.removeSearchCriteria()
     this.bookedEmails = JSON.parse(localStorage.getItem('bookedEmails'))
     if (this.bookedEmails) {
@@ -72,7 +72,7 @@ export default {
           name: space.name,
           description: space.description,
           capacity: space.capacity,
-          attributes: space.attributes,
+          attributes: space.attributes ? space.attributes : [],
           image: space.image,
           spaceLongAttrList: space.attributes.length >= 5
         })

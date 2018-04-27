@@ -16,12 +16,6 @@ const http = Vue.http
 export default http
 Vue.config.productionTip = false
 
-// Vue.prototype.$searchUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/emp/rooms'
-// Vue.prototype.$commonTagsUrl = 'https://search-emp-cixk22lczi5yrt4zd2dhswnltm.us-east-1.es.amazonaws.com/_all'
-// Vue.prototype.$editUrl = 'https://3p8vyivi98.execute-api.us-east-1.amazonaws.com/dev/place'
-// Vue.prototype.$availabilityUrl = 'http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com/availability/'
-// Vue.prototype.$googleCalendarUrl = 'http://localhost:5000/'
-
 Vue.prototype.$searchUrl = process.env.SEARCH_ADDR + '/emp/rooms'
 Vue.prototype.$commonTagsUrl = process.env.COMMON_TAGS_ADDR + '/_all'
 Vue.prototype.$editUrl = process.env.EDIT_ADDR + '/dev/place'
@@ -38,16 +32,12 @@ var store = {
     startTime: false,
     endTime: false
   },
-  setDate (date) {
+  setDates (date, startTime, endTime) {
     this.state.date = date
+    this.state.startTime = startTime
+    this.state.endTime = endTime
   },
-  setStartTime (time) {
-    this.state.startTime = time
-  },
-  setEndTime (time) {
-    this.state.endTime = time
-  },
-  resetDates () {
+  clearDates () {
     this.state.date = false
     this.state.startTime = false
     this.state.endTime = false

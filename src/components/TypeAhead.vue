@@ -16,7 +16,7 @@
     <div id="selectedItemsArea">
         <!-- Beginning of attribute list -->
         <div v-for="item in selectedAttributes" :key="item" class="tag is-info" style="margin-right: 2px">
-            <span class="attr">{{item}}</span>
+            <span>{{item}}</span>
             <button class="delete is-small" @click="removeAttribute(item)"><strong>x</strong></button>
         </div>
         <!-- End of attribute list -->

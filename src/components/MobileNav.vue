@@ -47,7 +47,7 @@ export default {
   props: ['pageLocation'],
   methods: {
     removeSearchCriteria () {
-      this.$store.resetDates()
+      this.$store.clearDates()
       this.$store.removeSearchCriteria()
     }
   }
