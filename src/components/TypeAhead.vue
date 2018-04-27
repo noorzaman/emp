@@ -1,25 +1,23 @@
 <template>
   <section>
     <label for="attributes">Attributes</label>
-    <p>Ex: food, WiFi, projector, etc.</p>
+    <p>Ex: Food, WiFi, Projector, etc.</p>
     <div style="display: flex;">
       <div style="flex-basis: 250px">
-        <input id="attributes" class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
-        <!-- typeahead component is defined at: https://uiv.wxsm.space/typeahead/ -->
+        <input class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
+        <!-- https://uiv.wxsm.space/typeahead/ -->
         <typeahead v-model="newAttribute" target="#attributes" :data="uniqueAttributesList" :open-on-empty="true"/>
         <p class="text-danger">{{newAttributeError}}</p>
       </div>
       <div>
-        <button id="addAttrButton" class="btn btn-primary" @click="addAttribute">Add</button>
+        <button class="btn btn-primary" @click="addAttribute">Add</button>
       </div>
     </div>
-    <div id="selectedItemsArea">
-        <!-- Beginning of attribute list -->
-        <div v-for="item in selectedAttributes" :key="item" class="tag is-info" style="margin-right: 2px">
-            <span>{{item}}</span>
-            <button class="delete is-small" @click="removeAttribute(item)"><strong>x</strong></button>
-        </div>
-        <!-- End of attribute list -->
+    <div>
+      <div v-for="item in selectedAttributes" :key="item" class="tag is-info" style="margin-right: 2px">
+        <span>{{item}}</span>
+        <button class="delete is-small" @click="removeAttribute(item)"><strong>x</strong></button>
+      </div>
     </div>
   </section>
 </template>
@@ -127,30 +125,6 @@ export default {
         // concatenating all attributes together
         for (var i = 0; i < searchResult.length; i++) {
           arr = arr.concat(searchResult[i].key)
-        }
-        // dropping duplicates and sorting
-        var uniqueArray = arr.filter(function (item, pos) {
-          return arr.indexOf(item) === pos
-        })
-        this.uniqueAttributesList = uniqueArray.sort()
-      }, error => {
-        console.log(error)
-      })
-    },
-    old_getUniqueAttributes () {
-      // size 10,000 is the max_result_window for Elasticsearch
-      // this would cause an incomplete list if we somehow had more than 10,000 rooms in the database
-      var searchUrl = this.$searchUrl + '/_search?_source=space.attributes&size=10000'
-      this.$http.get(searchUrl, {
-        headers: this.$defaultHeaders
-      }).then(result => {
-        var arr = []
-        var searchResult = result.body.hits.hits
-        // concatenating all attributes together
-        for (var i = 0; i < searchResult.length; i++) {
-          if (searchResult[i]._source.hasOwnProperty('space')) {
-            arr = arr.concat(searchResult[i]._source.space.attributes)
-          }
         }
         // dropping duplicates and sorting
         var uniqueArray = arr.filter(function (item, pos) {
