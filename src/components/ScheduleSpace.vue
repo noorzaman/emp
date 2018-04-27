@@ -38,7 +38,7 @@ export default {
     // remove search criteria storage
     this.$store.removeSearchCriteria()
     // Let's add this space to list of booked spaces.
-    this.updateListOfBookedSpaces(this.spaceEmail)
+    this.updateListOfBookedSpaces(this.email)
     // And redirect to Google Calendar for creating the meeting.
     this.$nextTick(function () {
       document.googleCalInput.submit()
@@ -54,13 +54,14 @@ export default {
     * to list of booked spaces. This list of booked
     * spaces is persisted on local storage.
     */
-    updateListOfBookedSpaces (spaceEmail) {
+    updateListOfBookedSpaces (email) {
+      console.log(email)
       var bookedSpaces = JSON.parse(localStorage.getItem('bookedEmails'))
       if (bookedSpaces == null) {
-        bookedSpaces = [spaceEmail]
+        bookedSpaces = [email]
       } else {
-        if (!bookedSpaces.includes(spaceEmail)) {
-          bookedSpaces.push(spaceEmail)
+        if (!bookedSpaces.includes(email)) {
+          bookedSpaces.push(email)
         }
       }
       localStorage.setItem('bookedEmails', JSON.stringify(bookedSpaces))

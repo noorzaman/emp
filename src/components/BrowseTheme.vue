@@ -1,4 +1,4 @@
- <template>
+<template>
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
     <div v-if="!this.searchFinished">
