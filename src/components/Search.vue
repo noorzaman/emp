@@ -1,8 +1,8 @@
 <template>
   <div class="search">
     <div class="form-group"><br>
-      <button style="width:180px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
-      <button style="width:180px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Quick Search By Name</button>
+      <button style="width:160px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
+      <button style="width:160px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Quick Search By Name</button>
     </div>
     <div v-show="!showFullSearch">
       <label>Space Name</label><br>
