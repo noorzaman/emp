@@ -5,4 +5,8 @@ node_modules/
 *.iml
 .DS_Store
 dist/
-
+*.sublime-project
+*.sublime-workspace
+*.log
+test/unit/coverage/
+responsive-ui/test/e2e/reports/

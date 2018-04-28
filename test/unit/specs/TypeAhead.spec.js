@@ -1,38 +1,46 @@
 import Vue from 'vue'
 import TypeAhead from '@/components/TypeAhead'
 
+/** This test spec tests typeahead feature for both browse spaces
+  and edit space flow.
+  */
+
 describe('TypeAhead.vue', () => {
   const Constructor = Vue.extend(TypeAhead)
   const TypeAheadComponent = new Constructor().$mount()
 
-  it('should prompt for adding an attribute', () => {
-    expect(TypeAheadComponent.$el.textContent).to.contain('Tags')
+  //  Mock list of allowed attributes. In real life, this list
+  //  will be populated using Elastic Search.
+  TypeAheadComponent.uniqueAttributesList = ['whiteboard', 'chairs', 'projector']
+
+  it('prompts for adding an attribute', () => {
+    expect(TypeAheadComponent.$el.textContent).to.contain('Attributes')
   })
 
-  it('should add whiteboard and chairs as a new attribute', () => {
-    TypeAheadComponent.selectedAttributes = ['whiteboard', 'chairs']
+  it('renders pre-selected attributes in edit space flow', () => {
+    TypeAheadComponent.selectedAttributes = ['chairs', 'whiteboard']
     TypeAheadComponent._watcher.run()
     expect(TypeAheadComponent.$el.textContent).to.contain('whiteboard')
     expect(TypeAheadComponent.$el.textContent).to.contain('chairs')
   })
 
-  it('should remove whiteboard when removeAttribute() is invoked', () => {
+  it('removes whiteboard when removeAttribute() is invoked', () => {
     TypeAheadComponent.removeAttribute('whiteboard')
     TypeAheadComponent._watcher.run()
     expect(TypeAheadComponent.$el.textContent).to.not.contain('whiteboard')
     expect(TypeAheadComponent.$el.textContent).to.contain('chairs')
   })
 
-  it('should add whiteboard when addAttribute() is invoked', () => {
-    TypeAheadComponent.newAttribute = {name: 'whiteboard'}
+  it('adds whiteboard when addAttribute() is invoked', () => {
+    TypeAheadComponent.newAttribute = 'whiteboard'
     TypeAheadComponent.addAttribute()
     TypeAheadComponent._watcher.run()
     expect(TypeAheadComponent.$el.textContent).to.contain('whiteboard')
     expect(TypeAheadComponent.$el.textContent).to.contain('chairs')
   })
 
-  it('should not add invalid attribute', () => {
-    TypeAheadComponent.newAttribute = {name: 'idontexist'}
+  it('does not add invalid attribute', () => {
+    TypeAheadComponent.newAttribute = 'idontexist'
     TypeAheadComponent.addAttribute()
     TypeAheadComponent._watcher.run()
     expect(TypeAheadComponent.$el.textContent).to.contain('whiteboard')
