@@ -2,10 +2,10 @@
   <div class="main">
     <h1>{{pageTitle}}</h1><br>
     <div class="row">
-      <div v-for="theme in themes" :key="theme.image" class="browseThemes">
-        <router-link :to="'/browse/' + theme.image">
-          <img :src="'/static/images/' + theme.image + '.png'" :alt="theme.caption" class="img-responsive">
-          <p>{{theme.caption}}</p>
+      <div v-for="theme in $possibleThemes" :key="theme" class="browseThemes">
+        <router-link :to="'/browse/' + theme">
+          <img :src="'/static/images/' + theme + '.png'" :alt="theme.charAt(0).toUpperCase() + theme.slice(1)" class="img-responsive">
+          <p>{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</p>
         </router-link>
       </div>
     </div>
@@ -21,20 +21,6 @@ export default {
   },
   data () {
     return {
-      themes: [
-        {image: 'casual', caption: 'Casual'},
-        {image: 'cozy', caption: 'Cozy'},
-        {image: 'fancy', caption: 'Fancy'},
-        {image: 'fun', caption: 'Fun'},
-        {image: 'grand', caption: 'Grand'},
-        {image: 'modern', caption: 'Modern'},
-        {image: 'professional', caption: 'Professional'},
-        {image: 'quiet', caption: 'Quiet'},
-        {image: 'rustic', caption: 'Rustic'},
-        {image: 'social', caption: 'Social'},
-        {image: 'studious', caption: 'Studious'},
-        {image: 'zen', caption: 'Zen'}
-      ],
       pageTitle: 'Explore Meeting Spaces',
       search: []
     }
