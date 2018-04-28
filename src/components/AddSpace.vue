@@ -32,7 +32,7 @@
       <label for="fileInput" slot="upload-label">
         <figure style="margin-left:45px">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-            <path class="path1" d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"></path>
+            <path class="path1" :d="this.$cameraIcon"></path>
           </svg>
         </figure>
         <span>{{ hasImage ? 'Replace Image' : 'Capture Image' }}</span>
@@ -65,6 +65,7 @@ export default {
       nameError: '',
       emailError: '',
       imageError: '',
+      hasErrors: false,
       uploading: false
     }
   },
@@ -78,82 +79,82 @@ export default {
     this.$store.removeSearchCriteria()
   },
   methods: {
-    hasInputErrors () {
-      let hasErrors = false
+    uploadImage () {
+      this.emailError = ''
+      this.nameError = ''
+      this.hasErrors = false
+
+      // verify that name and image are present
       if (!this.name.length) {
         this.nameError = 'The name field is required'
-        hasErrors = true
-      } else {
-        this.nameError = ''
-      }
-      if (this.email) {
-        if (!this.$emailRegExp.test(this.email.toLowerCase())) {
-          this.emailError = 'Please enter a valid email address'
-        hasErrors = true
-        } else if (!this.validEmail(this.email)) {
-          this.emailError = 'Given email is set as private. Please, enter a valid email'
-          hasErrors = true
-        }
-      } else {
-        this.emailError = ''
+        this.hasErrors = true
       }
       if (!this.hasImage) {
         this.imageError = 'You must add an image'
-        hasErrors = true
+        this.hasErrors = true
       }
-      return hasErrors
-    },
-    async validEmail (email) {
-      try {
-        const response = await axios.get(this.$googleCalendarUrl + email, {
-          headers: this.$defaultHeaders
-        })
-        return response && response.status === 200
-      } catch (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data)
-          console.log(error.response.status)
-          console.log(error.response.headers)
-          return false
+
+      // if no email was provided & there were no errors, submit the upload
+      if (!this.email) {
+        if (!this.hasErrors) {
+          this.submitUpload()
         }
-      }
-    },
-    async uploadImage () {
-      // verify proper input
-      if (this.hasInputErrors()) {
         return
       }
 
-      // check email uniqueness
-      if (this.email) {
-        let data = {
-          'size': 0,
-          'aggs': {
-            'uniq_attrs': {
-              'terms': {
-                'size': 1000,
-                'field': '_id'
-              }
+      // check if a valid email format was provided
+      if (!this.$emailRegExp.test(this.email.toLowerCase())) {
+        this.emailError = 'Please enter a valid email address'
+        return
+      }
+
+      // check if another space is already using this email id
+      let data = {
+        'size': 0,
+        'aggs': {
+          'uniq_attrs': {
+            'terms': {
+              'size': 1000,
+              'field': '_id'
             }
           }
         }
-        let jsonData = JSON.stringify(data)
-
-        const response = await axios.post(this.$searchUrl + '/_search', jsonData, {
-          headers: this.$defaultHeaders
-        })
-        let keys = response.data.aggregations.uniq_attrs.buckets
-        let lst = []
-        Object.assign(lst, ...Object.values(keys).map(k => lst.push(k.key)))
-        if (lst.indexOf(this.email) > -1) {
-          this.emailError = 'Room with this email already exists'
+      }
+      let jsonData = JSON.stringify(data)
+      axios.post(this.$searchUrl + '/_search', jsonData, {
+        headers: this.$defaultHeaders
+      }).then(result => {
+        let keys = result.data.aggregations.uniq_attrs.buckets
+        let spaceIdList = []
+        Object.assign(spaceIdList, ...Object.values(keys).map(k => spaceIdList.push(k.key)))
+        if (spaceIdList.indexOf(this.email) !== -1) {
+          this.emailError = 'A space is already using this email'
           return
         }
-      }
 
-      // upload the image
+        // check if the email exists and that its calendar is not set to private
+        axios.get(this.$googleCalendarUrl + this.email, {
+          headers: this.$defaultHeaders
+        }).then(result => {
+          // now that all email checks have passed, submit the upload if there were no errors elsewhere
+          if (!this.hasErrors) {
+            this.submitUpload()
+          }
+        }, error => {
+          if (error.response.status === 400) {
+            this.emailError = 'The given email does not exist or its calendar is set to private'
+          } else {
+            console.log(error)
+            this.emailError = 'An error has occured checking if the email\'s calendar is set to private'
+          }
+        })
+      }, error => {
+        console.log(error)
+        this.emailError = 'An error has occured checking if a space is already using this email'
+      })
+    },
+
+    submitUpload () {
       this.uploading = true
       let data = {
         'data': this.imageData,
@@ -177,6 +178,7 @@ export default {
         alert('Uploading your image failed.')
       })
     },
+    
     setImage (img) {
       var imgType = img.split(';')[0].split('/')[1]
       // png and bmp images are labeled as png, jpg and jpeg are labeled as jpeg
