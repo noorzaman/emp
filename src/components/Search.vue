@@ -65,7 +65,7 @@
       <div class="form-group">
         <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#000', unchecked: '#444'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
       </div>
-      <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': resultsLength == 'long' }, { 'searchLocationMedMissing': resultsLength == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+      <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': missingItemsLength >= 4}, { 'searchLocationMedMissing': missingItemsLength >= 2 && missingItemsLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div :class="{'matchTitle': match.matchPercent}">
           <p v-if="match.matchPercent" class="matchPercent" :class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
           <h2>{{match.name}}</h2>
@@ -150,7 +150,6 @@ export default {
       numCriteria: 0,
       selectedThemes: [],
       selectedAttributes: [],
-      resultsLength: '',
       startDate: new Date(), // default to today
       startTime: new Date(''), // empty date object
       endTime: new Date(''),
@@ -159,7 +158,8 @@ export default {
       showFullSearch: true,
       name: '', // name used for search by name
       searchingByName: false,
-      timeError: ''
+      timeError: '',
+      missingItemsLength: 0
     }
   },
   mounted () {
@@ -167,8 +167,8 @@ export default {
 
     var searchResults = JSON.parse(localStorage.getItem('searchResults'))
     if (searchResults) {
-      this.matches = searchResults
-      this.resultsLength = JSON.parse(localStorage.getItem('resultsLength'))
+      this.matches = searchResults.matches
+      this.missingItemsLength = searchResults.missingItemsLength
       this.searchCompleted = true
     }
 
@@ -462,12 +462,8 @@ export default {
               }
             }
           }
-          if (!this.resultsLength === 'long' && (missingThemes.length >= 2 || missingAttributes.length >= 2)) {
-            this.resultsLength = 'medium'
-            if (missingThemes.length >= 4 || missingAttributes.length >= 4) {
-              this.resultsLength = 'long'
-            }
-          }
+          this.missingItemsLength = Math.max(this.missingItemsLength, missingThemes.length, missingAttributes.length)
+          console.log(this.missingItemsLength)
           // if there is no availableList, default to not busy
           let isBusy = availableList ? !availableList.includes(spaceId) : false
           // console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
@@ -505,9 +501,12 @@ export default {
     */
     finishedSearch () {
       this.searchCompleted = true
+      var searchResults = {
+        matches: this.matches,
+        missingItemsLength: this.missingItemsLength
+      }
       localStorage.setItem('searchCriteria', JSON.stringify(this.searchCriteria))
-      localStorage.setItem('resultsLength', JSON.stringify(this.resultsLength))
-      localStorage.setItem('searchResults', JSON.stringify(this.matches))
+      localStorage.setItem('searchResults', JSON.stringify(searchResults))
       // scroll to search results
       this.$nextTick(function () {
         // scroll down to the results

@@ -45,7 +45,6 @@ var store = {
   removeSearchCriteria () {
     localStorage.removeItem('searchResults')
     localStorage.removeItem('searchCriteria')
-    localStorage.removeItem('resultsLength')
   }
 }
 
