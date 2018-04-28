@@ -9,7 +9,7 @@ describe('Search.vue', () => {
   const SearchComponent = new Constructor().$mount()
 
   it('shows Search by name page when changeSearchToByName() is called', () => {
-  	SearchComponent.changeSearchToByName()
+    SearchComponent.changeSearchToByName()
     expect(SearchComponent.$el.textContent).to.contain('Space Name')
     expect(SearchComponent.showFullSearch).to.equal(false)
   })

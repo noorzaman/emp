@@ -45,6 +45,6 @@ describe('TypeAhead.vue', () => {
     TypeAheadComponent._watcher.run()
     expect(TypeAheadComponent.$el.textContent).to.contain('whiteboard')
     expect(TypeAheadComponent.$el.textContent).to.contain('chairs')
-    expect(TypeAheadComponent.$el.textContent).to.not.contain('idontexist')
+    expect(TypeAheadComponent.selectedAttributes).to.not.contain('idontexist')
   })
 })
