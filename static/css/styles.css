@@ -382,14 +382,10 @@ ul {
     position: relative;
 }
 
-#addAttrButton {
+.addAttrButton {
     margin-left: 0.5em;
     margin-top: 0em;
-    margin-bottom: 2em;
-}
-
-#attributes {
-    width: 100%;
+    margin-bottom: 1em;
 }
 
 .missingThemes {

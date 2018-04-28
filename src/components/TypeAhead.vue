@@ -4,13 +4,13 @@
     <p>Ex: Food, WiFi, Projector, etc.</p>
     <div style="display: flex;">
       <div style="flex-basis: 250px">
-        <input class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
+        <input id="attributes" class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
         <!-- https://uiv.wxsm.space/typeahead/ -->
         <typeahead v-model="newAttribute" target="#attributes" :data="uniqueAttributesList" :open-on-empty="true"/>
         <p class="text-danger">{{newAttributeError}}</p>
       </div>
       <div>
-        <button class="btn btn-primary" @click="addAttribute">Add</button>
+        <button class="btn btn-primary addAttrButton" @click="addAttribute">Add</button>
       </div>
     </div>
     <div>
@@ -76,7 +76,7 @@ export default {
       var attrListIndex = this.arrayIndexOf(this.uniqueAttributesList, this.newAttribute)
       if (!this.allowCustom && attrListIndex === -1) {
         // If we don't allow custom attributes and the attribute is not in the dropdown list, report error
-        this.newAttributeError = 'There are no spaces with attribute \'' + this.newAttribute + '\'.'
+        this.newAttributeError = 'There are no spaces with attribute \'' + this.newAttribute + '\''
       } else if (this.arrayIndexOf(this.selectedAttributes, this.newAttribute) === -1) {
         // If the attribute has not previously been selected, add it the way it is in the database if it's in the database
         if (attrListIndex === -1) {
