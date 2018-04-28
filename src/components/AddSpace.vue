@@ -86,8 +86,14 @@ export default {
       } else {
         this.nameError = ''
       }
-      if (this.email && !this.validEmail(this.email)) {
+      if (this.email) {
+        if (!this.$emailRegExp.test(this.email.toLowerCase())) {
+          this.emailError = 'Please enter a valid email address'
         hasErrors = true
+        } else if (!this.validEmail(this.email)) {
+          this.emailError = 'Given email is set as private. Please, enter a valid email'
+          hasErrors = true
+        }
       } else {
         this.emailError = ''
       }
@@ -98,11 +104,6 @@ export default {
       return hasErrors
     },
     async validEmail (email) {
-      var self = this
-      if (!this.$emailRegExp.test(String(email).toLowerCase())) {
-        self.emailError = 'Please enter a valid email address'
-        return false
-      }
       try {
         const response = await axios.get(this.$googleCalendarUrl + email, {
           headers: this.$defaultHeaders
@@ -115,7 +116,6 @@ export default {
           console.log(error.response.data)
           console.log(error.response.status)
           console.log(error.response.headers)
-          self.emailError = 'Given email is set as private. Please, enter a valid email'
           return false
         }
       }
