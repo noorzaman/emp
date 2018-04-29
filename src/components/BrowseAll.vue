@@ -25,7 +25,6 @@ export default {
       search: []
     }
   },
-  // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = 'Browse Spaces'
     // remove search criteria storage

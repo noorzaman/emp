@@ -1,8 +1,9 @@
 <template>
   <div class="search">
+    <ScheduleSpace :email="scheduleEmail" :name="scheduleName" ref="scheduleSpace"></ScheduleSpace>
     <div class="form-group"><br>
-      <button style="width:160px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
-      <button style="width:160px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Quick Search By Name</button>
+      <button style="width:130px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
+      <button style="width:130px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Search By Name</button>
     </div>
     <div v-show="!showFullSearch">
       <label>Space Name</label><br>
@@ -63,7 +64,7 @@
       <h2 v-if="availableOnlyFilter.length === 1">Search Results: 1 space found</h2>
       <h2 v-else>Search Results: {{availableOnlyFilter.length}} spaces found</h2>
       <div class="form-group">
-        <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#000', unchecked: '#444'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
+        <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=160 :height=26 :color="{checked: '#000', unchecked: '#444'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
       </div>
       <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': missingItemsLength >= 4}, { 'searchLocationMedMissing': missingItemsLength >= 2 && missingItemsLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div :class="{'matchTitle': !searchingByName}">
@@ -102,7 +103,7 @@
         <div class="clearFix"></div>
         <div class="searchBtns">
           <router-link :to="'/space/' + match.email" class="btn btn-primary btnMargin">Details</router-link>
-          <router-link :to="'/schedule-space/' + match.email + '/' + match.name" class="btn btn-primary btnMargin">Book</router-link>
+          <button class="btn btn-primary btnMargin" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
           <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
         </div>
       </div>
@@ -116,6 +117,7 @@ import DatePicker from './DatePicker'
 import TypeAhead from './TypeAhead'
 import TimePicker from './TimePicker'
 import axios from 'axios'
+import ScheduleSpace from './ScheduleSpace'
 
 export default {
   name: 'Search',
@@ -123,7 +125,8 @@ export default {
     'NumberSlider': NumberSlider,
     'DatePicker': DatePicker,
     'TypeAhead': TypeAhead,
-    'TimePicker': TimePicker
+    'TimePicker': TimePicker,
+    'ScheduleSpace': ScheduleSpace
   },
   computed: {
     availableOnlyFilter () {
@@ -161,7 +164,9 @@ export default {
       name: '', // name used for search by name
       searchingByName: false,
       timeError: '',
-      missingItemsLength: 0
+      missingItemsLength: 0,
+      scheduleEmail: '',
+      scheduleName: ''
     }
   },
   mounted () {
@@ -470,14 +475,16 @@ export default {
 
           var matchPercent
           if (this.numCriteria > 0) {
-            matchPercent = Math.round((numMatches / this.numCriteria) * 100)
+            if (!this.searchCriteria.themes && !this.searchCriteria.attributes && numMatches === 0) {
+              // set match percent to 50 for search by capacity that was not a match
+              matchPercent = 50
+            } else {
+              // normal match percentage calculation
+              matchPercent = Math.round((numMatches / this.numCriteria) * 100)
+            }
           } else {
             // set match percent to 100 if there was no search criteria
             matchPercent = 100
-          }
-          if (!this.searchCriteria.themes && !this.searchCriteria.attributes && numMatches === 0) {
-            // set match percent to 50 for search by capacity that was not a match
-            matchPercent = 50
           }
 
           this.matches.push({
@@ -547,6 +554,14 @@ export default {
     changeSearchToByName () {
       this.searchCompleted = false
       this.showFullSearch = false
+    },
+    /**
+    * Submit Google Calendar form
+    */
+    submitGoogleCalForm (email, name) {
+      this.scheduleEmail = email
+      this.scheduleName = name
+      this.$refs.scheduleSpace.submitForm()
     }
   }
 }

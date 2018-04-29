@@ -7,7 +7,6 @@ import Search from '@/components/Search'
 import Booked from '@/components/Booked'
 import BrowseTheme from '@/components/BrowseTheme'
 import ViewOneSpace from '@/components/ViewOneSpace'
-import ScheduleSpace from '@/components/ScheduleSpace'
 import NotFound from '@/components/NotFound'
 
 Vue.use(Router)
@@ -48,11 +47,6 @@ const router = new Router({
       path: '/space/:spaceId',
       name: 'ViewOneSpace',
       component: ViewOneSpace
-    },
-    {
-      path: '/schedule-space/:spaceId/:spaceName',
-      name: 'ScheduleSpace',
-      component: ScheduleSpace
     },
     {
       path: '*',

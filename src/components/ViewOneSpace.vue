@@ -1,12 +1,13 @@
 <template>
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
+    <ScheduleSpace :email="email" :name="name" ref="scheduleSpace"></ScheduleSpace>
     <h1>{{name}}</h1>
     <div class="viewOneImgCol">
       <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
     </div>
     <div class="roomInfo">
-      <router-link :to="'/schedule-space/' + email + '/' + name" class="btn btn-primary viewOneLink">Set up meeting</router-link>
+      <button class="btn btn-primary viewOneLink" @click="submitGoogleCalForm">Set up meeting</button>
       <router-link :to="'/edit-space/' + email" class="btn btn-primary viewOneLink editBtn">Edit Space</router-link>
 
       <p v-if="description"><strong>Description: </strong>{{description}}</p>
@@ -40,11 +41,13 @@
 
 <script>
 import NotFound from './NotFound'
+import ScheduleSpace from './ScheduleSpace'
 
 export default {
   name: 'ViewOneSpace',
   components: {
-    'NotFound': NotFound
+    'NotFound': NotFound,
+    'ScheduleSpace': ScheduleSpace
   },
   data () {
     return {
@@ -82,6 +85,12 @@ export default {
         console.error(error)
         this.notFound = true
       })
+    },
+    /**
+    * Submit Google Calendar form
+    */
+    submitGoogleCalForm () {
+      this.$refs.scheduleSpace.submitForm()
     }
   }
 }

@@ -4,5 +4,5 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  GOOGLE_CALENDAR_ADDR: '"http://localhost:5000"'
+  GOOGLE_CALENDAR_ADDR: '"http://development.6awinxwfj9.us-east-1.elasticbeanstalk.com"'
 })

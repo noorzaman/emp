@@ -1,26 +1,25 @@
 <template>
-  <form hidden name="googleCalInput" method="GET" action="https://calendar.google.com/calendar/r/eventedit">
+  <form hidden name="googleCalForm" method="GET" action="https://calendar.google.com/calendar/r/eventedit">
     <input name="add" :value="email"/>
-    <input name='location' :value="name"/>
+    <input name="location" :value="name"/>
     <input v-if="date" name="dates" :value="time"/>
   </form>
 </template>
 
 <script>
 export default {
-  name: 'Test',
+  name: 'ScheduleSpace',
+  props: ['email', 'name'],
   data () {
     return {
-      email: this.$route.params.spaceId,
-      name: this.$route.params.spaceName,
-      date: this.$store.state.date,
-      startTime: this.$store.state.startTime,
-      endTime: this.$store.state.endTime
+      date: false,
+      startTime: false,
+      endTime: false
     }
   },
   computed: {
     time () {
-      // return time string of the format '20180320T204000/20180320T204000'
+      // return time string of the format 'YYYYMMDDTHHMMSS/YYYYMMDDTHHMMSS'
       if (this.date) {
         var month = this.addPadding((this.date.getMonth() + 1))
         var day = this.addPadding(this.date.getDate())
@@ -34,17 +33,24 @@ export default {
       return false
     }
   },
-  mounted () {
-    // remove search criteria storage
-    this.$store.removeSearchCriteria()
-    // Let's add this space to list of booked spaces.
-    this.updateListOfBookedSpaces(this.email)
-    // And redirect to Google Calendar for creating the meeting.
-    this.$nextTick(function () {
-      document.googleCalInput.submit()
-    })
-  },
   methods: {
+    /**
+    * Submits the form to open Google Calendar
+    */
+    submitForm () {
+      // get date and time information
+      this.date = this.$store.state.date
+      this.startTime = this.$store.state.startTime
+      this.endTime = this.$store.state.endTime
+      // remove search criteria storage
+      this.$store.removeSearchCriteria()
+      // add this space to list of booked spaces
+      this.updateListOfBookedSpaces(this.email)
+      // and submit the form
+      this.$nextTick(function () {
+        document.googleCalForm.submit()
+      })
+    },
     addPadding (number) {
       var string = number.toString()
       var pad = '00'
@@ -55,7 +61,6 @@ export default {
     * spaces is persisted on local storage.
     */
     updateListOfBookedSpaces (email) {
-      console.log(email)
       var bookedSpaces = JSON.parse(localStorage.getItem('bookedEmails'))
       if (bookedSpaces == null) {
         bookedSpaces = [email]

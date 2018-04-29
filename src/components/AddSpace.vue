@@ -178,7 +178,7 @@ export default {
         alert('Uploading your image failed.')
       })
     },
-    
+
     setImage (img) {
       var imgType = img.split(';')[0].split('/')[1]
       // png and bmp images are labeled as png, jpg and jpeg are labeled as jpeg

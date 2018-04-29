@@ -3,7 +3,7 @@ a {
    outline: 0;
 }
 
-p, li, button, input, label {
+p, li, input, label {
     font-family: 'Assistant', sans-serif;
 }
 

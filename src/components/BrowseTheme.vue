@@ -1,6 +1,7 @@
 <template>
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
+    <ScheduleSpace :email="scheduleEmail" :name="scheduleName" ref="scheduleSpace"></ScheduleSpace>
     <div v-if="!this.searchFinished">
       <p>Searching...</p>
     </div>
@@ -29,7 +30,7 @@
           </div>
           <div class="searchBtns">
             <router-link :to="'/space/' + match.email" class="btn btn-primary">Details</router-link>
-            <router-link :to="'/schedule-space/' + match.email + '/' + match.name" class="btn btn-primary btnMargin">Book</router-link>
+            <button class="btn btn-primary btnMargin" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
             <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
           </div>
         </div>
@@ -40,11 +41,13 @@
 
 <script>
 import NotFound from './NotFound'
+import ScheduleSpace from './ScheduleSpace'
 
 export default {
   name: 'BrowseTheme',
   components: {
-    'NotFound': NotFound
+    'NotFound': NotFound,
+    'ScheduleSpace': ScheduleSpace
   },
   data () {
     return {
@@ -53,10 +56,11 @@ export default {
       empUrl: '',
       matches: [],
       searchFinished: false,
-      results: ''
+      results: '',
+      scheduleEmail: '',
+      scheduleName: ''
     }
   },
-  // bind event handlers to the `handleResize` method (defined below)
   mounted () {
     document.title = this.$route.params.theme.charAt(0).toUpperCase() + this.$route.params.theme.slice(1) + ' Spaces'
     // remove search criteria storage
@@ -109,6 +113,14 @@ export default {
       }, error => {
         console.error(error)
       })
+    },
+    /**
+    * Submit Google Calendar form
+    */
+    submitGoogleCalForm (email, name) {
+      this.scheduleEmail = email
+      this.scheduleName = name
+      this.$refs.scheduleSpace.submitForm()
     }
   }
 }
