@@ -1,17 +1,11 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="template">
-          <h1>Oops!</h1>
-          <h2>404 Not Found</h2>
-          <div class="details">
-            Sorry, an error has occured, requested page not found!
-          </div>
-          <a href="/" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Take Me Home</a>
-        </div>
-      </div>
+  <div class="template">
+    <h1>Oops!</h1>
+    <h2>404 Not Found</h2>
+    <div class="details">
+      Sorry, an error has occured, requested page not found!
     </div>
+    <a href="/" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;Take Me Home</a>
   </div>
 </template>
 
