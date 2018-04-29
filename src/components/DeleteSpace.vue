@@ -8,7 +8,6 @@
 export default {
   name: 'DeleteSpace',
   components: {
-    'NotFound': NotFound
   },
   data () {
     return {
