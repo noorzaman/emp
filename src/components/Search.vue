@@ -384,8 +384,7 @@ export default {
     */
     runSearch (searchObject) {
       var jsonStr = JSON.stringify(searchObject)
-      var searchSize = '20'
-      var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
+      var searchUrl = this.$searchUrl + '/_search?from=0&size=' + this.$maxResultsShown
 
       this.$http.post(searchUrl, jsonStr, {
         headers: this.$defaultHeaders

@@ -12,7 +12,7 @@
       </div>
       <div v-else class="row">
         <h1>{{pageTitle}}</h1>
-        <div v-for="match in matches" :key="match.email" :class="[{ 'searchLocationManyMissing': results == 'long' }, { 'searchLocationMedMissing': results == 'medium' }]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div v-for="match in matches" :key="match.email" :class="[{ 'searchLocationManyMissing': attributesLength >= 4}, { 'searchLocationMedMissing': attributesLength >= 2 && attributesLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
           <p class="block-with-text">{{match.description}}</p>
           <router-link :to="'/space/' + match.email">
@@ -24,7 +24,7 @@
             <p>No attributes have been added for this space yet.</p>
           </div>
           <div v-else>
-            <ul :class="{ 'browseAttributesList' : match.spaceLongAttrList }" class="attrList">
+            <ul :class="{ 'browseAttributesList' : match.longAttrList }" class="attrList">
               <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>
@@ -56,7 +56,7 @@ export default {
       empUrl: '',
       matches: [],
       searchFinished: false,
-      results: '',
+      attributesLength: 0,
       scheduleEmail: '',
       scheduleName: ''
     }
@@ -82,8 +82,7 @@ export default {
         }
       }
       var jsonStr = JSON.stringify(search)
-      var searchSize = '10'
-      var searchUrl = this.$searchUrl + '/_search?from=0&size=' + searchSize
+      var searchUrl = this.$searchUrl + '/_search?from=0&size=' + this.$maxResultsShown
 
       this.$http.post(searchUrl, jsonStr, {
         headers: this.$defaultHeaders
@@ -93,12 +92,8 @@ export default {
         for (var n = 0; n < searchResult.length; n++) {
           var email = searchResult[n]._id
           var entry = searchResult[n]._source.space
-          if (entry.attributes.length >= 2) {
-            this.results = 'medium'
-            if (entry.attributes.length >= 4) {
-              this.results = 'long'
-            }
-          }
+          // get the maximum attributes length
+          this.attributesLength = Math.max(this.attributesLength, entry.attributes.length)
           this.matches.push({
             email: email,
             name: entry.name,
@@ -106,7 +101,7 @@ export default {
             image: entry.image,
             capacity: entry.capacity,
             attributes: entry.attributes ? entry.attributes : [],
-            spaceLongAttrList: entry.attributes.length >= 5
+            longAttrList: entry.attributes.length > 5
           })
         }
         this.searchFinished = true

@@ -44,11 +44,11 @@ export default {
       this.endTime = this.$store.state.endTime
       // remove search criteria storage
       this.$store.removeSearchCriteria()
-      // add this space to list of booked spaces
-      this.updateListOfBookedSpaces(this.email)
-      // and submit the form
       this.$nextTick(function () {
-        document.googleCalForm.submit()
+        // add this space to list of booked spaces
+        this.updateListOfBookedSpaces(this.email)
+        // and submit the form
+        // document.googleCalForm.submit()
       })
     },
     addPadding (number) {
@@ -63,13 +63,14 @@ export default {
     updateListOfBookedSpaces (email) {
       var bookedSpaces = JSON.parse(localStorage.getItem('bookedEmails'))
       if (bookedSpaces == null) {
-        bookedSpaces = [email]
-      } else {
-        if (!bookedSpaces.includes(email)) {
-          bookedSpaces.push(email)
+        localStorage.setItem('bookedEmails', JSON.stringify([email]))
+      } else if (!bookedSpaces.includes(email)) {
+        if (bookedSpaces.length >= this.$maxResultsShown) {
+          bookedSpaces.shift()
         }
+        bookedSpaces.push(email)
+        localStorage.setItem('bookedEmails', JSON.stringify(bookedSpaces))
       }
-      localStorage.setItem('bookedEmails', JSON.stringify(bookedSpaces))
     }
   }
 }
