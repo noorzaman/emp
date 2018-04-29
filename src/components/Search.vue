@@ -66,8 +66,8 @@
         <toggle-button v-if="!timeOmitted" @change="changeUserFilterKey" :value="false" :width=180 :height=25 :color="{checked: '#000', unchecked: '#444'}" :labels="{checked: 'Show all rooms', unchecked: 'Show only available rooms'}"/>
       </div>
       <div v-for="match in availableOnlyFilter" :key="match.email" :class="[{ 'searchLocationManyMissing': missingItemsLength >= 4}, { 'searchLocationMedMissing': missingItemsLength >= 2 && missingItemsLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
-        <div :class="{'matchTitle': match.matchPercent}">
-          <p v-if="match.matchPercent" class="matchPercent" :class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
+        <div :class="{'matchTitle': !searchingByName}">
+          <p v-if="!searchingByName" class="matchPercent" :class="[{ 'highMatch': match.matchPercent >= 80 }, { 'mediumMatch': match.matchPercent < 80 &&  match.matchPercent >= 50}, { 'lowMatch': match.matchPercent < 50 }]">{{match.matchPercent}}%</p>
           <h2>{{match.name}}</h2>
         </div>
         <div class="clearFix"></div>
@@ -75,14 +75,16 @@
         <router-link :to="'/space/' + match.email">
           <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
         </router-link>
-        <div v-if="!searchingByName && match.matchPercent !== 100">
-          <div v-if="searchCriteria.capacity !== 0 && parseInt(searchCriteria.capacity) > parseInt(match.capacity)" class="missingCapacity">
-            <ul>
-              <li class="missingCapacity"><strong>Capacity NOT a match:</strong> has a capacity of {{match.capacity}}</li>
-            </ul>
-          </div>
-          <div v-else>
-            <p><strong>Capacity sufficient:</strong> has a capacity of {{match.capacity}}</p>
+        <div v-if="!searchingByName">
+          <div v-if="searchCriteria.capacity !== 0">
+            <div v-if="searchCriteria.capacity > match.capacity" class="missingCapacity">
+              <ul>
+                <li class="missingCapacity"><strong>Capacity NOT a match:</strong> has a capacity of {{match.capacity}}</li>
+              </ul>
+            </div>
+            <div v-else>
+              <p><strong>Capacity sufficient:</strong> has a capacity of {{match.capacity}}</p>
+            </div>
           </div>
           <div v-if="match.missThemes.length" class="missingThemes">
             <p><strong>Missing Themes</strong></p>
@@ -323,11 +325,11 @@ export default {
       if (this.capacity !== 0) {
         this.numCriteria++
       }
-      // search for half the capacity, but report capacity is not a match if actual capacity < desired capacity
-      var searchCapacity = this.capacity / 2
+      // search for 3/4 capacity, but report capacity is not a match if actual capacity < desired capacity
+      var searchCapacity = this.capacity * 3 / 4
       var searchObject = {}
 
-      //  If neither theme nor any attributes is selected, then just search by capacity.
+      //  If neither theme nor any attributes are selected, then just search by capacity.
       if (this.selectedThemes.length === 0 && this.selectedAttributes.length === 0) {
         searchObject = {
           'query': {
@@ -436,8 +438,8 @@ export default {
         if (!this.searchingByName) {
           // find matches
           var numMatches = 0
-          if (this.searchCriteria.capacity !== 0 && parseInt(entry.capacity) >= parseInt(this.searchCriteria.capacity)) {
-            numMatches = 1
+          if (this.searchCriteria.capacity > 0 && entry.capacity >= this.searchCriteria.capacity) {
+            numMatches++
           }
           var searchThemes = this.searchCriteria.themes
           var missingThemes = []
@@ -463,10 +465,21 @@ export default {
             }
           }
           this.missingItemsLength = Math.max(this.missingItemsLength, missingThemes.length, missingAttributes.length)
-          console.log(this.missingItemsLength)
           // if there is no availableList, default to not busy
-          let isBusy = availableList ? !availableList.includes(spaceId) : false
-          // console.log(entry.name + ' is ' + (isBusy ? 'busy' : 'available'))
+          var isBusy = availableList ? !availableList.includes(spaceId) : false
+
+          var matchPercent
+          if (this.numCriteria > 0) {
+            matchPercent = Math.round((numMatches / this.numCriteria) * 100)
+          } else {
+            // set match percent to 100 if there was no search criteria
+            matchPercent = 100
+          }
+          if (!this.searchCriteria.themes && !this.searchCriteria.attributes && numMatches === 0) {
+            // set match percent to 50 for search by capacity that was not a match
+            matchPercent = 50
+          }
+
           this.matches.push({
             name: entry.name,
             description: entry.description,
@@ -478,9 +491,7 @@ export default {
             capacity: entry.capacity,
             missThemes: missingThemes,
             missAttributes: missingAttributes,
-            //  Match percent: Make sure that match percent is never greater than 100%.
-            //  This could happen when no criteria are selected and therefore numCriteria is zero.
-            matchPercent: Math.min(100, Math.round((numMatches / this.numCriteria) * 100))
+            matchPercent: matchPercent
           })
         } else {
           // if this was a search by name, only this information is needed
