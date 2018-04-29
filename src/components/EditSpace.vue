@@ -10,7 +10,7 @@
       <div class="leftSearch">
         <div class="form-group">
           <label>Space name</label><br>
-          <input type="text" v-model="name"><br>
+          <input type="text" v-model="name" id="name"><br>
         </div>
         <div class="form-group">
           <label>Space e-mail</label><br>
