@@ -19,7 +19,7 @@
           </div>
           <div v-else>
             <ul class="themesList">
-              <li v-for="theme in themes" :key="theme">{{theme}}</li>
+              <li v-for="theme in themes" :key="theme" :id="theme">{{theme}}</li>
             </ul>
           </div>
         </div>
