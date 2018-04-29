@@ -3,7 +3,7 @@
     <h1>{{pageTitle}}</h1><br>
     <div class="row">
       <div v-for="theme in $possibleThemes" :key="theme" class="browseThemes">
-        <router-link :to="'/browse/' + theme">
+        <router-link :to="'/browse/' + theme" :id="theme">
           <img :src="'/static/images/' + theme + '.png'" :alt="theme.charAt(0).toUpperCase() + theme.slice(1)" class="img-responsive">
           <p>{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</p>
         </router-link>

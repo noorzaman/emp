@@ -11,7 +11,7 @@
             <li><router-link to="/" v-bind:class="{ 'desktopNavActive': pageLocation === 'browse' }">Browse Spaces</router-link></li>
             <li id="searchNavLink"><router-link to="/search-spaces" v-bind:class="{ 'desktopNavActive': pageLocation === 'search' }" >Search Space</router-link></li>
             <li><router-link to="/booked-spaces" v-bind:class="{ 'desktopNavActive': pageLocation === 'booked' }">My Booked Spaces</router-link></li>
-            <li><router-link to="/add-space" v-bind:class="{ 'desktopNavActive': pageLocation === 'addspace' }">Add Space</router-link></li>
+            <li><router-link to="/add-space" v-bind:class="{ 'desktopNavActive': pageLocation === 'addspace' }" id="desktop-add-space-link">Add Space</router-link></li>
           </ul>
         </div>
       </div>

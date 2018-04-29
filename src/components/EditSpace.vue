@@ -46,7 +46,7 @@
           <TypeAhead :selectedAttributes="attributes" :allowCustom="true"></TypeAhead>
         </div>
       </div>
-      <button class="btn btn-primary submitButton" v-on:click="editSpace">Save</button>
+      <button class="btn btn-primary submitButton" v-on:click="editSpace" id="save-btn">Save</button>
     </div>
   </div>
 </template>

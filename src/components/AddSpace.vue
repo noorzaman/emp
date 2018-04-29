@@ -9,7 +9,7 @@
       <div class="form-group">
         <label class="empLabel">*Space name</label>
         <br>
-        <input class="empText" type="text" v-model="name">
+        <input class="empText" type="text" v-model="name" id="name">
         <div class="text-danger">{{nameError}}</div>
       </div>
       <div class="form-group">
@@ -18,6 +18,7 @@
         <input class="empText" type="email" v-model="email"><br>
         <div class="text-danger">{{emailError}}</div>
       </div>
+      <input type="text" style="display: none;" v-model="imageData" id="test-image-data">
       <image-uploader
         hidden
         :debug="1"
@@ -44,7 +45,8 @@
         </div>
       </div>
       <br><br>
-      <button class="btn btn-primary" @click="uploadImage">Upload Image</button>
+      <button style="display: none;" @click="setImage(imageData)" id="test-set-image-btn">Test - Set and upload Image</button>
+      <button class="btn btn-primary" @click="uploadImage" id="upload-image-btn">Upload Image</button>
     </div>
   </div>
 </template>
