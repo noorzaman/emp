@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
           <label>Space e-mail</label><br>
-          <p>{{this.email}}</p>
+          <p id="spaceId">{{this.email}}</p>
         </div>
         <div class="row">
           <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">

@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" id="message">
     {{ spaceId }} {{ message }}
   </div>
 </template>
