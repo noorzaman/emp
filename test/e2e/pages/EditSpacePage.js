@@ -6,6 +6,7 @@ module.exports = {
   },
   elements: {
     spaceName: '#name',
+    spaceId: '#spaceId',
     casual: '#casual',
     studious: '#studious',
     fancy: '#fancy',
