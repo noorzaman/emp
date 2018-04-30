@@ -5,7 +5,7 @@
     <div v-if="!prevBookedSpaces.length">
       <p>You have not booked any spaces yet.</p>
     </div>
-    <div v-else class="row">
+    <div v-else>
       <div v-for="space in prevBookedSpaces" :key="space.email" :class="[{ 'searchLocationManyMissing': attributesLength >= 4}, { 'searchLocationMedMissing': attributesLength >= 2 && attributesLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <h2>{{space.name}}</h2>
         <p class="block-with-text">{{space.description}}</p>

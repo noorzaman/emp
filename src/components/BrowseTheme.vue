@@ -1,17 +1,16 @@
 <template>
   <NotFound v-if="notFound"></NotFound>
   <div v-else class="main">
+    <h1>{{pageTitle}}</h1>
     <ScheduleSpace :email="scheduleEmail" :name="scheduleName" ref="scheduleSpace"></ScheduleSpace>
     <div v-if="!this.searchFinished">
       <p>Searching...</p>
     </div>
     <div v-else>
       <div v-if="!matches.length">
-        <h1>{{pageTitle}}</h1>
         <p>No matches were found for this theme.</p>
       </div>
-      <div v-else class="row">
-        <h1>{{pageTitle}}</h1>
+      <div v-else>
         <div v-for="match in matches" :key="match.email" :class="[{ 'searchLocationManyMissing': attributesLength >= 4}, { 'searchLocationMedMissing': attributesLength >= 2 && attributesLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
           <p class="block-with-text">{{match.description}}</p>

@@ -9,7 +9,7 @@
       <br>
       <div class="leftSearch">
         <div class="form-group">
-          <label>Space name</label><br>
+          <label>* Space name</label><br>
           <input type="text" v-model="name" id="name" maxLength="20"><br>
           <div class="text-danger">{{nameError}}</div>
         </div>

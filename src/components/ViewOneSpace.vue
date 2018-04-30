@@ -1,8 +1,8 @@
 <template>
   <NotFound v-if="notFound"></NotFound>
-  <div v-else class="main">
-    <ScheduleSpace :email="email" :name="name" ref="scheduleSpace"></ScheduleSpace>
+  <div v-else class="main viewOnePage">
     <h1>{{name}}</h1>
+    <ScheduleSpace :email="email" :name="name" ref="scheduleSpace"></ScheduleSpace>
     <div class="viewOneImgCol">
       <img :src="imageData" :alt="name + ' image'" class="img-fluid img-thumbnail">
     </div>

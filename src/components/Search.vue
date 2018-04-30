@@ -2,8 +2,8 @@
   <div class="search">
     <ScheduleSpace :email="scheduleEmail" :name="scheduleName" ref="scheduleSpace"></ScheduleSpace>
     <div class="form-group"><br>
-      <button style="width:130px" :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
-      <button style="width:130px" :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Search By Name</button>
+      <button :class="[showFullSearch ? 'btn-dark' : 'btn-light', 'btn']" @click="changeSearchToFull">Full Search</button>
+      <button :class="[showFullSearch ? 'btn-light' : 'btn-dark', 'btn']" @click="changeSearchToByName">Search By Name</button>
     </div>
     <div v-show="!showFullSearch">
       <label>Space Name</label><br>

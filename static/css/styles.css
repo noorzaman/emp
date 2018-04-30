@@ -31,16 +31,13 @@ h2 {
 	font-family: 'Abel', sans-serif;
 }
 
-
 /* Page subheadings such as Add Room  */
 h1 {
 	color: #333;
 	font-size: 2.5em;
 	font-family: 'Abel', sans-serif;
 	margin-top: 0.2em;
-	margin-left: 0px;
-	padding-left: 0px;
-
+	font-weight: bold;
 }
 
 /* Navigation/Header Styles */
@@ -195,6 +192,7 @@ hr {
 
 .introText h1 {
     margin-left: 0px;
+	padding-left: 0px;
 }
 
 .introText ul {
@@ -477,6 +475,15 @@ ul {
     border-radius: 5px;
 }
 
+    
+.btn-dark {
+    width: 130px;
+}
+
+.btn-light {
+    width: 130px;
+}
+
 /* Booked Spaces Styles */
 
 .bookedLocation, .searchLocation {
@@ -484,6 +491,7 @@ ul {
 }
 
 .bookedImg, .searchImg {
+    margin-top: 5px;
     margin-bottom: 1em;
     width: auto;
     height: 250px;
@@ -678,11 +686,20 @@ ul {
     body {
         /*background-color: purple;*/
     }
+    
+    .main {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
 
     h1 {
-        font-size: 1.7em;
+        font-size: 1.6em;
         margin-top: 10px;
         margin-bottom: 0;
+    }
+    
+    .viewOnePage h1 {
+        margin-bottom: 0.5em;
     }
 
     .searchLocation {
@@ -719,7 +736,7 @@ ul {
     .searchLocation {
         height: 31em;
     }
-
+    
     .searchLocationMedMissing {
         height: 36em;
     }
@@ -877,7 +894,7 @@ ul {
     }
 
     .browseAllTitle h1 {
-        font-size: 2em
+        font-size: 2em;
     }
 }
 
@@ -909,10 +926,6 @@ ul {
         /*background-color: lightblue;*/
     }
 
-    .empheading-mobile {
-        font-size: 1.5em;
-    }
-
     .browseThemes {
         margin-bottom: 1em;
     }
@@ -928,7 +941,8 @@ ul {
     }
 
     .to p {
-        margin-top: 0.5em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
     }
 
     .checkbox-grid li {
@@ -1052,6 +1066,11 @@ ul {
 @media only screen and (max-width: 320px) {
     body {
         /*background-color: purple;*/
+    }
+        
+    .btn-dark, .btn-light {
+        width: 120px;
+        font-size: 0.9em;
     }
 
     .editBtn {
