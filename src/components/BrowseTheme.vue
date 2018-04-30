@@ -24,7 +24,7 @@
             <p>No attributes have been added for this space yet.</p>
           </div>
           <div v-else>
-            <ul :class="{ 'browseAttributesList' : match.longAttrList }" class="attrList">
+            <ul :class="{ 'attributesList' : match.longAttrList }" class="attrList">
               <li v-for="attribute in match.attributes" :key="attribute">{{attribute}}</li>
             </ul>
           </div>

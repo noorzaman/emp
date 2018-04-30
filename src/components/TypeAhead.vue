@@ -6,7 +6,7 @@
       <div style="flex-basis: 250px">
         <input id="attributes" class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
         <!-- https://uiv.wxsm.space/typeahead/ -->
-        <typeahead v-model="newAttribute" target="#attributes" :data="uniqueAttributesList" :open-on-empty="true"/>
+        <typeahead v-model="newAttribute" target="#attributes" :data="uniqueAttributesList" :open-on-empty="false"/>
         <p class="text-danger">{{newAttributeError}}</p>
       </div>
       <div>

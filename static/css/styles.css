@@ -394,7 +394,7 @@ ul {
     margin-right: 2em;
 }
 
-.missingItems, .browseAttributesList {
+.missingItems, .attributesList, .themesList {
     height: 100px;
     overflow: auto;
 }

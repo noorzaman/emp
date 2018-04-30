@@ -11,6 +11,7 @@
         <div class="form-group">
           <label>Space name</label><br>
           <input type="text" v-model="name" id="name"><br>
+          <div class="text-danger">{{nameError}}</div>
         </div>
         <div class="form-group">
           <label>Space e-mail</label><br>
@@ -74,7 +75,8 @@ export default {
       capacity: 1,
       themes: [],
       attributes: [],
-      uploading: false
+      uploading: false,
+      nameError: ''
     }
   },
   mounted () {
@@ -107,6 +109,20 @@ export default {
       })
     },
     editSpace () {
+      var hasErrors = false
+      if (!this.name.length) {
+        this.nameError = 'The name field is required'
+        hasErrors = true
+      } else if (this.name.length > 20) {
+        this.nameError = 'The name field can have maximum 20 characters'
+        hasErrors = true
+      } else {
+        this.nameError = ''
+      }
+      if (hasErrors) {
+        return
+      }
+
       this.uploading = true
 
       var data = {
