@@ -48,7 +48,7 @@ export default {
         // add this space to list of booked spaces
         this.updateListOfBookedSpaces(this.email)
         // and submit the form
-        // document.googleCalForm.submit()
+        document.googleCalForm.submit()
       })
     },
     addPadding (number) {
