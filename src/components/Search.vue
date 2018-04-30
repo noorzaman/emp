@@ -105,7 +105,7 @@
         </div>
         <div class="clearFix"></div>
         <div class="searchBtns">
-          <router-link :to="'/space/' + match.email" class="btn btn-primary btnMargin">Details</router-link>
+          <router-link :to="'/space/' + match.email" class="btn btn-primary">Details</router-link>
           <button class="btn btn-primary btnMargin" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
           <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
         </div>

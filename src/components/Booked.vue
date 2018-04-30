@@ -18,7 +18,7 @@
           <p>No attributes have been added for this space yet.</p>
         </div>
         <div v-else>
-          <ul :class="{ 'browseAttributesList' : space.longAttrList }" class="attrList">
+          <ul :class="{ 'attributesList' : space.longAttrList }" class="attrList">
             <li v-for="attribute in space.attributes" :key="attribute">{{attribute}}</li>
           </ul>
         </div>

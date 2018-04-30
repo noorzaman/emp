@@ -8,13 +8,13 @@
       <br>
       <div class="form-group">
         <label class="empLabel">*Space name</label>
-        <br>
-        <input class="empText" type="text" v-model="name" id="name">
+        <p>Maximum character length 20.</p>
+        <input class="empText" type="text" v-model="name" id="name" maxLength="20"><br>
         <div class="text-danger">{{nameError}}</div>
       </div>
       <div class="form-group">
         <label class="empLabel">Space e-mail</label>
-        <p>Only if your space already has a gmail calendar associated with it</p>
+        <p>Only if your space already has a Gmail calendar associated with it</p>
         <input class="empText" type="email" v-model="email"><br>
         <div class="text-danger">{{emailError}}</div>
       </div>
@@ -93,6 +93,10 @@ export default {
       }
       if (!this.hasImage) {
         this.imageError = 'You must add an image'
+        this.hasErrors = true
+      }
+      if (this.name.length > 20) {
+        this.nameError = 'The name field can have maximum 20 characters'
         this.hasErrors = true
       }
 
