@@ -452,13 +452,29 @@ ul {
     padding-left: 0;
 }
 
-/* room headings in search */
 .matchTitle h2 {
     padding-top: 0.3em;
 }
 
 .matchTitle p {
     font-size: 1.2em;
+}
+
+.searchImgDiv {
+    margin-top: -12px;
+}
+
+.availableMark {
+    color: white;
+    background-color: #318833;
+    -ms-transform: rotate(-52deg); /* IE 9 */
+    -webkit-transform: rotate(-52deg); /* Safari 3-8 */
+    transform: rotate(-52deg);
+    width: 65px;
+    position: relative;
+    padding: 2px 5px;
+    top: 50px;
+    border-radius: 5px;
 }
 
 /* Booked Spaces Styles */

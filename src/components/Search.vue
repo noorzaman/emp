@@ -73,9 +73,12 @@
         </div>
         <div class="clearFix"></div>
         <p class="block-with-text">{{match.description}}</p>
-        <router-link :to="'/space/' + match.email">
-          <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-        </router-link>
+        <div class="searchImgDiv">
+          <div v-if="userFilterKey == 'all' && !match.busy" class="availableMark">Available</div>
+          <router-link :to="'/space/' + match.email">
+            <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+          </router-link>
+        </div>
         <div v-if="!searchingByName">
           <div v-if="searchCriteria.capacity !== 0">
             <div v-if="searchCriteria.capacity > match.capacity" class="missingCapacity">
@@ -84,7 +87,7 @@
               </ul>
             </div>
             <div v-else>
-              <p><strong>Capacity sufficient:</strong> has a capacity of {{match.capacity}}</p>
+              <p><strong>Capacity sufficient:</strong> capacity of {{match.capacity}}</p>
             </div>
           </div>
           <div v-if="match.missThemes.length" class="missingThemes">
@@ -309,7 +312,9 @@ export default {
     fullSearch () {
       this.timeOmitted = isNaN(this.startTime.getTime()) || isNaN(this.endTime.getTime())
       if (!this.timeOmitted) {
-        if (this.startTime >= this.endTime) {
+        var ordinalStartTime = this.startTime.getHours() * 60 + this.startTime.getMinutes()
+        var ordinalEndTime = this.endTime.getHours() * 60 + this.endTime.getMinutes()
+        if (ordinalStartTime >= ordinalEndTime) {
           this.searchCompleted = false
           this.timeError = 'The start time must come before the end time'
           return
@@ -321,11 +326,10 @@ export default {
         this.endTime = new Date('')
         this.$store.clearDates()
       }
-
+      this.userFilterKey = 'available'
       this.searchCompleted = false
       this.timeError = ''
       this.searchingByName = false
-      this.userFilterKey = 'available'
       this.numCriteria = 0
       if (this.capacity !== 0) {
         this.numCriteria++
