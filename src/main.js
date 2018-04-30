@@ -18,7 +18,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$searchUrl = process.env.ES_ADDR + '/emp/rooms'
 Vue.prototype.$commonTagsUrl = process.env.ES_ADDR + '/_all'
-Vue.prototype.$editUrl = process.env.EMP_API + '/dev/place'
+Vue.prototype.$editUrl = process.env.EMP_API + '/place'
 Vue.prototype.$availabilityUrl = process.env.CALENDAR_API + '/availability/'
 Vue.prototype.$googleCalendarUrl = process.env.CALENDAR_API + '/'
 
