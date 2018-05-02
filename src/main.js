@@ -28,6 +28,8 @@ Vue.prototype.$cameraIcon = 'M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.
 Vue.prototype.$possibleThemes = ['casual', 'cozy', 'fancy', 'fun', 'grand', 'modern', 'professional', 'quiet', 'rustic', 'social', 'studious', 'zen']
 Vue.prototype.$maxResultsShown = 20
 
+Vue.prototype.$maxAttributes = 7
+
 var store = {
   state: {
     date: false,

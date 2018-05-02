@@ -102,6 +102,7 @@ export default {
         this.description = space.description
         this.capacity = space.capacity
         this.attributes = space.attributes ? space.attributes : []
+        this.filterAttributes()
         this.themes = space.themes ? space.themes : []
       }, error => {
         console.error(error)
@@ -146,6 +147,14 @@ export default {
         this.uploading = false
         alert('Saving your edits failed.')
       })
+    },
+    filterAttributes () {
+      if (this.$maxAttributes < 1) {
+        return
+      }
+      if (this.attributes.length > this.$maxAttributes) {
+        this.attributes = this.attributes.slice(0, this.$maxAttributes)
+      }
     }
   }
 }
