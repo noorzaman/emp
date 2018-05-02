@@ -18,9 +18,9 @@
             <p>No themes have been added to this space yet.</p>
           </div>
           <div v-else>
-            <ul class="themesList">
-              <li v-for="theme in themes" :key="theme" :id="theme">{{theme}}</li>
-            </ul>
+            <div v-for="item in themes" :key="item" class="tag is-info viewTag" style="margin-right: 2px">
+              <span>{{item}}</span>
+            </div>
           </div>
         </div>
         <div class="viewOneAttrCol">
@@ -29,9 +29,9 @@
             <p>No attributes have been added to this space yet.</p>
           </div>
           <div v-else>
-            <ul class="attributesList">
-              <li v-for="attribute in attributes" :key="attribute">{{attribute}}</li>
-            </ul>
+            <div v-for="item in attributes" :key="item" class="tag is-info viewTag" style="margin-right: 2px">
+              <span>{{item}}</span>
+            </div>
           </div>
         </div>
       </div>

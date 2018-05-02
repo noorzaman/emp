@@ -351,7 +351,7 @@ ul {
 }
 
 .tag.is-info {
-    background-color: #3273dc;
+    background-color: #007bff;
     color: #fff;
 }
 .tag {
@@ -367,6 +367,12 @@ ul {
     padding-right: .5em;
     margin-bottom: 0.3em;
     vertical-align: top;
+}
+
+.tag.viewTag {
+    background-color: #17a2b8;
+    padding-left: .75em;
+    padding-right: .75em;
 }
 
 .delete.is-small {
