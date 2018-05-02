@@ -8,10 +8,10 @@
     <div v-else>
       <div v-for="space in prevBookedSpaces" :key="space.email" :class="[{ 'searchLocationManyMissing': attributesLength >= 4}, { 'searchLocationMedMissing': attributesLength >= 2 && attributesLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <h2>{{space.name}}</h2>
-        <p class="block-with-text">{{space.description}}</p>
         <router-link :to="'/space/' + space.email">
           <img :src="space.image" :alt="space.name + 'image'" class="img-fluid img-thumbnail bookedImg">
         </router-link>
+        <p v-if="space.description" class="block-with-text"><strong>Description:</strong> {{space.description}}</p>
         <p><strong>Capacity:</strong> {{space.capacity}}</p>
         <p><strong>Attributes</strong></p>
         <div v-if="!space.attributes.length">
@@ -23,11 +23,13 @@
           </ul>
         </div>
         <div class="searchBtns">
-          <router-link :to="'/space/' + space.email" class="btn btn-primary">Details</router-link>
-          <button class="btn btn-primary btnMargin" @click="submitGoogleCalForm(space.email, space.name)">Book</button>
-          <router-link :to="'/edit-space/' + space.email" class="btn btn-primary btnMargin">Edit</router-link>
+          <router-link :to="'/space/' + space.email" class="btn btn-primary resultsBtn">Details</router-link>
+          <button class="btn btn-primary btnMargin resultsBtn" @click="submitGoogleCalForm(space.email, space.name)">Book</button>
+          <router-link :to="'/edit-space/' + space.email" class="btn btn-primary btnMargin resultsBtn">Edit</router-link>
         </div>
       </div>
+      <div class="clearFix"></div>
+      <div class="resultsFooterSpace"></div>
     </div>
   </div>
 </template>

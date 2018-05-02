@@ -13,12 +13,12 @@
       <div v-else>
         <div v-for="match in matches" :key="match.email" :class="[{ 'searchLocationManyMissing': attributesLength >= 4}, { 'searchLocationMedMissing': attributesLength >= 2 && attributesLength < 4}]" class="searchLocation col-lg-4 col-md-4 col-sm-6 col-xs-12">
           <h2>{{match.name}}</h2>
-          <p class="block-with-text">{{match.description}}</p>
           <router-link :to="'/space/' + match.email">
             <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
           </router-link>
+          <p v-if="match.description" class="block-with-text"><strong>Description:</strong> {{match.description}}</p>
           <p><strong>Capacity:</strong> {{match.capacity}}</p>
-          <p><strong>Attributes</strong></p>
+          <p><strong>Attributes:</strong></p>
           <div v-if="!match.attributes.length">
             <p>No attributes have been added for this space yet.</p>
           </div>
@@ -28,12 +28,14 @@
             </ul>
           </div>
           <div class="searchBtns">
-            <router-link :to="'/space/' + match.email" class="btn btn-primary">Details</router-link>
-            <button class="btn btn-primary btnMargin" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
-            <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
+            <router-link :to="'/space/' + match.email" class="btn btn-primary resultsBtn">Details</router-link>
+            <button class="btn btn-primary btnMargin resultsBtn" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
+            <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin resultsBtn">Edit</router-link>
           </div>
         </div>
       </div>
+      <div class="clearFix"></div>
+      <div class="resultsFooterSpace"></div>
     </div>
   </div>
 </template>

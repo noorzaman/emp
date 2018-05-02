@@ -72,7 +72,6 @@
           <h2>{{match.name}}</h2>
         </div>
         <div class="clearFix"></div>
-        <p class="block-with-text">{{match.description}}</p>
         <div class="searchImgDiv">
           <div v-if="userFilterKey == 'all' && !match.busy" class="availableMark">Available</div>
           <router-link :to="'/space/' + match.email">
@@ -80,6 +79,7 @@
           </router-link>
         </div>
         <div v-if="!searchingByName">
+          <p v-if="match.description" class="block-with-text"><strong>Description:</strong> {{match.description}}</p>
           <div v-if="searchCriteria.capacity !== 0">
             <div v-if="searchCriteria.capacity > match.capacity" class="missingCapacity">
               <ul>
@@ -105,11 +105,13 @@
         </div>
         <div class="clearFix"></div>
         <div class="searchBtns">
-          <router-link :to="'/space/' + match.email" class="btn btn-primary">Details</router-link>
-          <button class="btn btn-primary btnMargin" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
-          <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin">Edit</router-link>
+          <router-link :to="'/space/' + match.email" class="btn btn-primary resultsBtn">Details</router-link>
+          <button class="btn btn-primary btnMargin resultsBtn" @click="submitGoogleCalForm(match.email, match.name)">Book</button>
+          <router-link :to="'/edit-space/' + match.email" class="btn btn-primary btnMargin resultsBtn">Edit</router-link>
         </div>
       </div>
+      <div class="clearFix"></div>
+      <div class="resultsFooterSpace"></div>
     </div>
   </div>
 </template>

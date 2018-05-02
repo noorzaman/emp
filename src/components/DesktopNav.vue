@@ -2,9 +2,11 @@
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-            <router-link to="/"><img class="logo" src="/static/images/logo-large.png" alt="Logo. "></router-link>
-            <h3 class="empheading">Meet Anywhere</h3>
-            <p class="empsubheading">The right meeting space for any situation</p>
+            <router-link to="/">
+              <img class="logo" src="/static/images/logo-large.png" alt="Logo. ">
+              <h3 class="empheading">Meet Anywhere</h3>
+              <p class="empsubheading">The right meeting space for any situation</p>
+            </router-link>
         </div>
         <div>
           <ul class="nav navbar-nav navbar-right">
