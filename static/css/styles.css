@@ -11,6 +11,10 @@ p, li, input, label {
     font-family: 'Assistant', sans-serif;
 }
 
+p {
+    word-wrap: break-word;
+}
+
 /* Meet Anywhere */
 .empheading {
 	margin-top: 10px;
@@ -54,6 +58,10 @@ h1 {
 
 .btnMargin {
     margin-left: 1em;
+}
+
+#save-btn {
+    margin-bottom: 2em;
 }
 
 /* Navigation/Header Styles */

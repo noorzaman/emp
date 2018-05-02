@@ -4,7 +4,7 @@
     <p>Ex: Food, WiFi, Projector, etc.</p>
     <div style="display: flex;">
       <div style="flex-basis: 250px">
-        <input id="attributes" class="form-control" style="width: 250px" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
+        <input id="attributes" class="form-control" type="text" placeholder="Type to search..." autocomplete="off" @keyup.enter="addAttribute">
         <!-- https://uiv.wxsm.space/typeahead/ -->
         <typeahead v-model="newAttribute" target="#attributes" :data="filteredAttributesList" :open-on-empty="false"/>
         <p class="text-danger">{{newAttributeError}}</p>
