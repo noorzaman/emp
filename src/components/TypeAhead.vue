@@ -109,27 +109,17 @@ export default {
     /** Populate uniqueAttributesList with all unique attributes in the database
     */
     getUniqueAttributes () {
-      let data = {
-        'size': 0,
-        'aggs': {
-          'attributes': {
-            'terms': {
-              'field': 'space.attributes.keyword',
-              'size': 10000
-            }
-          }
-        }
-      }
-      let jsonData = JSON.stringify(data)
-      var searchUrl = this.$commonTagsUrl + '/_search'
-      this.$http.post(searchUrl, jsonData, {
+      var searchUrl = this.$searchUrl + '/_search?_source=space.attributes&size=10000'
+      this.$http.get(searchUrl, {
         headers: this.$defaultHeaders
       }).then(result => {
         var arr = []
-        var searchResult = result.body.aggregations.attributes.buckets
+        var searchResult = result.body.hits.hits
         // concatenating all attributes together
         for (var i = 0; i < searchResult.length; i++) {
-          arr = arr.concat(searchResult[i].key)
+          if (searchResult[i]._source.hasOwnProperty('space')) {
+            arr = arr.concat(searchResult[i]._source.space.attributes)
+          }
         }
         // dropping duplicates and sorting
         var uniqueArray = arr.filter(function (item, pos) {
