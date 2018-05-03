@@ -60,6 +60,7 @@
     <br>
 
     <br>
+    <h2 v-if="searching">Searching...</h2>
     <div v-if="searchCompleted">
       <h2 v-if="availableOnlyFilter.length === 1">Search Results: 1 space found</h2>
       <h2 v-else>Search Results: {{availableOnlyFilter.length}} spaces found</h2>
@@ -171,7 +172,8 @@ export default {
       timeError: '',
       missingItemsLength: 0,
       scheduleEmail: '',
-      scheduleName: ''
+      scheduleName: '',
+      searching: false
     }
   },
   mounted () {
@@ -275,6 +277,7 @@ export default {
     * Search by space name only
     */
     searchByName () {
+      this.searching = true
       this.searchCompleted = false
       this.timeError = ''
       this.searchingByName = true
@@ -328,6 +331,7 @@ export default {
         this.endTime = new Date('')
         this.$store.clearDates()
       }
+      this.searching = true
       this.userFilterKey = 'available'
       this.searchCompleted = false
       this.timeError = ''
@@ -425,6 +429,7 @@ export default {
             })
             this.process(searchResults, availableList)
           }, error => {
+            this.searching = false
             console.error(error)
             alert('Looking up space availability failed.')
           })
@@ -433,6 +438,7 @@ export default {
           this.finishedSearch()
         }
       }, error => {
+        this.searching = false
         console.error(error)
         alert('Search failed.')
       })
@@ -523,13 +529,22 @@ export default {
     * back to the search page. Also scrolls to the results.
     */
     finishedSearch () {
+      this.searching = false
       this.searchCompleted = true
       var searchResults = {
         matches: this.matches,
         missingItemsLength: this.missingItemsLength
       }
-      localStorage.setItem('searchCriteria', JSON.stringify(this.searchCriteria))
-      localStorage.setItem('searchResults', JSON.stringify(searchResults))
+      try {
+        localStorage.setItem('searchCriteria', JSON.stringify(this.searchCriteria))
+      } catch (error) {
+        console.error(error)
+      }
+      try {
+        localStorage.setItem('searchResults', JSON.stringify(searchResults))
+      } catch (error) {
+        console.error(error)
+      }
       // scroll to search results
       this.$nextTick(function () {
         // scroll down to the results
