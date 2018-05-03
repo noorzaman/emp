@@ -73,12 +73,10 @@
           <h2>{{match.name}}</h2>
         </div>
         <div class="clearFix"></div>
-        <div class="searchImgDiv">
-          <div v-if="userFilterKey == 'all' && !match.busy" class="availableMark">Available</div>
-          <router-link :to="'/space/' + match.email">
-            <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
-          </router-link>
-        </div>
+        <div v-if="userFilterKey == 'all' && !match.busy" class="availableMark">Available</div>
+        <router-link :to="'/space/' + match.email">
+          <img :src="match.image" :alt="match.name + ' image'" class="img-fluid img-thumbnail searchImg">
+        </router-link>
         <div v-if="!searchingByName">
           <p v-if="match.description" class="block-with-text"><strong>Description:</strong> {{match.description}}</p>
           <div v-if="searchCriteria.capacity !== 0">
