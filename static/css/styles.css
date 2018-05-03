@@ -484,10 +484,6 @@ ul {
     font-size: 1.2em;
 }
 
-.searchImgDiv {
-    margin-top: -12px;
-}
-
 .availableMark {
     color: white;
     background-color: #318833;
@@ -495,12 +491,13 @@ ul {
     -webkit-transform: rotate(-52deg); /* Safari 3-8 */
     transform: rotate(-52deg);
     width: 65px;
-    position: relative;
+    position: absolute;
     padding: 2px 5px;
-    top: 50px;
+    padding-top: 0;
+    padding-bottom: 0;
+    top: 105px;
     border-radius: 5px;
 }
-
     
 .btn-dark {
     width: 130px;
